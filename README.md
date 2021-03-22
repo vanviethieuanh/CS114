@@ -10,3 +10,5 @@
 - 😷 Nhận diện đeo khẩu trang đúng cách
 - 📚 Quản lý sách
 - 👕 Chọn áo quần hợp thời trang
+- 😔 Nhận biết tin bạo lực
+- ⚽ Phát hiện highlight trong video bóng đá
