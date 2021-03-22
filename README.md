@@ -12,3 +12,4 @@
 - 👕 Chọn áo quần hợp thời trang
 - 😔 Nhận biết tin bạo lực
 - ⚽ Phát hiện highlight trong video bóng đá
+- 🏍️ Nhận diện biển số xe
