@@ -13,3 +13,4 @@
 - 😔 Nhận biết tin bạo lực
 - ⚽ Phát hiện highlight trong video bóng đá
 - 🏍️ Nhận diện biển số xe
+- 🍣 Đề xuất món ăn theo nguyên liệu, địa điểm và mùa
