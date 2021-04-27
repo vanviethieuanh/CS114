@@ -1,6 +1,4 @@
 # Tìm một số bài toán sử dụng Regression trong thực tế.
-#### 1. Bài toán dự đoán giá vàng.
-+ Input: 
 
 #### 2. Dự đoán mức lương cơ bản của một nhân viên để cho người phỏng vấn biết cần phải cho người ứng tuyển mức lương tối đa anh ta nhận được. (Mặc dù khi phỏng vấn, người ứng tuyển có thể deal lương của mình với công ty nhưng kết quả dự đoán này cho biết người phỏng vấn phải biết tối đa mức lương của người xin việc nhận được tương ứng với năng lực của người đó)
 + Input: 
