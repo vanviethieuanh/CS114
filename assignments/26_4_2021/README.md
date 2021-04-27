@@ -1,5 +1,14 @@
 # Tìm một số bài toán sử dụng Regression trong thực tế.
 
+#### 1. Dự đoán tỉ lệ nhiễm covid 19 dựa trên nhiệt độ cơ thể và triệu chứng biểu hiện.
++ Input: Nhiệt độ cơ thể và các triệu chứng của bệnh nhân.
+  - Cách thu thập data: xin dữ liệu từ các bệnh viện.
+  - Cách xử lý data:
+    - Số hóa các dữ liệu về triệu chứng.
+    - Gom nhóm dữ liệu vào cùng 1 file csv.
++ Output: Đưa ra tỉ lệ nhiễm covid 19 của bệnh nhân đó.
+
+
 #### 2. Dự đoán mức lương cơ bản của một nhân viên để cho người phỏng vấn biết cần phải cho người ứng tuyển mức lương tối đa anh ta nhận được. (Mặc dù khi phỏng vấn, người ứng tuyển có thể deal lương của mình với công ty nhưng kết quả dự đoán này cho biết người phỏng vấn phải biết tối đa mức lương của người xin việc nhận được tương ứng với năng lực của người đó)
 + Input: 
   - Mức độ học vấn
@@ -8,13 +17,13 @@
   - Các chứng chỉ đi kèm hoặc các kỹ năng mềm hiện có.
 + Output:
   - Mức lương khi mới vào của nhân viên
- 
 + Data:
   - Lấy từ hồ sơ phỏng vấn của người ứng tuyển khi mới nộp vào.
   - Đối với Mức độ học vấn thì ta sẽ quy định với trình độ học vấn nào thì ứng với con số nào để máy tính hiểu được
   - Kinh nghiệm thì bằng dữ liệu số
   - Những công ty đã từng làm và chức vụ thì ta cũng quy định đối với công ty như thế nào thì ứng với con số nhất định, chức vụ cũng vậy (Đối với mục này thì bạn cần phải có một dữ liệu công ty ngành công nghệ thông tin lớn và số chức vụ trong ngành công nghệ thông tin)
   - Các chứng chỉ thì tương ưng với số điềm có quy định.
+
 
 #### 3. Dự đoán mức độ lạm phát của VNĐ trong quý tiếp theo
   + Input:
