@@ -97,7 +97,6 @@ class csvWriterPipeline:
                       'https://www.theguardian.com/lifeandstyle/all',
                       'https://www.theguardian.com/commentisfree/all'
         ]
-    ```
 
 2. Với mỗi đường dẫn lấy ra tất cả thẻ trong wrapper\* ta được 1 bài viết.
 
@@ -223,6 +222,7 @@ Công cụ sử dụng **Selenium** và **Beautiful Soup**
       'https://babylonbee.com/news',
       'https://www.newyorker.com/latest/news',
        ]
+    ```
 
 2. Từ các đường link trên ta tiến hành lấy dữ liệu
 - Truy cập web theo link.
@@ -250,6 +250,7 @@ Công cụ sử dụng **Selenium** và **Beautiful Soup**
             browser.execute_script('window.scrollTo(0, document.body.scrollHeight);')
             time.sleep(self.delay)
             j += 1
+    ```
 
 3. Lấy thông tin ngày đăng
  *Nếu thông tin ngày đăng không có sẳn ở ngoài bài báo*
@@ -266,5 +267,5 @@ Công cụ sử dụng **Selenium** và **Beautiful Soup**
         date_line = str(soup.body.findAll('p',attrs={'class':'byline'}))
         date = date_line[(date_line.find('Updated')+8):-5]
         return date
-
+    ```
 
