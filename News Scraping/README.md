@@ -61,6 +61,8 @@ Gồm **120.000** records từ
 
 ### 19521225 - Văn Viết Hiếu Anh
 
+**Thiết lập**
+
 Công cụ sử dụng **Scrapy**
 
 `pipelines.py`
@@ -106,28 +108,64 @@ class csvWriterPipeline:
     ```python
         def parse(self, response):
             for article in response.css('.fc-slice-wrapper ul >li.u-faux-block-link'):
-
+    
                 article_link = article.css(
                     'a.u-faux-block-link__overlay::attr(href)').get()
                 headline = article.css('span.js-headline-text::text').get()
                 posted_at = article.css('time::attr(datetime)').get()
-
+    
                 if '2017-12-31' == posted_at[:10]:
                     return
-
+    
                 yield{
                     'article_link': article_link,
                     'headline': headline,
                     'posted_at': posted_at,
                     'is_sarcastic': 0
                 }
-
+    
             next_page = response.css('a[aria-label=" next page"]').attrib['href']
             if next_page is not None:
                 yield response.follow(next_page, callback=self.parse)
     ```
 
+**Chuẩn hóa**: `standardize.ipynb`
+
+Vì những dữ liệu `03 Jan` (nghĩa là 03/01/2021) không thể chuyển về dạng datetime bằng hàm của `pandas` nên phải sử dụng hàm dưới đây để chuẩn hóa về dạng mà `pandas` có thể đọc được
+
+```python
+def thisYear(date):
+    # Find date of this year like "03 Jan" in CBS news
+    pattern = re.compile(r'\w{3} \d{,2}$')
+    
+    # If match to pattern add 2021 to the end, else return itself
+    if bool(pattern.match(date)):
+        return date + ', 2021'
+    
+    return date
+
+# Apply above function to posted_at column
+df['posted_at'] = df['posted_at'].apply(thisYear)
+```
+
+Dạng dữ liệu còn lại là `<time> ago` vốn chính là ngày thu thập dữ liệu nên đổi thành string `today` để `pandas` có thể đọc được
+
+```python
+# Turn posted_at to datetime. All error with be turn to NaT for the reason it the time like "16 hours ago" which mean today, so we will fill it with today
+df['posted_at'] = pd.to_datetime(df['posted_at'], errors='coerce', utc=True)
+df['posted_at'] = df['posted_at'].fillna(pd.to_datetime('today'))
+df['posted_at'] = pd.to_datetime(df['posted_at'], errors='coerce', utc=True)
+```
+
+Chuyển toàn bộ datetime về 1 format cố định
+
+```python
+# Turn all date to same format
+df['posted_at'] = df['posted_at'].dt.strftime('%d/%m/%Y')
+```
+
 ### Lê Văn Phước
+
 Công cụ sử dụng **Python Crawl** dữ liệu
 
 **Các bước thu thập**
@@ -149,7 +187,7 @@ Công cụ sử dụng **Python Crawl** dữ liệu
     ```python
     soup = BeautifulSoup(response.content, "html.parser")
 4. Phân tích dữ liệu vừa lấy
-    
+   
     Ta tiến hành lên trang web xác định data cần lấy trong trang web, từ đó lấy các thẻ và class chứa     data hoặc link các bài báo cần lấy.
     
     Xác định các trường cần lấy trong mỗi bài báo:
