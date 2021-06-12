@@ -30,9 +30,10 @@ Gồm **120.000** records từ
 
 | Trang | Số lượng | Châm biếm ? |
 | ----- | -------- | ----------- |
-|       |          |             |
-|       |          |             |
-|       |          |             |
+|clickhole.com|1771|True|
+|thepoke.co.uk|1157|True|
+|babylonbee.com|7043|True|
+|newyorker.com|13704|True|
 
 
 
