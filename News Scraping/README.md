@@ -26,14 +26,18 @@
 
 ## Tổng quan dữ liệu thu thập
 
-Gồm **120.000** records từ
+Gồm **174.708** records từ
 
 | Trang                        | Số lượng | Thể loại    | Thành viên        |
 | ---------------------------- | -------- | ----------- | ----------------- |
 | https://www.theguardian.com/ | 34230    | Chính thống | Văn Viết Hiếu Anh |
 | https://www.cbsnews.com      | 60735    | Chính thống | Văn Viết Hiếu Anh |
-| https://thehardtimes.net     | 5917     | Châm biếm   | Lê Văn Phước      |
+| https://www.thehardtimes.net     | 5917     | Châm biếm   | Lê Văn Phước      |
 | https://www.theaustralian.com.au | 50151  | Chính thống | Lê Văn Phước     |
+| https://www.clickhole.com | 1771 | Châm biếm | Nguyễn Đại Kỳ |
+| https://www.thepoke.co.uk | 1157 | Châm biếm | Nguyễn Đại Kỳ |
+| https://www.babylonbee.com | 7043 | Châm biếm | Nguyễn Đại Kỳ |
+| https://www.newyorker.com | 13704 | Châm biếm | Nguyễn Đại Kỳ |
 
 ## Dataset Format
 
@@ -205,4 +209,62 @@ Công cụ sử dụng **Python Crawl** dữ liệu
 5. Lưu data vừa lấy vào file
 
 ### Nguyễn Đại Kỳ
+
+Công cụ sử dụng **Selenium** và **Beautiful Soup**
+
+**Các bước thu thập**
+
+1. Lấy tất cả các đường link đến các category của trang báo cần lấy dữ liệu:
+  ```python
+    # Các đường link đã gom được:
+    list_urls = [
+      'https://clickhole.com/category/news/',
+      'https://www.thepoke.co.uk/category/news/',
+      'https://babylonbee.com/news',
+      'https://www.newyorker.com/latest/news',
+       ]
+
+2. Từ các đường link trên ta tiến hành lấy dữ liệu
+- Truy cập web theo link.
+- Duyệt qua danh sách các page chứa dữ liệu cần crawl của web.
+- Dùng css selector để lấy ra nội dung quan tâm.
+- Lưu dữ liệu vào file.
+
+    ```python
+    def load_page(self):
+        browser = self.driver
+        j = 1
+        while j < 1395:
+            browser.get("https://www.thepoke.co.uk/category/news/page/{page}/".format(page=j))
+            time.sleep(self.delay)
+            all_data = browser.find_elements_by_css_selector('div.boxframe.archive > article.boxgrid > a')
+            for i in range(len(all_data)):
+                line = {}
+                line['article_link'] = all_data[i].get_attribute('href')
+                line['headline'] = all_data[i].text.split('\n')[1]
+                line['posted_at'] = self.get_date(all_data[i].get_attribute('href'))
+                line['is_sarcastic'] = 1
+                with open('crawled_data/ThePoke.txt','a') as filedata:
+                    json.dump(line,filedata)
+                    filedata.write('\n')
+            browser.execute_script('window.scrollTo(0, document.body.scrollHeight);')
+            time.sleep(self.delay)
+            j += 1
+
+3. Lấy thông tin ngày đăng
+ *Nếu thông tin ngày đăng không có sẳn ở ngoài bài báo*
+ *Thông tin ngày đăng của file BabylonBee em chưa kịp chuẩn hóa*
+
+- Truy cập link bài viết.
+- Dùng Beautiful Soup để tải html.
+- Dùng findAll để tìm ra thông tin quan tâm.
+
+    ```python
+    def get_date(self,url):
+        page = requests.get(url)
+        soup = bs(page.text, 'html.parser')
+        date_line = str(soup.body.findAll('p',attrs={'class':'byline'}))
+        date = date_line[(date_line.find('Updated')+8):-5]
+        return date
+
 
