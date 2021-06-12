@@ -164,3 +164,6 @@ Công cụ sử dụng **Python Crawl** dữ liệu
     publication_dates = soup.findAll('span', class_='show-for-xlarge')
     dates = [date.text for date in publication_dates]
 5. Lưu data vừa lấy vào file
+
+### Nguyễn Đại Kỳ
+
