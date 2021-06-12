@@ -32,7 +32,8 @@ Gồm **120.000** records từ
 | ---------------------------- | -------- | ----------- | ----------------- |
 | https://www.theguardian.com/ | 34230    | Chính thống | Văn Viết Hiếu Anh |
 | https://www.cbsnews.com      | 60735    | Chính thống | Văn Viết Hiếu Anh |
-|                              |          |             |                   |
+| https://thehardtimes.net     | 5917     | Châm biếm   | Lê Văn Phước      |
+| https://www.theaustralian.com.au | 50151  | Chính thống | Lê Văn Phước     |
 
 ## Dataset Format
 
