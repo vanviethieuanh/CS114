@@ -254,7 +254,9 @@ Công cụ sử dụng **Selenium** và **Beautiful Soup**
     ```
 
 3. Lấy thông tin ngày đăng
+
  *Nếu thông tin ngày đăng không có sẳn ở ngoài bài báo*
+ 
  *Thông tin ngày đăng của file BabylonBee em chưa kịp chuẩn hóa*
 
 - Truy cập link bài viết.
