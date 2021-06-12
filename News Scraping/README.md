@@ -6,23 +6,23 @@
 
 19521225 Văn Viết Hiếu Anh
 
-19522054 Lê Văn Phước 
-
-
+19522054 Lê Văn Phước
 
 **Những trang nhóm lấy dữ liệu:**
 
-- Trang chính thống: 
-  - https://www.theguardian.com/ 
-  - https://www.cbsnews.com 
-  - https://www.theaustralian.com.au/ 
+-   Trang chính thống:
 
-- Trang châm biếm: 
-  - https://clickhole.com/ 
-  - https://thehardtimes.net/ 
+    -   https://www.theguardian.com/
+    -   https://www.cbsnews.com
+    -   https://www.theaustralian.com.au/
 
-  - https://www.thepoke.co.uk/ 
-  - https://babylonbee.com/
+-   Trang châm biếm:
+
+    -   https://clickhole.com/
+    -   https://thehardtimes.net/
+
+    -   https://www.thepoke.co.uk/
+    -   https://babylonbee.com/
 
 ## Tổng quan dữ liệu thu thập
 
@@ -33,8 +33,6 @@ Gồm **120.000** records từ
 | https://www.theguardian.com/ | 34230    | Chính thống | Văn Viết Hiếu Anh |
 | https://www.cbsnews.com      | 60735    | Chính thống | Văn Viết Hiếu Anh |
 |                              |          |             |                   |
-
-
 
 ## Dataset Format
 
@@ -58,15 +56,13 @@ Gồm **120.000** records từ
 
 **is_sarcastic** Bài Viết có phải là châm biếm ?
 
-
-
 ## Quá trình thu thập
 
 ### 19521225 - Văn Viết Hiếu Anh
 
 Công cụ sử dụng **Scrapy**
 
-`pipelines.py` 
+`pipelines.py`
 
 ```python
 class csvWriterPipeline:
@@ -81,57 +77,53 @@ class csvWriterPipeline:
         return item
 ```
 
-
-
 **Các bước thu thập**
 
-1. Sử dụng *JavaScript* trên trình duyệt để gom tất cả những đường dẫn đến các category của trang báo:
+1. Sử dụng _JavaScript_ trên trình duyệt để gom tất cả những đường dẫn đến các category của trang báo:
 
-   ```python
-   # Các đường dẫn đã gom được
-   start_urls = ['https://www.theguardian.com/world/coronavirus-outbreak/all',
-                     'https://www.theguardian.com/world/all',
-                     'https://www.theguardian.com/science/all',
-   					...
-                     'https://www.theguardian.com/lifeandstyle/all',
-                     'https://www.theguardian.com/commentisfree/all'
-       ]
-   ```
+    ```python
+    # Các đường dẫn đã gom được
+    start_urls = ['https://www.theguardian.com/world/coronavirus-outbreak/all',
+                      'https://www.theguardian.com/world/all',
+                      'https://www.theguardian.com/science/all',
+    					...
+                      'https://www.theguardian.com/lifeandstyle/all',
+                      'https://www.theguardian.com/commentisfree/all'
+        ]
+    ```
 
-   
+2. Với mỗi đường dẫn lấy ra tất cả thẻ trong wrapper\* ta được 1 bài viết.
 
-2. Với mỗi đường dẫn lấy ra tất cả thẻ trong wrapper* ta được 1 bài viết.
+    - Với mỗi bài viết lấy các thông tin cần thiết.
 
-   - Với mỗi bài viết lấy các thông tin cần thiết. 
+    - Kiểm tra ngày đăng nếu là ngày 31/12/2017 thì dừng việc thu thập.
 
-   - Kiểm tra ngày đăng nếu là ngày 31/12/2017 thì dừng việc thu thập.
+    - Dùng css Selector tìm đường dẫn đến trang tiếp theo, nếu có trang tiếp theo thì tiếp thục thu thập, nếu không thì dừng lại
 
-   - Dùng css Selector tìm đường dẫn đến trang tiếp theo, nếu có trang tiếp theo thì tiếp thục thu thập, nếu không thì dừng lại
+        \*_chỉ lấy trong wrapper vì nếu lấy ngoài có thể dính một số trang khác ví dụ trang tin nổi bật, tình trạng này xảy ra ở 1 số trang ví dụ CBS News, cấu trúc thẻ HTML của tin nổi bật giống hoàn toàn thẻ tin tức của category đó gây trùng lặp khi thu thập dữ liệu_
 
-     **chỉ lấy trong wrapper vì nếu lấy ngoài có thể dính một số trang khác ví dụ trang tin nổi bật, tình trạng này xảy ra ở 1 số trang ví dụ CBS News, cấu trúc thẻ HTML của tin nổi bật giống hoàn toàn thẻ tin tức của category đó gây trùng lặp khi thu thập dữ liệu*
+    ```python
+        def parse(self, response):
+            for article in response.css('.fc-slice-wrapper ul >li.u-faux-block-link'):
 
-   ```python
-       def parse(self, response):
-           for article in response.css('.fc-slice-wrapper ul >li.u-faux-block-link'):
-   
-               article_link = article.css(
-                   'a.u-faux-block-link__overlay::attr(href)').get()
-               headline = article.css('span.js-headline-text::text').get()
-               posted_at = article.css('time::attr(datetime)').get()
-   
-               if '2017-12-31' == posted_at[:10]:
-                   return
-   
-               yield{
-                   'article_link': article_link,
-                   'headline': headline,
-                   'posted_at': posted_at,
-                   'is_sarcastic': 0
-               }
-   
-           next_page = response.css('a[aria-label=" next page"]').attrib['href']
-           if next_page is not None:
-               yield response.follow(next_page, callback=self.parse)
-   ```
+                article_link = article.css(
+                    'a.u-faux-block-link__overlay::attr(href)').get()
+                headline = article.css('span.js-headline-text::text').get()
+                posted_at = article.css('time::attr(datetime)').get()
+
+                if '2017-12-31' == posted_at[:10]:
+                    return
+
+                yield{
+                    'article_link': article_link,
+                    'headline': headline,
+                    'posted_at': posted_at,
+                    'is_sarcastic': 0
+                }
+
+            next_page = response.css('a[aria-label=" next page"]').attrib['href']
+            if next_page is not None:
+                yield response.follow(next_page, callback=self.parse)
+    ```
 
 ### Lê Văn Phước
