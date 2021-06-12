@@ -1,6 +1,7 @@
 # Báo cáo thu thập dataset cho bài toán "Sarcasm detection in news headline"
 
 > Bài nộp bao gồm: 
+> 
 > Notebook chứa các code cần thiết để crawl dữ liệu: Với mỗi thư mục chứa bài làm (source code) dùng để crawl dữ liệu
 >
 > Báo cáo kết quả quá trình thu thập dữ liệu: file Report.pdf
