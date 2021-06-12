@@ -214,7 +214,8 @@ Công cụ sử dụng **Selenium** và **Beautiful Soup**
 **Các bước thu thập**
 
 1. Lấy tất cả các đường link đến các category của trang báo cần lấy dữ liệu:
-  ```python
+
+    ```python
     # Các đường link đã gom được:
     list_urls = [
       'https://clickhole.com/category/news/',
