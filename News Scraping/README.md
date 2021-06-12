@@ -2,7 +2,7 @@
 
 > Bài nộp bao gồm: 
 > 
-> Notebook chứa các code cần thiết để crawl dữ liệu: Với mỗi thư mục chứa bài làm (source code) dùng để crawl dữ liệu
+> Notebook chứa các code cần thiết để crawl dữ liệu: Với mỗi thư mục chứa bài làm (source code) dùng để crawl dữ liệu tương ứng với mã số sinh viên của các thành viên
 >
 > Báo cáo kết quả quá trình thu thập dữ liệu: file Report.pdf
 >
