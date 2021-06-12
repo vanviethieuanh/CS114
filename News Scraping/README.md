@@ -26,7 +26,7 @@
 
 ## Tổng quan dữ liệu thu thập
 
-Gồm **174.708** records từ
+Gồm **174.753** records từ (Dữ liệu được lưu ở file `data.json` hoặc `data.csv` ở cùng thư mục với file báo cáo)
 
 | Trang                        | Số lượng | Thể loại    | Thành viên        |
 | ---------------------------- | -------- | ----------- | ----------------- |
@@ -61,7 +61,7 @@ Gồm **174.708** records từ
 
 **is_sarcastic** Bài Viết có phải là châm biếm ?
 
-## Quá trình thu thập
+## Quá trình thu thập và xử lý
 
 ### 19521225 - Văn Viết Hiếu Anh
 
@@ -256,7 +256,7 @@ Công cụ sử dụng **Selenium** và **Beautiful Soup**
 3. Lấy thông tin ngày đăng
 
  *Nếu thông tin ngày đăng không có sẳn ở ngoài bài báo*
- 
+
  *Thông tin ngày đăng của file BabylonBee em chưa kịp chuẩn hóa*
 
 - Truy cập link bài viết.
