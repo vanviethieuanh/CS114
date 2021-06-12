@@ -128,3 +128,39 @@ class csvWriterPipeline:
     ```
 
 ### Lê Văn Phước
+Công cụ sử dụng **Python Crawl** dữ liệu
+
+**Các bước thu thập**
+
+1. Lấy tất cả các đường link đến các category của trang báo cần lấy dữ liệu:
+    ```python
+    # Các đường link đã gom được:
+    list_urls = ['https://www.theaustralian.com.au/nation/politics',
+                    'https://www.theaustralian.com.au/business/economics,
+                    'https://www.theaustralian.com.au/sport/football,
+                    ...
+                    'https://thehardtimes.net/culture/',
+                    'https://thehardtimes.net/music/'
+       ]
+2. Từ các đường link trên ta tiến hành lấy dữ liệu
+    ```python
+    response = requests.get('https://www.theaustralian.com.au/nation/politics')
+3. Tách dữ liệu vừa lấy
+    ```python
+    soup = BeautifulSoup(response.content, "html.parser")
+4. Phân tích dữ liệu vừa lấy
+    Ta tiến hành lên trang web xác định data cần lấy trong trang web, từ đó lấy các thẻ và class chứa     data hoặc link các bài báo cần lấy.
+    
+    Xác định các trường cần lấy trong mỗi bài báo:
+        
+        - article_link
+        - headline
+        - posted_at
+        - is_sarcastic
+    ```python
+    titles = soup.findAll('h3', class_='story-block__heading')
+    links = [link.find('a').attrs["href"] for link in titles]
+    headlines = [headline.find('a').text for headline in titles]
+    publication_dates = soup.findAll('span', class_='show-for-xlarge')
+    dates = [date.text for date in publication_dates]
+5. Lưu data vừa lấy vào file
