@@ -149,6 +149,7 @@ Công cụ sử dụng **Python Crawl** dữ liệu
     ```python
     soup = BeautifulSoup(response.content, "html.parser")
 4. Phân tích dữ liệu vừa lấy
+    
     Ta tiến hành lên trang web xác định data cần lấy trong trang web, từ đó lấy các thẻ và class chứa     data hoặc link các bài báo cần lấy.
     
     Xác định các trường cần lấy trong mỗi bài báo:
