@@ -84,3 +84,31 @@ def GetAllFireWild(date,provinceCode,districtCode,wardCode=0):
             })
 
     return records
+
+def WildFireStat(date, provinceCode=0):
+    """Return records of stat firewild of a date, if null return []
+
+    Args:
+        date (str): dd/mm/yyyy
+
+    Returns:
+        array: return an array of record, each individual contain province and distric code
+            and firewild count
+    """
+    formatedDate = date.replace('/','!')
+    url = f'http://firewatchvn.kiemlam.org.vn/fwdata/search/diaphuong/{provinceCode}/0/0/{formatedDate}/{formatedDate}/1/100'
+
+    res = get(url)
+    json = res.json()
+
+    records = []
+    if json:
+        for province in json:
+            for district in province['huyens']:
+                records.append({
+                    'province':province['code'],
+                    'district':district['code'],
+                    'firewildCount':district['sdc']
+                })
+
+    return records
