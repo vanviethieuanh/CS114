@@ -1,0 +1,17 @@
+sign,dir,from,to
+N,North,349,011
+NNE,North-Northeast,012,033
+NE,Northeast,034,056
+ENE,East-Northeast,057,078
+E,East,079,101
+ESE,East-Southeast,102,123
+SE,Southeast,124,146
+SSE,South-Southeast,147,168
+S,South,169,191
+SSW,South-Southwest,192,213
+SW,Southwest,214,236
+WSW,West-Southwest,237,258
+W,West,259,281
+WNW,West-Northwest,282,303
+NW,Northwest,304,326
+NNW,North-Northwest,327,348
