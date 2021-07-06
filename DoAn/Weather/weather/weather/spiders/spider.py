@@ -1,8 +1,10 @@
+from time import time
+from urllib import parse
 import numpy
 
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 from scrapy import Spider
-from scrapy.http import FormRequest, Request
+from scrapy.http import FormRequest, Request, request
 
 import pandas
 
@@ -262,40 +264,56 @@ class WorldWeatherOnlineScraper(Spider):
                 'cloud': records[i+7],
                 'pressure': records[i+8],
             }
+
+
 class IBMWeatherScapper(Spider):
     name = 'ibm-weather'
 
-class IBMGeo2Ward(Spider):
-    name = 'ibm-geo-ward'
+    df_ward_taynguyen_fire = pandas.read_csv(
+        'https://raw.githubusercontent.com/vanviethieuanh/CS114.L21/main/DoAn/TayNguyenWardLongLat.csv')
 
-    wards = pandas.read_csv('https://raw.githubusercontent.com/vanviethieuanh/CS114.L21/main/DoAn/TayNguyenWardLongLat.csv')
-    
-    wards['lat'] = numpy.round(wards['lat'], 2)    
-    wards['long'] = numpy.round(wards['long'], 2)    
+    df_ward_taynguyen_fire['long'] = numpy.round(
+        df_ward_taynguyen_fire['long'], 2)
+    df_ward_taynguyen_fire['lat'] = numpy.round(
+        df_ward_taynguyen_fire['lat'], 2)
 
     def start_requests(self):
-        requests_list = []
-
-        for i, w in self.wards.iterrows():
-            requests_list.append(Request(
-                f"https://weather.com/weather/today/l/{w['lat']},{w['long']}?par=google",
+        requests = []
+        for i, ward in self.df_ward_taynguyen_fire.iterrows:
+            requests.append(request.Request(
+                url=f"https://dsx.weather.com/wxd/v3/PastObsAvg/en_US/20140101/35/{ward['lat']},{ward['long']}?format=json&apiKey=7bb1c920-7027-4289-9c96-ae5e263980bc",
                 meta={
-                    'ward': w['ward'],
-                    'district': w['district'],
-                    'province': w['province'],
-                    'long':w['long'],
-                    'lat':w['lat']
-            }))
+                    'ward': ward
+                }
+            ))
 
-        return requests_list
-    
+        return requests
+
     def parse(self, response, **kwargs):
-        title = response.css('title::text').get()
-        yield{
-            'ibm_title': title.split(',')[0],
-            'ward':response.meta['ward'],
-            'district': response.meta['district'],
-            'province': response.meta['province'],
-            'long':response.meta['long'],
-            'lat':response.meta['lat']
-        }
+        json = response.json()
+        ward = response.meta['ward']
+
+        for d in json:
+            yield {
+                'ward':ward['ward_code'],
+                'date':d['Temperatures']['highTmISOLocal'][:10],
+                'highC': d['Temperatures']['highC'],
+                'lowC': d['Temperatures']['lowC'],
+                'sun_rise': d['SunData']['sunrise'],
+                'sun_set': d['SunData']['sunset']
+            }
+
+        last = json[-1]
+        recentDate = datetime.strptime(
+            last['Temperatures']['highTmISO'][:10], '%Y-%M-%d')
+        next = recentDate + timedelta(days=1)
+
+        if recentDate.date != datetime.today:
+            response.follow(
+                request.Request(
+                    url=f"https://dsx.weather.com/wxd/v3/PastObsAvg/en_US/{next.strftime('%Y%M%d')}/35/{ward['lat']},{ward['long']}?format=json&apiKey=7bb1c920-7027-4289-9c96-ae5e263980bc",
+                    meta={
+                        'ward': ward
+                    }
+                )
+            )
