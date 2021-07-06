@@ -265,31 +265,37 @@ class WorldWeatherOnlineScraper(Spider):
 class IBMWeatherScapper(Spider):
     name = 'ibm-weather'
 
-class IBMWeatherGeoCodeScapper(Spider):
-    name = 'ibm-weather-geo'
+class IBMGeo2Ward(Spider):
+    name = 'ibm-geo-ward'
 
-    df_wards_taynguyen = pandas.read_csv('https://github.com/vanviethieuanh/CS114.L21/raw/main/DoAn/TayNguyenWardLongLat.csv')
-    latitude = numpy.round(df_wards_taynguyen['lat'], 2)
-    longtitude = numpy.round(df_wards_taynguyen['long'], 2)
+    wards = pandas.read_csv('https://raw.githubusercontent.com/vanviethieuanh/CS114.L21/main/DoAn/TayNguyenWardLongLat.csv')
+    
+    wards['lat'] = numpy.round(wards['lat'], 2)    
+    wards['long'] = numpy.round(wards['long'], 2)    
 
     def start_requests(self):
         requests_list = []
 
-        for i in range(self.latitude.shape[0]):
+        for i, w in self.wards.iterrows():
             requests_list.append(Request(
-                f'https://weather.com/weather/today/l/{self.latitude[i]},{self.longtitude[i]}?par=google',
+                f"https://weather.com/weather/today/l/{w['lat']},{w['long']}?par=google",
                 meta={
-                    'ward': self.df_wards_taynguyen['ward'].iloc[i]
-                }))
+                    'ward': w['ward'],
+                    'district': w['district'],
+                    'province': w['province'],
+                    'long':w['long'],
+                    'lat':w['lat']
+            }))
 
         return requests_list
-
-        urls = []
-        
-        return urls
     
     def parse(self, response, **kwargs):
-        yield {
-            'ibm-title': response.css('title::text').get(),
-            'ward': response.meta['ward']
+        title = response.css('title::text').get()
+        yield{
+            'ibm_title': title.split(',')[0],
+            'ward':response.meta['ward'],
+            'district': response.meta['district'],
+            'province': response.meta['province'],
+            'long':response.meta['long'],
+            'lat':response.meta['lat']
         }
