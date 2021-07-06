@@ -2,7 +2,9 @@ import numpy
 
 from datetime import date, timedelta
 from scrapy import Spider
-from scrapy.http import FormRequest
+from scrapy.http import FormRequest, Request
+
+import pandas
 
 BASE = date(2018, 1, 1)
 DATES = numpy.array(
@@ -260,3 +262,34 @@ class WorldWeatherOnlineScraper(Spider):
                 'cloud': records[i+7],
                 'pressure': records[i+8],
             }
+class IBMWeatherScapper(Spider):
+    name = 'ibm-weather'
+
+class IBMWeatherGeoCodeScapper(Spider):
+    name = 'ibm-weather-geo'
+
+    df_wards_taynguyen = pandas.read_csv('https://github.com/vanviethieuanh/CS114.L21/raw/main/DoAn/TayNguyenWardLongLat.csv')
+    latitude = numpy.round(df_wards_taynguyen['lat'], 2)
+    longtitude = numpy.round(df_wards_taynguyen['long'], 2)
+
+    def start_requests(self):
+        requests_list = []
+
+        for i in range(self.latitude.shape[0]):
+            requests_list.append(Request(
+                f'https://weather.com/weather/today/l/{self.latitude[i]},{self.longtitude[i]}?par=google',
+                meta={
+                    'ward': self.df_wards_taynguyen['ward'].iloc[i]
+                }))
+
+        return requests_list
+
+        urls = []
+        
+        return urls
+    
+    def parse(self, response, **kwargs):
+        yield {
+            'ibm-title': response.css('title::text').get(),
+            'ward': response.meta['ward']
+        }
