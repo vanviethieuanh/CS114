@@ -1,5 +1,3 @@
-from time import time
-from urllib import parse
 import numpy
 
 from datetime import date, timedelta, datetime
@@ -270,7 +268,7 @@ class IBMWeatherScapper(Spider):
     name = 'ibm-weather'
 
     df_ward_taynguyen_fire = pandas.read_csv(
-        'https://raw.githubusercontent.com/vanviethieuanh/CS114.L21/main/DoAn/TayNguyenWardLongLat.csv')
+        'https://raw.githubusercontent.com/vanviethieuanh/CS114.L21/main/DoAn/Weather/taynguyen_wards_longlat.csv')
 
     df_ward_taynguyen_fire['long'] = numpy.round(
         df_ward_taynguyen_fire['long'], 2)
@@ -279,23 +277,28 @@ class IBMWeatherScapper(Spider):
 
     def start_requests(self):
         requests = []
-        for i, ward in self.df_ward_taynguyen_fire.iterrows:
+        for i, ward in self.df_ward_taynguyen_fire.iterrows():
             requests.append(request.Request(
-                url=f"https://dsx.weather.com/wxd/v3/PastObsAvg/en_US/20140101/35/{ward['lat']},{ward['long']}?format=json&apiKey=7bb1c920-7027-4289-9c96-ae5e263980bc",
+                url=f"https://dsx.weather.com/wxd/v3/PastObsAvg/en_US/20140101/35/{ward['lat']:.2f},{ward['long']:.2f}?format=json&apiKey=7bb1c920-7027-4289-9c96-ae5e263980bc",
                 meta={
-                    'ward': ward
-                }
+                    'ward_code': ward['ward_code'],
+                    'long':ward['long'],
+                    'lat':ward['lat']
+                },
+                callback=self.parse
             ))
 
         return requests
 
     def parse(self, response, **kwargs):
         json = response.json()
-        ward = response.meta['ward']
+        ward_code = response.meta['ward_code']
+        long = response.meta['long']
+        lat = response.meta['lat']
 
         for d in json:
             yield {
-                'ward':ward['ward_code'],
+                'ward':ward_code,
                 'date':d['Temperatures']['highTmISOLocal'][:10],
                 'highC': d['Temperatures']['highC'],
                 'lowC': d['Temperatures']['lowC'],
@@ -308,12 +311,16 @@ class IBMWeatherScapper(Spider):
             last['Temperatures']['highTmISO'][:10], '%Y-%M-%d')
         next = recentDate + timedelta(days=1)
 
-        if recentDate.date != datetime.today:
-            response.follow(
-                request.Request(
-                    url=f"https://dsx.weather.com/wxd/v3/PastObsAvg/en_US/{next.strftime('%Y%M%d')}/35/{ward['lat']},{ward['long']}?format=json&apiKey=7bb1c920-7027-4289-9c96-ae5e263980bc",
+
+        if recentDate.date() == datetime.today():
+            return
+        else:
+            yield response.follow(
+                    url=f"https://dsx.weather.com/wxd/v3/PastObsAvg/en_US/{next.strftime('%Y%M%d')}/45/{lat:.2f},{long:.2f}?format=json&apiKey=7bb1c920-7027-4289-9c96-ae5e263980bc",
                     meta={
-                        'ward': ward
-                    }
-                )
+                        'ward_code': ward_code,
+                        'long':long,
+                        'lat':lat
+                    },
+                    callback=self.parse
             )
