@@ -1,0 +1,48 @@
+INFO: Scrapy 2.4.1 started (bot: weather)
+INFO: Versions: lxml 4.6.3.0, libxml2 2.9.12, cssselect 1.1.0, parsel 1.5.2, w3lib 1.21.0, Twisted 21.2.0, Python 3.7.10 (default, Feb 26 2021, 18:47:35) - [GCC 7.3.0], pyOpenSSL 20.0.1 (OpenSSL 1.1.1k  25 Mar 2021), cryptography 3.4.7, Platform Linux-5.11.0-7614-generic-x86_64-with-debian-bullseye-sid
+DEBUG: Using reactor: twisted.internet.epollreactor.EPollReactor
+INFO: Overridden settings:
+{'BOT_NAME': 'weather',
+ 'NEWSPIDER_MODULE': 'weather.spiders',
+ 'SPIDER_MODULES': ['weather.spiders']}
+INFO: Telnet Password: e97fdf2b4eca7d90
+INFO: Enabled extensions:
+['scrapy.extensions.corestats.CoreStats',
+ 'scrapy.extensions.telnet.TelnetConsole',
+ 'scrapy.extensions.memusage.MemoryUsage',
+ 'scrapy.extensions.feedexport.FeedExporter',
+ 'scrapy.extensions.logstats.LogStats']
+INFO: Enabled downloader middlewares:
+['scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
+ 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
+ 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
+ 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats']
+INFO: Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+INFO: Enabled item pipelines:
+['weather.pipelines.WeatherPipeline']
+INFO: Spider opened
+INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+INFO: Telnet console listening on 127.0.0.1:6023
+INFO: Received SIGINT, shutting down gracefully. Send again to force 
+INFO: Closing spider (shutdown)
+INFO: Received SIGINT twice, forcing unclean shutdown
+DEBUG: Retrying <GET https://dsx.weather.com/wxd/v3/PastObsAvg/20140101/35/12.72,108.01?format=json&apiKey=7bb1c920-7027-4289-9c96-ae5e263980bc&fbclid=IwAR1IgpD8qPU6ZaHqDnZT1tMl95Y4G8gfGvIYmpM3CGGIqyjwQeaAmbZZ8SE> (failed 1 times): [<twisted.python.failure.Failure twisted.internet.error.ConnectionLost: Connection to the other side was lost in a non-clean fashion: Connection lost.>]
+DEBUG: Retrying <GET https://dsx.weather.com/wxd/v3/PastObsAvg/20140101/35/12.84,107.87?format=json&apiKey=7bb1c920-7027-4289-9c96-ae5e263980bc&fbclid=IwAR1IgpD8qPU6ZaHqDnZT1tMl95Y4G8gfGvIYmpM3CGGIqyjwQeaAmbZZ8SE> (failed 1 times): [<twisted.python.failure.Failure twisted.internet.error.ConnectionLost: Connection to the other side was lost in a non-clean fashion: Connection lost.>]
+DEBUG: Retrying <GET https://dsx.weather.com/wxd/v3/PastObsAvg/20140101/35/12.79,107.97?format=json&apiKey=7bb1c920-7027-4289-9c96-ae5e263980bc&fbclid=IwAR1IgpD8qPU6ZaHqDnZT1tMl95Y4G8gfGvIYmpM3CGGIqyjwQeaAmbZZ8SE> (failed 1 times): [<twisted.python.failure.Failure twisted.internet.error.ConnectionLost: Connection to the other side was lost in a non-clean fashion: Connection lost.>]
+DEBUG: Retrying <GET https://dsx.weather.com/wxd/v3/PastObsAvg/20140101/35/12.72,107.94?format=json&apiKey=7bb1c920-7027-4289-9c96-ae5e263980bc&fbclid=IwAR1IgpD8qPU6ZaHqDnZT1tMl95Y4G8gfGvIYmpM3CGGIqyjwQeaAmbZZ8SE> (failed 1 times): [<twisted.python.failure.Failure twisted.internet.error.ConnectionLost: Connection to the other side was lost in a non-clean fashion: Connection lost.>]
+DEBUG: Retrying <GET https://dsx.weather.com/wxd/v3/PastObsAvg/20140101/35/12.78,107.91?format=json&apiKey=7bb1c920-7027-4289-9c96-ae5e263980bc&fbclid=IwAR1IgpD8qPU6ZaHqDnZT1tMl95Y4G8gfGvIYmpM3CGGIqyjwQeaAmbZZ8SE> (failed 1 times): [<twisted.python.failure.Failure twisted.internet.error.ConnectionLost: Connection to the other side was lost in a non-clean fashion: Connection lost.>]
+DEBUG: Retrying <GET https://dsx.weather.com/wxd/v3/PastObsAvg/20140101/35/12.88,107.87?format=json&apiKey=7bb1c920-7027-4289-9c96-ae5e263980bc&fbclid=IwAR1IgpD8qPU6ZaHqDnZT1tMl95Y4G8gfGvIYmpM3CGGIqyjwQeaAmbZZ8SE> (failed 1 times): [<twisted.python.failure.Failure twisted.internet.error.ConnectionLost: Connection to the other side was lost in a non-clean fashion: Connection lost.>]
+DEBUG: Retrying <GET https://dsx.weather.com/wxd/v3/PastObsAvg/20140101/35/12.76,107.99?format=json&apiKey=7bb1c920-7027-4289-9c96-ae5e263980bc&fbclid=IwAR1IgpD8qPU6ZaHqDnZT1tMl95Y4G8gfGvIYmpM3CGGIqyjwQeaAmbZZ8SE> (failed 1 times): [<twisted.python.failure.Failure twisted.internet.error.ConnectionLost: Connection to the other side was lost in a non-clean fashion: Connection lost.>]
+DEBUG: Retrying <GET https://dsx.weather.com/wxd/v3/PastObsAvg/20140101/35/12.93,107.68?format=json&apiKey=7bb1c920-7027-4289-9c96-ae5e263980bc&fbclid=IwAR1IgpD8qPU6ZaHqDnZT1tMl95Y4G8gfGvIYmpM3CGGIqyjwQeaAmbZZ8SE> (failed 1 times): [<twisted.python.failure.Failure twisted.internet.error.ConnectionLost: Connection to the other side was lost in a non-clean fashion: Connection lost.>]

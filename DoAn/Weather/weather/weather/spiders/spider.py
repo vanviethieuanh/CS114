@@ -1,10 +1,12 @@
 import numpy
+import pandas
 
 from datetime import date, timedelta, datetime
 from scrapy import Spider
 from scrapy.http import FormRequest, Request, request
 
-import pandas
+import logging
+from scrapy.utils.log import configure_logging 
 
 BASE = date(2018, 1, 1)
 DATES = numpy.array(
@@ -265,6 +267,13 @@ class WorldWeatherOnlineScraper(Spider):
 
 
 class IBMWeatherScapper(Spider):
+    configure_logging(install_root_handler=False)
+    logging.basicConfig(
+        filename='error-log.txt',
+        format='%(levelname)s: %(message)s',
+        level=logging.ERROR
+    )
+    
     name = 'ibm-weather'
 
     df_ward_taynguyen_fire = pandas.read_csv(
@@ -279,7 +288,7 @@ class IBMWeatherScapper(Spider):
         requests = []
         for i, ward in self.df_ward_taynguyen_fire.iterrows():
             requests.append(request.Request(
-                url=f"https://dsx.weather.com/wxd/v3/PastObsAvg/en_US/20140101/35/{ward['lat']:.2f},{ward['long']:.2f}?format=json&apiKey=7bb1c920-7027-4289-9c96-ae5e263980bc",
+                url=f"https://dsx.weather.com/wxd/v3/PastObsAvg/20140101/35/{ward['lat']:.2f},{ward['long']:.2f}?format=json&apiKey=7bb1c920-7027-4289-9c96-ae5e263980bc&fbclid=IwAR1IgpD8qPU6ZaHqDnZT1tMl95Y4G8gfGvIYmpM3CGGIqyjwQeaAmbZZ8SE",
                 meta={
                     'ward_code': ward['ward_code'],
                     'long':ward['long'],
@@ -299,11 +308,14 @@ class IBMWeatherScapper(Spider):
         for d in json:
             yield {
                 'ward':ward_code,
-                'date':d['Temperatures']['highTmISOLocal'][:10],
-                'highC': d['Temperatures']['highC'],
-                'lowC': d['Temperatures']['lowC'],
-                'sun_rise': d['SunData']['sunrise'],
-                'sun_set': d['SunData']['sunset']
+                'date':d.get('Temperatures', {}).get('highTmISOLocal','')[:10],
+                'highC': d.get('Temperatures', {}).get('highC',''),
+                'lowC': d.get('Temperatures', {}).get('lowC',''),
+                'sun_rise': d.get('SunData', {}).get('sunrise',''),
+                'sun_set': d.get('SunData',{}).get('sunset',''),
+                'sevenDayPrecipCm':d.get('Precips',{}).get('sevenDayPrecipCm',''),
+                'mtdPrecipCm':d.get('Precips',{}).get('mtdPrecipCm',''),
+                'precip24Cm':d.get('Precips',{}).get('precip24Cm',''),
             }
 
         last = json[-1]
@@ -316,7 +328,7 @@ class IBMWeatherScapper(Spider):
             return
         else:
             yield response.follow(
-                    url=f"https://dsx.weather.com/wxd/v3/PastObsAvg/en_US/{next.strftime('%Y%M%d')}/45/{lat:.2f},{long:.2f}?format=json&apiKey=7bb1c920-7027-4289-9c96-ae5e263980bc",
+                    url=f"https://dsx.weather.com/wxd/v3/PastObsAvg/{next.strftime('%Y%M%d')}/35/{lat:.2f},{long:.2f}?format=json&apiKey=7bb1c920-7027-4289-9c96-ae5e263980bc&fbclid=IwAR1IgpD8qPU6ZaHqDnZT1tMl95Y4G8gfGvIYmpM3CGGIqyjwQeaAmbZZ8SE",
                     meta={
                         'ward_code': ward_code,
                         'long':long,
