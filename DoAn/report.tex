@@ -22,6 +22,7 @@
 % !TEX program = xelatex
 \documentclass{article}
 
+\usepackage[a4paper, total={6in, 10in}]{geometry}
 \usepackage{fontspec}
 \usepackage[version=3]{mhchem} % Package for chemical equation typesetting
 \usepackage{siunitx} % Provides the \SI{}{} and \si{} command for typesetting SI units
@@ -33,24 +34,21 @@
 
 \renewcommand{\labelenumi}{\alph{enumi}.} % Make numbering in the enumerate environment by letter rather than number (e.g. section 6)
 
-%\usepackage{times} % Uncomment to use the Times New Roman font
-
 %----------------------------------------------------------------------------------------
 %	DOCUMENT INFORMATION
 %----------------------------------------------------------------------------------------
 
 \begin{document}
 
-\title{Daily fire forecasting \\ over Western Highlands, Vietnam \\ using historical weather data} % Title
+\title{Daily fire forecasting over Western Highlands, Vietnam \\ using historical weather data} % Title
 \date{\today} % Date for the report
 \maketitle % Insert the title, author and date
 
 \begin{center}
     \begin{tabular}{l l}
-        Date Performed: & January 1, 2012              \\ % Date the experiment was performed
+        Date Performed: & June 26, 2021                \\ % Date the experiment was performed
         Instructor:     & Lê Đình Duy                  \\
                         & Phạm Nguyễn Trường An        \\
-
         Team members:   & Văn Viết Hiếu Anh - 19521225 \\
                         & Nguyễn Đại Kỳ - 19521731     \\
                         & Lê Văn Phước - 19522054      \\
@@ -69,17 +67,8 @@
 
 \section{Objective}
 
-To determine the atomic weight of magnesium via its reaction with oxygen and to study the stoichiometry of the reaction (as defined in \ref{definitions}):
-
-\begin{center}\ce{2 Mg + O2 -> 2 MgO}\end{center}
-
-% If you have more than one objective, uncomment the below:
-%\begin{description}
-%\item[First Objective] \hfill \\
-%Objective 1 text
-%\item[Second Objective] \hfill \\
-%Objective 2 text
-%\end{description}
+To build a model that can forecasting the warning level
+of wildfire for each invidual place in Western Highlands, Vietnam
 
 \subsection{Definitions}
 \label{definitions}
