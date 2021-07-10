@@ -1,0 +1,8 @@
+# Latex
+# Ignore all log
+report.*
+
+# Do not ignore the tex and result
+!report.tex
+!report.pdf
+
