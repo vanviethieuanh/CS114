@@ -1,0 +1,7 @@
+{
+    "downloader/request_count": 16464,
+    "downloader/response_status_count/200": 15759,
+    "downloader/response_status_count/204": 118,
+    "downloader/response_status_count/400": 585,
+    "downloader/response_status_count/503": 2
+}
