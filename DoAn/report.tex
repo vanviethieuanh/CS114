@@ -68,10 +68,49 @@ Hệ thống này cung cấp dữ liệu về điểm cháy ghi nhận được 
 
 \subsection{Source of Data}
 
-\qquad Cả 3 nguồn dữ liệu gồm 2 nguồn dữ liệu thời tiết và nguồn dữ liệu về điểm cháy đều không có API cung cấp một cách đại chúng cho việc khai thác. Tuy nhiên vì các website này được xây dựng dựa trên cấu trúc Asynchronous (ASP.NET, Jquery hoặc ReactJS) nên sau khi phân tích và ghi lại các reqest, ta hoàn toàn có thể tìm được các cổng API và phương thức giao tiếp với server. Từ đó dùng vào việc khai thác dữ liệu.
+\qquad Cả 3 nguồn dữ liệu gồm 2 nguồn dữ liệu thời tiết và nguồn dữ liệu về điểm cháy đều không có API cung cấp một cách đại chúng cho việc khai thác. Tuy nhiên vì các website này được xây dựng dựa trên cấu trúc Asynchronous (ASP.NET, Jquery hoặc ReactJS), nên sau khi phân tích và ghi lại các reqest, ta hoàn toàn có thể tìm được các cổng API và phương thức giao tiếp với server. Từ đó dùng vào việc khai thác dữ liệu tự động.
 
 \subsubsection{Weather Data}
+
+\qquad Có thể nói việc lấy dữ liệu thời tiết là công đoạn gây ra nhiều khó khăn nhất. Đa phần dữ liệu lịch sử thời tiết là rất lớn và các công ty hay tập đoàn công nghệ đều dùng để bán chứ không public trên website của họ. Ngay cả trên giao diện chính của weather.com của IBM cũng chỉ hiển thị dữ liệu thời tiết trong 2 năm trở lại (tức là 2021 và 2020). Tuy nhiên sau khi phân tích và tìm ra API và thử thay đổi các thông số, ta hoàn toàn có thể nhận được dữ liệu trong thời gian xa hơn.
+
 \paragraph{weather.com}
+Như đã nói ở trên, sau khi phân tích các request mà website này gửi về server của họ, chúng em đã tìm ra cổng API cung cấp dữ liệu thời tiết. Sau khi thay đổi các thông số, cổng API này chấp nhận cung cấp dữ liệu đến 1/1/2014.
+
+Dữ liệu từ website này cung cấp có độ chính xác đến từng tọa độ, có nghĩa là chỉ cần cung cấp tọa độ (làm tròn đến 2 chữ số thập phân) thì server sẽ trả về thời tiết tại điểm đó tùy vào thời gian mà ta muốn. Tuy nhiên điểm yếu của dữ liệu này là chỉ cung cấp các đặc tính cơ bản nhất của thời tiết tại địa điểm đó gồm: nhiệt độ cao nhất và thấp nhất trong ngày, thời gian mặt trời mọc và lặn, lượng mưa (tích lũy trong 7 ngày, trong 1 tháng hoặc chỉ ngày hôm đó)
+
+\begin{table}[]
+      \begin{tabular}{lllllllll}
+            ward    & date       & max & min & sunrise  & sunset   & 7\_rain & m\_rain & 24\_rain \\
+            24727.0 & 2016-10-17 & 30  & 25  & 05:36 AM & 05:28 PM & 5.94    & 30.91   & 1.82     \\
+            24727.0 & 2016-10-18 & 30  & 25  & 05:36 AM & 05:28 PM & 7.54    & 32.66   & 1.75     \\
+            24727.0 & 2016-10-19 & 30  & 25  & 05:36 AM & 05:27 PM & 7.54    & 32.96   & 0.3      \\
+            24761.0 & 2019-10-14 & 32  & 24  & 05:36 AM & 05:30 PM & 0.02    & 0.07    & 0.0      \\
+            24761.0 & 2019-10-15 & 32  & 25  & 05:36 AM & 05:30 PM & 0.02    & 0.07    & 0.0      \\
+            24761.0 & 2019-10-16 & 32  & 25  & 05:36 AM & 05:29 PM & 0.02    & 0.07    & 0.02     \\
+            24761.0 & 2019-10-17 & 32  & 25  & 05:36 AM & 05:29 PM & 0.02    & 0.07    & 0.0      \\
+            24761.0 & 2019-10-18 & 32  & 25  & 05:36 AM & 05:28 PM & 0.02    & 0.07    & 0.0      \\
+            24761.0 & 2019-10-19 & 32  & 26  & 05:36 AM & 05:28 PM & 0.02    & 0.07    & 0.0      \\
+            24761.0 & 2019-10-20 & 32  & 26  & 05:36 AM & 05:27 PM & 0.02    & 0.1     & 0.0      \\
+            24761.0 & 2019-10-21 & 33  & 25  & 05:36 AM & 05:27 PM & 0.02    & 0.1     & 0.0      \\
+            24761.0 & 2019-10-22 & 32  & 25  & 05:37 AM & 05:26 PM & 0.02    & 0.1     & 0.0      \\
+            24761.0 & 2019-10-23 & 33  & 25  & 05:37 AM & 05:26 PM & 0.0     & 0.1     & 0.0      \\
+            24761.0 & 2019-10-24 & 33  & 25  & 05:37 AM & 05:25 PM & 0.0     & 0.1     & 0.0
+      \end{tabular}
+\end{table}
+
+Sau khoảng nhiều ngày khai thác và xử lý, nhóm đã lấy được dữ liệu của 5 tỉnh Tây Nguyên vào từng xã từng ngày kéo dài từ 1/1/2014 đến 8/6/2021. Dữ liệu gồm các trường cơ bản sau:
+
+\begin{itemize}
+      \item ward: Mã của xã, phường, thị trấn, thị xã. Vì sẽ có những địa điểm trùng tên nên nhóm sử dụng mã để phân biệt các địa phương (mã này cung cấp bởi API của firewatchvn.kiemlam.org.vn\cite{website:firewatch-administrative})
+      \item date: là ngày mà record được ghi lại.
+      \item max/min: là nhiệt độ cao nhất và thấp nhất được ghi nhận trong ngày(celcius).
+      \item sunrise/sunset: là thời gian mặt trời mọc và lặn.
+      \item 7\_rain: lượng mưa tổng tính từ ngày chủ nhật gần nhất trước đó (cm)
+      \item m\_rain: lượng mưa tổng tính từ ngày 1 của tháng đó(cm)
+      \item 24\_rain: lượng mưa ghi nhận trong ngày(cm)
+\end{itemize}
+
 
 \paragraph{worldweatheronline.com}
 
