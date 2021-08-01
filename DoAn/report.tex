@@ -74,7 +74,9 @@ Trong 3 nguồn dữ liệu thì chỉ có worldweatheronline.com sử dụng SS
 \subsubsection{Weather Data}
 \qquad\emph{Việc tìm các nguồn dữ liệu khác về thời tiết ngoài 2 nguồn trên đã được thực hiện song các nguồn này đều có những điểm thiếu rất quan trọng ví dụ như API của website chỉ cung cấp trong 1 năm trở lại hay các website này không cung cấp đủ nhiều địa phương mà chỉ cung cấp dữ liệu ở những thành phố cụ thể.}
 
-Trên trang web của weather.com dữ liệu thời tiết chỉ hiển thị dữ liệu thời tiết trong 2 năm trở lại (tức là 2021 và 2020). Tuy nhiên vì sử dụng Ajax nên sau khi phân tích và ghi lại các request mà website gửi đi cũng như các response nhận về, việc có thể tìm được các cổng API và phương thức giao tiếp với server, từ đó dùng vào việc khai thác dữ liệu tự động trong nhiều năm trước nữa là hoàn toàn có hy vọng.
+Có thể nói việc lấy dữ liệu thời tiết là công đoạn gây ra nhiều khó khăn nhất. Đa phần dữ liệu lịch sử thời tiết là rất lớn và các công ty hay tập đoàn công nghệ đều dùng để bán chứ không public trên website của họ. Ngay cả trên giao diện chính của weather.com của IBM cũng chỉ hiển thị dữ liệu thời tiết trong 2 năm trở lại (tức là 2021 và 2020).
+
+Tuy nhiên vì sử dụng Ajax nên sau khi phân tích và ghi lại các request mà website gửi đi cũng như các response nhận về, việc có thể tìm được các cổng API và phương thức giao tiếp với server, từ đó dùng vào việc khai thác dữ liệu tự động trong nhiều năm trước nữa là hoàn toàn có hy vọng.
 
 Về việc tìm nguồn dữ liệu tương tự đã được khai thác trước, nhóm đã từng thử tìm kiếm nhưng để đạt được yêu cầu chi tiết đến từng địa phương với thời gian kéo dài thì không tìm được dữ liệu nào đạt yêu cầu. Ngay cả khi join vào Slack của \href{https://callforcode.org/}{Call For Code} năm nay để xin hỗ trợ vì đề tài này có liên quan đến cuộc thi thì phía ban tổ chức cuộc thi cũng trả lời rằng dữ liệu này không cung cấp cho thí sinh. Ngoài ra nhóm cũng đã thử gửi mail cho Trung tâm Dự báo khí tượng thuỷ văn quốc gia nhưng cũng không nhận được phản hồi. Hiển nhiên, việc tự đi thu thập dữ liệu là tất yếu.
 
@@ -103,13 +105,20 @@ Sau đó mô tả các thông số chi tiết của bộ dữ liệu, kèm theo 
 
 \subsection{Quá trình thu thập dữ liệu}
 
+Tất cả dữ liệu của nhóm đều bắt đầu bằng 1 quy trình chung để kiểm tra xem nguồn dữ liệu có đáp ứng các yêu cầu hay không.
 
-\subsubsection{Weather Data}
+\includegraphics[width=6in]{images/process.png}
 
-\qquad Có thể nói việc lấy dữ liệu thời tiết là công đoạn gây ra nhiều khó khăn nhất. Đa phần dữ liệu lịch sử thời tiết là rất lớn và các công ty hay tập đoàn công nghệ đều dùng để bán chứ không public trên website của họ. Ngay cả trên giao diện chính của weather.com của IBM cũng chỉ hiển thị dữ liệu thời tiết trong 2 năm trở lại (tức là 2021 và 2020). Tuy nhiên sau khi phân tích và tìm ra API và thử thay đổi các thông số, ta hoàn toàn có thể nhận được dữ liệu trong thời gian xa hơn.
+\subsubsection{weather.com}
+\qquad Để tìm ra API phục vụ cho việc crawl ta vào trang Monthly của một địa phương cụ thể sau đó navigate đến các trang chứa dữ liệu của các tháng trước (việc này giúp cho website sử dụng các API yêu cầu dữ liệu thời tiết quá khứ). Kiểm tra các response trong filter XHR ta có thể tìm ra những response tốt nhất chứa dữ liệu cần thiết.
 
-\paragraph{weather.com}
-Như đã nói ở trên, sau khi phân tích các request mà website này gửi về server của họ, chúng em đã tìm ra cổng API cung cấp dữ liệu thời tiết. Sau khi thay đổi các thông số, cổng API này chấp nhận cung cấp dữ liệu đến 1/1/2014.
+\includegraphics[width=6in]{images/inspect.png}
+
+Tiếp theo đó khi đã xác nhận API này đủ điều kiện ra kiểm tra ý nghĩa của các thông số trong request, thử thay đổi thông số để kiểm tra dữ liệu kéo dài được đến bao lâu. Trên thực tế ta chỉ chọn một thời điểm đủ xa để chấp nhận được, nếu đạt sẽ crawl ngược thời gian đến khi hết crawl được thì dừng.
+
+\includegraphics[width=6in]{images/checkpast.png}
+
+Vì dữ liệu chấp nhận đến 2016 nên sẽ tiến hành crawl dữ liệu.
 
 Dữ liệu từ website này cung cấp có độ chính xác đến từng tọa độ, có nghĩa là chỉ cần cung cấp tọa độ (làm tròn đến 2 chữ số thập phân) thì server sẽ trả về thời tiết tại điểm đó tùy vào thời gian mà ta muốn. Tuy nhiên điểm yếu của dữ liệu này là chỉ cung cấp các đặc tính cơ bản nhất của thời tiết tại địa điểm đó gồm: nhiệt độ cao nhất và thấp nhất trong ngày, thời gian mặt trời mọc và lặn, lượng mưa (tích lũy trong 7 ngày, trong 1 tháng hoặc chỉ ngày hôm đó).
 
@@ -147,8 +156,10 @@ Dưới đây là một đoạn mẫu trong dữ liệu.
       \end{tabular}
 \end{table}
 
-\paragraph{worldweatheronline.com}
-Trong các we
+\subsubsection{worldweatheronline.com}
+\subsubsection{firewatchvn.kiemlam.org.vn}
+
+
 
 \subsection{Xây dựng bộ dữ liệu}
 

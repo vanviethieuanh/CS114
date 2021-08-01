@@ -1,0 +1,87 @@
+%% Creator: Inkscape 1.1 (ce6663b3b7, 2021-05-25), www.inkscape.org
+%% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
+%% Accompanies image file 'verify.pdf' (pdf, eps, ps)
+%%
+%% To include the image in your LaTeX document, write
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics{<filename>.pdf}
+%% To scale the image, write
+%%   \def\svgwidth{<desired width>}
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics[width=<desired width>]{<filename>.pdf}
+%%
+%% Images with a different path to the parent latex file can
+%% be accessed with the `import' package (which may need to be
+%% installed) using
+%%   \usepackage{import}
+%% in the preamble, and then including the image with
+%%   \import{<path to file>}{<filename>.pdf_tex}
+%% Alternatively, one can specify
+%%   \graphicspath{{<path to file>/}}
+%% 
+%% For more information, please see info/svg-inkscape on CTAN:
+%%   http://tug.ctan.org/tex-archive/info/svg-inkscape
+%%
+\begingroup%
+  \makeatletter%
+  \providecommand\color[2][]{%
+    \errmessage{(Inkscape) Color is used for the text in Inkscape, but the package 'color.sty' is not loaded}%
+    \renewcommand\color[2][]{}%
+  }%
+  \providecommand\transparent[1]{%
+    \errmessage{(Inkscape) Transparency is used (non-zero) for the text in Inkscape, but the package 'transparent.sty' is not loaded}%
+    \renewcommand\transparent[1]{}%
+  }%
+  \providecommand\rotatebox[2]{#2}%
+  \newcommand*\fsize{\dimexpr\f@size pt\relax}%
+  \newcommand*\lineheight[1]{\fontsize{\fsize}{#1\fsize}\selectfont}%
+  \ifx\svgwidth\undefined%
+    \setlength{\unitlength}{594.93787111bp}%
+    \ifx\svgscale\undefined%
+      \relax%
+    \else%
+      \setlength{\unitlength}{\unitlength * \real{\svgscale}}%
+    \fi%
+  \else%
+    \setlength{\unitlength}{\svgwidth}%
+  \fi%
+  \global\let\svgwidth\undefined%
+  \global\let\svgscale\undefined%
+  \makeatother%
+  \begin{picture}(1,0.39849634)%
+    \lineheight{1}%
+    \setlength\tabcolsep{0pt}%
+    \put(0,0){\includegraphics[width=\unitlength,page=1]{verify.pdf}}%
+    \put(0.06586885,0.22957114){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Tìm website chứa...\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=2]{verify.pdf}}%
+    \put(0.38733099,0.35689536){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Nếu sử dụng SSR\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=3]{verify.pdf}}%
+    \put(0.36337891,0.15015108){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Nếu sử dụng Ajax\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=4]{verify.pdf}}%
+    \put(0.28017693,0.22957114){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Phân tích cách truyền dữ...\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=5]{verify.pdf}}%
+    \put(0.57012318,0.28377848){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Có\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=6]{verify.pdf}}%
+    \put(0.75291538,0.35563473){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Không\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=7]{verify.pdf}}%
+    \put(0.57012318,0.35563473){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Kiểm tra xem dữ liệu hi...\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=8]{verify.pdf}}%
+    \put(0.8487237,0.0732523){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Có thể\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=9]{verify.pdf}}%
+    \put(0.72770266,0.19427334){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Không thể\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=10]{verify.pdf}}%
+    \put(0.72139948,0.06568848){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Kiểm tra các API có t...\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=11]{verify.pdf}}%
+    \put(0.57012318,0.22957114){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Kết luận không đạt\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=12]{verify.pdf}}%
+    \put(0.58399017,0.06694912){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Không đủ\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=13]{verify.pdf}}%
+    \put(0.62433052,0.00013542){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Đủ\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=14]{verify.pdf}}%
+    \put(0.46927231,0.06568848){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Kiểm tra xem dữ liệu hi...\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=15]{verify.pdf}}%
+    \put(0.92310121,0.22957114){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}Bắt đầu thu thập\end{tabular}}}}%
+  \end{picture}%
+\endgroup%
