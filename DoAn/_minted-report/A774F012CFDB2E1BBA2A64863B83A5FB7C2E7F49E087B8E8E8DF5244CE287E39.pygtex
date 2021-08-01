@@ -1,0 +1,40 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+	 \PYG{k}{def} \PYG{n+nf}{parse}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{response}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{):}
+        \PYG{n}{json} \PYG{o}{=} \PYG{n}{response}\PYG{o}{.}\PYG{n}{json}\PYG{p}{()}
+        \PYG{n}{ward\PYGZus{}code} \PYG{o}{=} \PYG{n}{response}\PYG{o}{.}\PYG{n}{meta}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}ward\PYGZus{}code\PYGZsq{}}\PYG{p}{]}
+        \PYG{n+nb}{long} \PYG{o}{=} \PYG{n}{response}\PYG{o}{.}\PYG{n}{meta}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}long\PYGZsq{}}\PYG{p}{]}
+        \PYG{n}{lat} \PYG{o}{=} \PYG{n}{response}\PYG{o}{.}\PYG{n}{meta}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}lat\PYGZsq{}}\PYG{p}{]}
+        \PYG{k}{for} \PYG{n}{d} \PYG{o+ow}{in} \PYG{n}{json}\PYG{p}{:}
+            \PYG{k}{yield} \PYG{p}{\PYGZob{}}
+                \PYG{l+s+s1}{\PYGZsq{}ward\PYGZsq{}}\PYG{p}{:}\PYG{n}{ward\PYGZus{}code}\PYG{p}{,}
+                \PYG{l+s+s1}{\PYGZsq{}date\PYGZsq{}}\PYG{p}{:}\PYG{n}{d}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Temperatures\PYGZsq{}}\PYG{p}{,} \PYG{p}{\PYGZob{}\PYGZcb{})}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}highTmISOLocal\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}}\PYG{p}{)[:}\PYG{l+m+mi}{10}\PYG{p}{],}
+                \PYG{l+s+s1}{\PYGZsq{}highC\PYGZsq{}}\PYG{p}{:} \PYG{n}{d}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Temperatures\PYGZsq{}}\PYG{p}{,} \PYG{p}{\PYGZob{}\PYGZcb{})}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}highC\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}}\PYG{p}{),}
+                \PYG{l+s+s1}{\PYGZsq{}lowC\PYGZsq{}}\PYG{p}{:} \PYG{n}{d}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Temperatures\PYGZsq{}}\PYG{p}{,} \PYG{p}{\PYGZob{}\PYGZcb{})}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}lowC\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}}\PYG{p}{),}
+                \PYG{l+s+s1}{\PYGZsq{}sun\PYGZus{}rise\PYGZsq{}}\PYG{p}{:} \PYG{n}{d}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}SunData\PYGZsq{}}\PYG{p}{,} \PYG{p}{\PYGZob{}\PYGZcb{})}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}sunrise\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}}\PYG{p}{),}
+                \PYG{l+s+s1}{\PYGZsq{}sun\PYGZus{}set\PYGZsq{}}\PYG{p}{:} \PYG{n}{d}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}SunData\PYGZsq{}}\PYG{p}{,\PYGZob{}\PYGZcb{})}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}sunset\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}}\PYG{p}{),}
+                \PYG{l+s+s1}{\PYGZsq{}sevenDayPrecipCm\PYGZsq{}}\PYG{p}{:}\PYG{n}{d}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Precips\PYGZsq{}}\PYG{p}{,\PYGZob{}\PYGZcb{})}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}sevenDayPrecipCm\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}}\PYG{p}{),}
+                \PYG{l+s+s1}{\PYGZsq{}mtdPrecipCm\PYGZsq{}}\PYG{p}{:}\PYG{n}{d}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Precips\PYGZsq{}}\PYG{p}{,\PYGZob{}\PYGZcb{})}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}mtdPrecipCm\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}}\PYG{p}{),}
+                \PYG{l+s+s1}{\PYGZsq{}precip24Cm\PYGZsq{}}\PYG{p}{:}\PYG{n}{d}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Precips\PYGZsq{}}\PYG{p}{,\PYGZob{}\PYGZcb{})}\PYG{o}{.}\PYG{n}{get}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}precip24Cm\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}}\PYG{p}{),}
+            \PYG{p}{\PYGZcb{}}
+
+		\PYG{n}{last} \PYG{o}{=} \PYG{n}{json}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}
+        \PYG{n}{recentDate} \PYG{o}{=} \PYG{n}{datetime}\PYG{o}{.}\PYG{n}{strptime}\PYG{p}{(}
+            \PYG{n}{last}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}Temperatures\PYGZsq{}}\PYG{p}{][}\PYG{l+s+s1}{\PYGZsq{}highTmISO\PYGZsq{}}\PYG{p}{][:}\PYG{l+m+mi}{10}\PYG{p}{],} \PYG{l+s+s1}{\PYGZsq{}\PYGZpc{}Y\PYGZhy{}\PYGZpc{}M\PYGZhy{}}\PYG{l+s+si}{\PYGZpc{}d}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
+        \PYG{n+nb}{next} \PYG{o}{=} \PYG{n}{recentDate} \PYG{o}{+} \PYG{n}{timedelta}\PYG{p}{(}\PYG{n}{days}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{)}
+		
+		\PYG{k}{if} \PYG{n}{recentDate}\PYG{o}{.}\PYG{n}{date}\PYG{p}{()} \PYG{o}{==} \PYG{n}{datetime}\PYG{o}{.}\PYG{n}{today}\PYG{p}{():}
+        	\PYG{k}{return}
+        \PYG{k}{else}\PYG{p}{:}
+            \PYG{k}{yield} \PYG{n}{response}\PYG{o}{.}\PYG{n}{follow}\PYG{p}{(}
+                \PYG{n}{url}\PYG{o}{=}\PYG{n}{f}\PYG{l+s+s2}{\PYGZdq{}https://dsx.weather.com/wxd/v3/PastObsAvg/ }\PYG{l+s+se}{\PYGZbs{}}
+\PYG{l+s+s2}{				\PYGZob{}next.strftime(\PYGZsq{}\PYGZpc{}Y\PYGZpc{}M}\PYG{l+s+si}{\PYGZpc{}d}\PYG{l+s+s2}{\PYGZsq{})\PYGZcb{}/35/\PYGZob{}lat:.2f\PYGZcb{},\PYGZob{}long:.2f\PYGZcb{}}\PYG{l+s+se}{\PYGZbs{}}
+\PYG{l+s+s2}{				?format=json}\PYG{l+s+se}{\PYGZbs{}}
+\PYG{l+s+s2}{				\PYGZam{}apiKey=7bb1c920\PYGZhy{}7027\PYGZhy{}4289\PYGZhy{}9c96\PYGZhy{}ae5e263980bc}\PYG{l+s+se}{\PYGZbs{}}
+\PYG{l+s+s2}{				\PYGZam{}fbclid=IwAR1IgpD8qPU6ZaHqDnZT1tMl95Y4G8gfGvIYmpM3CGGIqyjwQeaAmbZZ8SE\PYGZdq{}}\PYG{p}{,}
+                \PYG{n}{meta}\PYG{o}{=}\PYG{p}{\PYGZob{}}
+                        \PYG{l+s+s1}{\PYGZsq{}ward\PYGZus{}code\PYGZsq{}}\PYG{p}{:} \PYG{n}{ward\PYGZus{}code}\PYG{p}{,}
+                        \PYG{l+s+s1}{\PYGZsq{}long\PYGZsq{}}\PYG{p}{:}\PYG{n+nb}{long}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}lat\PYGZsq{}}\PYG{p}{:}\PYG{n}{lat}
+                    \PYG{p}{\PYGZcb{},}
+                    \PYG{n}{callback}\PYG{o}{=}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{parse}
+            \PYG{p}{)}
+\end{Verbatim}

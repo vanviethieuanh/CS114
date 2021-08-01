@@ -1,0 +1,19 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+	\PYG{k}{def} \PYG{n+nf}{start\PYGZus{}requests}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+	\PYG{n}{requests} \PYG{o}{=} \PYG{p}{[]}
+	\PYG{k}{for} \PYG{n}{i}\PYG{p}{,} \PYG{n}{ward} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{df\PYGZus{}ward\PYGZus{}taynguyen\PYGZus{}fire}\PYG{o}{.}\PYG{n}{iterrows}\PYG{p}{():}
+		\PYG{n}{requests}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{request}\PYG{o}{.}\PYG{n}{Request}\PYG{p}{(}
+			\PYG{n}{url}\PYG{o}{=}\PYG{n}{f}\PYG{l+s+s2}{\PYGZdq{}https://dsx.weather.com/wxd/v3/PastObsAvg/20140101/35/}\PYG{l+s+se}{\PYGZbs{}}
+\PYG{l+s+s2}{			\PYGZob{}ward[\PYGZsq{}lat\PYGZsq{}]:.2f\PYGZcb{},\PYGZob{}ward[\PYGZsq{}long\PYGZsq{}]:.2f\PYGZcb{}}\PYG{l+s+se}{\PYGZbs{}}
+\PYG{l+s+s2}{			?format=json}\PYG{l+s+se}{\PYGZbs{}}
+\PYG{l+s+s2}{			\PYGZam{}apiKey=7bb1c920\PYGZhy{}7027\PYGZhy{}4289\PYGZhy{}9c96\PYGZhy{}ae5e263980bc\PYGZam{}}\PYG{l+s+se}{\PYGZbs{}}
+\PYG{l+s+s2}{			fbclid=IwAR1IgpD8qPU6ZaHqDnZT1tMl95Y4G8gfGvIYmpM3CGGIqyjwQeaAmbZZ8SE\PYGZdq{}}\PYG{p}{,}
+			\PYG{n}{meta}\PYG{o}{=}\PYG{p}{\PYGZob{}}
+				\PYG{l+s+s1}{\PYGZsq{}ward\PYGZus{}code\PYGZsq{}}\PYG{p}{:} \PYG{n}{ward}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}ward\PYGZus{}code\PYGZsq{}}\PYG{p}{],}
+				\PYG{l+s+s1}{\PYGZsq{}long\PYGZsq{}}\PYG{p}{:}\PYG{n}{ward}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}long\PYGZsq{}}\PYG{p}{],}
+				\PYG{l+s+s1}{\PYGZsq{}lat\PYGZsq{}}\PYG{p}{:}\PYG{n}{ward}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}lat\PYGZsq{}}\PYG{p}{]}
+			\PYG{p}{\PYGZcb{},}
+			\PYG{n}{callback}\PYG{o}{=}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{parse}
+		\PYG{p}{))}
+	\PYG{k}{return} \PYG{n}{requests}
+\end{Verbatim}

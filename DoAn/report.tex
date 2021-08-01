@@ -5,36 +5,38 @@
 \usepackage{cite}
 \usepackage{float}
 \usepackage{graphicx}
+\usepackage{lmodern}
+\usepackage{minted}
 \usepackage{hyperref}
 
 \begin{document}
 \title{
-      \LARGE{
-            \textbf{
-                  Xây dựng mô hình Machine Learning \\ dự báo cháy rừng ở các tỉnh Tây Nguyên \\ dựa vào dữ liệu lịch sử thời tiết.
-            }
-      }
+	\LARGE{
+		\textbf{
+			Xây dựng mô hình Machine Learning \\ dự báo cháy rừng ở các tỉnh Tây Nguyên \\ dựa vào dữ liệu lịch sử thời tiết.
+		}
+	}
 }
 
 \author{
-      Nguyễn Đại Kỳ\\
-      19521731\\
-      \and
-      Văn Viết Hiếu Anh\\
-      19521225
-      \and
-      Lê Văn Phước\\
+	Nguyễn Đại Kỳ\\
+	19521731\\
+	\and
+	Văn Viết Hiếu Anh\\
+	19521225
+	\and
+	Lê Văn Phước\\
 
 }
 
 \date{\today} % Date for the report
 \maketitle % Insert the title, author and date
 \begin{center}
-      \begin{tabular}{l l}
-            Môn học:              & CS114 - Máy học       \\
-            Giảng viên hướng dẫn: & Lê Đình Duy           \\
-                                  & Phạm Nguyễn Trường An \\
-      \end{tabular}
+	\begin{tabular}{l l}
+		Môn học:              & CS114 - Máy học       \\
+		Giảng viên hướng dẫn: & Lê Đình Duy           \\
+		                      & Phạm Nguyễn Trường An \\
+	\end{tabular}
 \end{center}
 
 \tableofcontents
@@ -64,9 +66,9 @@ Chưa làm xong đâu, làm phụ đi
 Nguồn dữ liệu của nhóm đến từ các website gồm 3 website chính:
 
 \begin{itemize}
-      \item firewatchvn.kiemlam.org.vn: là Hệ thống theo dõi cháy rừng trực tuyến thuộc Cục Kiểm Lâm - Tổng cục Lâm Nghiệp
-      \item weather.com: là website của The Weather Channel (TWC) - IBM\cite{website:wiki_twc}
-      \item worldweatheronline.com
+	\item firewatchvn.kiemlam.org.vn: là Hệ thống theo dõi cháy rừng trực tuyến thuộc Cục Kiểm Lâm - Tổng cục Lâm Nghiệp
+	\item weather.com: là website của The Weather Channel (TWC) - IBM\cite{website:wiki_twc}
+	\item worldweatheronline.com
 \end{itemize}
 
 Trong 3 nguồn dữ liệu thì chỉ có worldweatheronline.com sử dụng SSR(Server-side render) còn 2 nguồn còn lại đều sử dụng Ajax để truyền dữ liệu qua lại giữa server.
@@ -114,47 +116,197 @@ Tất cả dữ liệu của nhóm đều bắt đầu bằng 1 quy trình chung
 
 \includegraphics[width=6in]{images/inspect.png}
 
-Tiếp theo đó khi đã xác nhận API này đủ điều kiện ra kiểm tra ý nghĩa của các thông số trong request, thử thay đổi thông số để kiểm tra dữ liệu kéo dài được đến bao lâu. Trên thực tế ta chỉ chọn một thời điểm đủ xa để chấp nhận được, nếu đạt sẽ crawl ngược thời gian đến khi hết crawl được thì dừng.
+Tiếp theo đó khi đã xác nhận API này đủ điều kiện ra kiểm tra ý nghĩa của các thông số trong request, thử thay đổi thông số để kiểm tra dữ liệu kéo dài được đến bao lâu.
 
 \includegraphics[width=6in]{images/checkpast.png}
 
-Vì dữ liệu chấp nhận đến 2016 nên sẽ tiến hành crawl dữ liệu.
+Vì dữ liệu chấp nhận đến 2014 nên sẽ tiến hành crawl dữ liệu. Nhóm sử dụng Scrappy để crawl vì công cụ này hỗ trợ async cho phép gửi nhiều request cùng lúc cùng với đó là có pipeline để lưu dữ liệu nên giảm rất nhiều quá trình cài đặt.
+
+% Continue here
+Đầu tiên ta tạo tải dữ liệu danh sách chứa tất cả các xã cần crawl dữ liệu, làm tròn các tọa độ đến 2 chữ số thập phân(theo yêu cầu của API, xử lý bằng numpy trước sẽ nhanh hơn việc xử lý trong vòng lặp).
+
+\begin{minted}[tabsize=4,breaklines]{python}
+class IBMWeatherScapper(Spider):
+    name = 'ibm-weather'
+
+    df_ward_taynguyen_fire = pandas.read_csv(
+        'https://raw.githubusercontent.com/.../taynguyen_wards_longlat.csv')
+    df_ward_taynguyen_fire['long'] = numpy.round(
+        df_ward_taynguyen_fire['long'], 2)
+    df_ward_taynguyen_fire['lat'] = numpy.round(
+        df_ward_taynguyen_fire['lat'], 2)
+\end{minted}
+
+Trong hàm start\_requests của Spider với mỗi xã ta tạo 1 request vào ngày 1/1/2014 với tọa độ của xã đó, cùng với đó là lưu kèm 1 meta để nhận diện xã đó trong parse function.
+
+\begin{minted}[tabsize=4,breaklines]{python}
+	def start_requests(self):
+	requests = []
+	for i, ward in self.df_ward_taynguyen_fire.iterrows():
+		requests.append(request.Request(
+			url=f"https://dsx.weather.com/wxd/v3/PastObsAvg/20140101/35/\
+			{ward['lat']:.2f},{ward['long']:.2f}\
+			?format=json\
+			&apiKey=7bb1c920-7027-4289-9c96-ae5e263980bc&\
+			fbclid=IwAR1IgpD8qPU6ZaHqDnZT1tMl95Y4G8gfGvIYmpM3CGGIqyjwQeaAmbZZ8SE",
+			meta={
+				'ward_code': ward['ward_code'],
+				'long':ward['long'],
+				'lat':ward['lat']
+			},
+			callback=self.parse
+		))
+	return requests
+\end{minted}
+
+Vì đây là API nên dữ liệu được thể hiện dưới dạng json rất rõ ràng.
+
+\begin{minted}[tabsize=4,breaklines]{json}
+	{
+        "Temperatures": {
+            "highF": 72,
+            "highC": 22,
+            "highTm": "01:00 PM",
+            "highTmISO": "2014-01-01T06:00:00.000Z",
+            "highTmISOLocal": "2014-01-01T13:00:00.000+07:00",
+            "lowF": 68,
+            "lowC": 20,
+            "lowTm": "01:00 AM",
+            "lowTmISO": "2013-12-31T18:00:00.000Z",
+            "lowTmISOLocal": "2014-01-01T01:00:00.000+07:00"
+        },
+        "WxDetails": { "icon": 27, "wx": "Mostly Cloudy" },
+        "SunData": {
+            "sunrise": "06:05 AM",
+            "sunset": "05:26 PM",
+            "sunriseISO": "2013-12-31T23:05:00.000Z",
+            "sunsetISO": "2014-01-01T10:26:00.000Z",
+            "sunriseISOLocal": "2014-01-01T06:05:00.000+07:00",
+            "sunsetISOLocal": "2014-01-01T17:26:00.000+07:00"
+        },
+        "Moon": {
+            "moonriseLocal": "2014-01-01T05:34:00.000+07:00",
+            "moonsetLocal": "2014-01-01T17:25:00.000+07:00",
+            "moonriseISO": "2013-12-31T22:34:00.000Z",
+            "moonsetlISO": "2014-01-01T10:25:00.000Z"
+        }
+    }
+\end{minted}
+
+Việc còn lại là lấy ra và lưu lại dưới file csv. Sau đó lấy ngày cuối cùng trong dữ liệu trả về xem có bằng ngày hôm nay không, nếu không thì tiếp tục tải dữ liệu còn nếu có thì dừng lại.
+
+\begin{minted}[tabsize=4]{python}
+	 def parse(self, response, **kwargs):
+        json = response.json()
+        ward_code = response.meta['ward_code']
+        long = response.meta['long']
+        lat = response.meta['lat']
+        for d in json:
+            yield {
+                'ward':ward_code,
+                'date':d.get('Temperatures', {}).get('highTmISOLocal','')[:10],
+                'highC': d.get('Temperatures', {}).get('highC',''),
+                'lowC': d.get('Temperatures', {}).get('lowC',''),
+                'sun_rise': d.get('SunData', {}).get('sunrise',''),
+                'sun_set': d.get('SunData',{}).get('sunset',''),
+                'sevenDayPrecipCm':d.get('Precips',{}).get('sevenDayPrecipCm',''),
+                'mtdPrecipCm':d.get('Precips',{}).get('mtdPrecipCm',''),
+                'precip24Cm':d.get('Precips',{}).get('precip24Cm',''),
+            }
+
+		last = json[-1]
+        recentDate = datetime.strptime(
+            last['Temperatures']['highTmISO'][:10], '%Y-%M-%d')
+        next = recentDate + timedelta(days=1)
+		
+		if recentDate.date() == datetime.today():
+        	return
+        else:
+            yield response.follow(
+                url=f"https://dsx.weather.com/wxd/v3/PastObsAvg/ \
+				{next.strftime('%Y%M%d')}/35/{lat:.2f},{long:.2f}\
+				?format=json\
+				&apiKey=7bb1c920-7027-4289-9c96-ae5e263980bc\
+				&fbclid=IwAR1IgpD8qPU6ZaHqDnZT1tMl95Y4G8gfGvIYmpM3CGGIqyjwQeaAmbZZ8SE",
+                meta={
+                        'ward_code': ward_code,
+                        'long':long, 'lat':lat
+                    },
+                    callback=self.parse
+            )
+\end{minted}
 
 Dữ liệu từ website này cung cấp có độ chính xác đến từng tọa độ, có nghĩa là chỉ cần cung cấp tọa độ (làm tròn đến 2 chữ số thập phân) thì server sẽ trả về thời tiết tại điểm đó tùy vào thời gian mà ta muốn. Tuy nhiên điểm yếu của dữ liệu này là chỉ cung cấp các đặc tính cơ bản nhất của thời tiết tại địa điểm đó gồm: nhiệt độ cao nhất và thấp nhất trong ngày, thời gian mặt trời mọc và lặn, lượng mưa (tích lũy trong 7 ngày, trong 1 tháng hoặc chỉ ngày hôm đó).
 
-Sau khoảng nhiều ngày khai thác và xử lý, nhóm đã lấy được dữ liệu của 5 tỉnh Tây Nguyên vào từng xã từng ngày kéo dài từ 1/1/2014 đến 8/6/2021. Dữ liệu gồm các trường cơ bản sau:
+Sau khoảng nhiều ngày khai thác và xử lý, nhóm đã lấy được dữ liệu của 5 tỉnh Tây Nguyên vào từng xã từng ngày kéo dài từ 1/1/2014 đến 8/6/2021. Dữ liệu gồm các trường cơ bản sau (lưu ý các trường này đã được đổi tên so với khi crawl dữ liệu để thống nhất các bộ dữ liệu với nhau nhằm dễ dàng cho việc nghiên cứu):
 
 \begin{itemize}
-      \item ward: Mã của xã, phường, thị trấn, thị xã. Vì sẽ có những địa điểm trùng tên nên nhóm sử dụng mã để phân biệt các địa phương (mã này cung cấp bởi API của firewatchvn.kiemlam.org.vn\cite{website:firewatch_administrative})
-      \item date: là ngày mà record được ghi lại.
-      \item max/min: là nhiệt độ cao nhất và thấp nhất được ghi nhận trong ngày(celcius).
-      \item sunrise/sunset: là thời gian mặt trời mọc và lặn.
-      \item 7\_rain: lượng mưa tổng tính từ ngày chủ nhật gần nhất trước đó (cm)
-      \item m\_rain: lượng mưa tổng tính từ ngày 1 của tháng đó(cm)
-      \item 24\_rain: lượng mưa ghi nhận trong ngày(cm)
+	\item ward: Mã của xã, phường, thị trấn, thị xã. Vì sẽ có những địa điểm trùng tên nên nhóm sử dụng mã để phân biệt các địa phương (mã này cung cấp bởi API của firewatchvn.kiemlam.org.vn\cite{website:firewatch_administrative})
+	\item date: là ngày mà record được ghi lại.
+	\item max/min: là nhiệt độ cao nhất và thấp nhất được ghi nhận trong ngày(celcius).
+	\item sunrise/sunset: là thời gian mặt trời mọc và lặn.
+	\item 7\_rain: lượng mưa tổng tính từ ngày chủ nhật gần nhất trước đó (cm)
+	\item m\_rain: lượng mưa tổng tính từ ngày 1 của tháng đó(cm)
+	\item 24\_rain: lượng mưa ghi nhận trong ngày(cm)
 \end{itemize}
 
 Dưới đây là một đoạn mẫu trong dữ liệu.
 
 \begin{table}[H]
-      \begin{tabular}{lllllllll}
-            ward    & date       & max & min & sunrise  & sunset   & 7\_rain & m\_rain & 24\_rain \\
-            24727.0 & 2016-10-17 & 30  & 25  & 05:36 AM & 05:28 PM & 5.94    & 30.91   & 1.82     \\
-            24727.0 & 2016-10-18 & 30  & 25  & 05:36 AM & 05:28 PM & 7.54    & 32.66   & 1.75     \\
-            24727.0 & 2016-10-19 & 30  & 25  & 05:36 AM & 05:27 PM & 7.54    & 32.96   & 0.3      \\
-            24761.0 & 2019-10-14 & 32  & 24  & 05:36 AM & 05:30 PM & 0.02    & 0.07    & 0.0      \\
-            24761.0 & 2019-10-15 & 32  & 25  & 05:36 AM & 05:30 PM & 0.02    & 0.07    & 0.0      \\
-            24761.0 & 2019-10-16 & 32  & 25  & 05:36 AM & 05:29 PM & 0.02    & 0.07    & 0.02     \\
-            24761.0 & 2019-10-17 & 32  & 25  & 05:36 AM & 05:29 PM & 0.02    & 0.07    & 0.0      \\
-            24761.0 & 2019-10-18 & 32  & 25  & 05:36 AM & 05:28 PM & 0.02    & 0.07    & 0.0      \\
-            24761.0 & 2019-10-19 & 32  & 26  & 05:36 AM & 05:28 PM & 0.02    & 0.07    & 0.0      \\
-            24761.0 & 2019-10-20 & 32  & 26  & 05:36 AM & 05:27 PM & 0.02    & 0.1     & 0.0      \\
-            24761.0 & 2019-10-21 & 33  & 25  & 05:36 AM & 05:27 PM & 0.02    & 0.1     & 0.0      \\
-            24761.0 & 2019-10-22 & 32  & 25  & 05:37 AM & 05:26 PM & 0.02    & 0.1     & 0.0      \\
-            24761.0 & 2019-10-23 & 33  & 25  & 05:37 AM & 05:26 PM & 0.0     & 0.1     & 0.0      \\
-            24761.0 & 2019-10-24 & 33  & 25  & 05:37 AM & 05:25 PM & 0.0     & 0.1     & 0.0
-      \end{tabular}
+	\begin{tabular}{lllllllll}
+		ward    & date       & max & min & sunrise  & sunset   & 7\_rain & m\_rain & 24\_rain \\
+		24727.0 & 2016-10-17 & 30  & 25  & 05:36 AM & 05:28 PM & 5.94    & 30.91   & 1.82     \\
+		24727.0 & 2016-10-18 & 30  & 25  & 05:36 AM & 05:28 PM & 7.54    & 32.66   & 1.75     \\
+		24727.0 & 2016-10-19 & 30  & 25  & 05:36 AM & 05:27 PM & 7.54    & 32.96   & 0.3      \\
+		24761.0 & 2019-10-14 & 32  & 24  & 05:36 AM & 05:30 PM & 0.02    & 0.07    & 0.0      \\
+		24761.0 & 2019-10-15 & 32  & 25  & 05:36 AM & 05:30 PM & 0.02    & 0.07    & 0.0      \\
+		24761.0 & 2019-10-16 & 32  & 25  & 05:36 AM & 05:29 PM & 0.02    & 0.07    & 0.02     \\
+		24761.0 & 2019-10-17 & 32  & 25  & 05:36 AM & 05:29 PM & 0.02    & 0.07    & 0.0      \\
+		24761.0 & 2019-10-18 & 32  & 25  & 05:36 AM & 05:28 PM & 0.02    & 0.07    & 0.0      \\
+		24761.0 & 2019-10-19 & 32  & 26  & 05:36 AM & 05:28 PM & 0.02    & 0.07    & 0.0      \\
+		24761.0 & 2019-10-20 & 32  & 26  & 05:36 AM & 05:27 PM & 0.02    & 0.1     & 0.0      \\
+		24761.0 & 2019-10-21 & 33  & 25  & 05:36 AM & 05:27 PM & 0.02    & 0.1     & 0.0      \\
+		24761.0 & 2019-10-22 & 32  & 25  & 05:37 AM & 05:26 PM & 0.02    & 0.1     & 0.0      \\
+		24761.0 & 2019-10-23 & 33  & 25  & 05:37 AM & 05:26 PM & 0.0     & 0.1     & 0.0      \\
+		24761.0 & 2019-10-24 & 33  & 25  & 05:37 AM & 05:25 PM & 0.0     & 0.1     & 0.0
+	\end{tabular}
 \end{table}
+
+Dưới đây là các thông số của bộ dữ liệu
+
+\begin{table}[H]
+	\begin{tabular}{lllllll}
+		      & ward    & max      & min      & 7\_rain   & m\_rain    & 24\_rain  \\
+		count & 1130904 & 1130904  & 1130904  & 679514    & 679514     & 679514    \\
+		mean  &         & 30.60013 & 24.66924 & 33.813765 & 82.088195  & 4.797731  \\
+		std   &         & 2.836824 & 2.207649 & 71.482188 & 153.732438 & 16.574482 \\
+		min   &         & 18       & 14       & 0         & 0          & 0         \\
+		25\%  &         & 29       & 23       & 0.5       & 2.2        & 0         \\
+		50\%  &         & 31       & 25       & 8.1       & 21.3       & 0         \\
+		75\%  &         & 32       & 26       & 34.7      & 88.6       & 2.7       \\
+		max   &         & 46       & 36       & 903.7     & 1300.7     & 419.1
+	\end{tabular}
+\end{table}
+
+Kết quả trả về từ hàm nunique():
+
+\begin{table}[H]
+	\begin{tabular}{ll}
+		ward     & 592  \\
+		date     & 2739 \\
+		max      & 25   \\
+		min      & 21   \\
+		sunrise  & 75   \\
+		sunset   & 74   \\
+		7\_rain  & 644  \\
+		m\_rain  & 976  \\
+		24\_rain & 231  \\
+	\end{tabular}
+\end{table}
+
+Dữ liệu bị trống sau khi sắp xếp theo ngày và địa phương(theo thứ tự ngày trước địa phương sau, tăng dần):
+
+\includegraphics[width=6in]{images/missing.png}
 
 \subsubsection{worldweatheronline.com}
 \subsubsection{firewatchvn.kiemlam.org.vn}
