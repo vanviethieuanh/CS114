@@ -4,6 +4,7 @@
 \usepackage[utf8]{vietnam}
 \usepackage{cite}
 \usepackage{float}
+\usepackage{graphicx}
 
 \begin{document}
 \title{
@@ -22,7 +23,7 @@
       19521225
       \and
       Lê Văn Phước\\
-      19522054
+
 }
 
 \date{\today} % Date for the report
@@ -43,32 +44,10 @@
 %	SECTION 1
 %----------------------------------------------------------------------------------------
 
-\section{Abstract}
-
+\section{Tổng quan}
 \qquad Bài viết là về quá trình thực nghiệm nghiên cứu các model Machine Learning với mục đích chọn ra mô hình tối ưu để dự đoán mức độ cháy rừng dựa vào dữ liệu thời tiết trong lịch sử của từng địa phương. Với mục đích hổ trợ trong việc dự đoán để phục vụ trong công tác phòng chống cháy rừng ở nước ta. Vì bài viết là ghi chép của quá trình thực nghiệm nên sẽ có nhiều phương pháp được đưa ra sử dụng.
-
-%----------------------------------------------------------------------------------------
-%	SECTION 2
-%----------------------------------------------------------------------------------------
-
-\section{Introduction}
-
-\qquad Ở nước ta có 3 thảm họa lớn nhất, gây thiệt hại lớn hàng năm về cả người và của. Cùng với lũ lụt và hạn hán, cháy rừng là một thảm họa gây thiệt hại không chỉ về kinh tế mà còn cả con người và hệ sinh thái. Theo thống kê của Cục Kiểm lâm từ năm 1992 đến 2006, trung bình mỗi năm xảy ra 1254 vụ cháy rừng gây thiệt hại khoảng 6646 ha rừng, trong đó có 2854 ha là rừng tự nhiên và 3791 ha là rừng trồng. Bên cạnh việc nâng cao năng lực phòng cháy chữa cháy rừng (PCCCR) cho lực lượng kiểm lâm như đầu tư trang thiết bị, cơ sở vật chất, xây dựng cơ chế điều hành phối hợp và tuyên truyền nâng cao nhận thức trách nhiệm của chủ rừng và người dân, công tác cảnh báo nguy cơ cháy rừng cũng như tổ chức phát hiện sớm và thông báo kịp thời điểm cháy rừng là rất cần thiết.
-
-Từ đầu năm 2007, Cục Kiểm lâm (Bộ Nông nghiệp và Phát triển Nông thôn) đã lắp đặt và vận hành trạm thu ảnh viễn thám MODIS tại Hà Nội với mục đích chính là phát hiện sớm các điểm cháy rừng (hotspots) trên toàn lãnh thổ Việt Nam. Hệ thống trạm thu của TeraScan đã tự động thu nhận, xử lý và sao lưu dữ liệu ảnh MODIS hàng ngày từ 2 vệ tinh TERRA và AQUA với mô-đun Vulcan tự động xử lý và tạo ra dữ liệu các điểm cháy sử dụng thuật toán ATBD-MOD14.
-
-Hệ thống này cung cấp dữ liệu về điểm cháy ghi nhận được từ vệ tinh và lưu lại thời gian và tọa độ cháy. Từ khi bắt đầu lắp đặt đến nay hệ thống dữ liệu cháy của cục kiểm lâm được ghi lại được gần 1 triệu điểm cháy. Nhờ lượng dữ liệu này việc xây dựng một hệ thống tự động phân tích mức độ cháy rừng dựa vào các đặc trưng cơ bản của dữ liệu khí tượng thủy văn là hoàn toàn có cơ sở và khả quan.
-
-%----------------------------------------------------------------------------------------
-%	SECTION 3
-%----------------------------------------------------------------------------------------
-
-\section{Dataset}
-
-\qquad Để xây dựng dược mô hình, việc đầu tiên sau khi khai thác dữ liệu là phải thực hiện phân tích và làm sạch dữ liệu. Từ đó chọn ra những đặc trưng có ảnh hưởng nhiều đến output của bài toán để tạo ra được dataset phù hợp.
-
-\subsection{Source of Data}
-
+\subsection{Mô tả bài toán}
+\subsection{Mô tả dữ liệu}
 \qquad Cả 3 nguồn dữ liệu gồm 2 nguồn dữ liệu thời tiết và nguồn dữ liệu về điểm cháy đều không có API cung cấp một cách đại chúng cho việc khai thác. Tuy nhiên vì các website này được xây dựng dựa trên cấu trúc Asynchronous (ASP.NET, Jquery hoặc ReactJS), nên sau khi phân tích và ghi lại các reqest, ta hoàn toàn có thể tìm được các cổng API và phương thức giao tiếp với server. Từ đó dùng vào việc khai thác dữ liệu tự động.
 
 \subsubsection{Weather Data}
@@ -114,12 +93,31 @@ Dưới đây là một đoạn mẫu trong dữ liệu.
       \end{tabular}
 \end{table}
 
-
-
 \paragraph{worldweatheronline.com}
 
 \subsubsection{Fire Data}
 firewatchvn.kiemlam.org.vn
+
+
+%----------------------------------------------------------------------------------------
+%	SECTION 2
+%----------------------------------------------------------------------------------------
+
+\section{Introduction}
+
+\qquad Ở nước ta có 3 thảm họa lớn nhất, gây thiệt hại lớn hàng năm về cả người và của. Cùng với lũ lụt và hạn hán, cháy rừng là một thảm họa gây thiệt hại không chỉ về kinh tế mà còn cả con người và hệ sinh thái. Theo thống kê của Cục Kiểm lâm từ năm 1992 đến 2006, trung bình mỗi năm xảy ra 1254 vụ cháy rừng gây thiệt hại khoảng 6646 ha rừng, trong đó có 2854 ha là rừng tự nhiên và 3791 ha là rừng trồng. Bên cạnh việc nâng cao năng lực phòng cháy chữa cháy rừng (PCCCR) cho lực lượng kiểm lâm như đầu tư trang thiết bị, cơ sở vật chất, xây dựng cơ chế điều hành phối hợp và tuyên truyền nâng cao nhận thức trách nhiệm của chủ rừng và người dân, công tác cảnh báo nguy cơ cháy rừng cũng như tổ chức phát hiện sớm và thông báo kịp thời điểm cháy rừng là rất cần thiết.
+
+Từ đầu năm 2007, Cục Kiểm lâm (Bộ Nông nghiệp và Phát triển Nông thôn) đã lắp đặt và vận hành trạm thu ảnh viễn thám MODIS tại Hà Nội với mục đích chính là phát hiện sớm các điểm cháy rừng (hotspots) trên toàn lãnh thổ Việt Nam. Hệ thống trạm thu của TeraScan đã tự động thu nhận, xử lý và sao lưu dữ liệu ảnh MODIS hàng ngày từ 2 vệ tinh TERRA và AQUA với mô-đun Vulcan tự động xử lý và tạo ra dữ liệu các điểm cháy sử dụng thuật toán ATBD-MOD14.
+
+Hệ thống này cung cấp dữ liệu về điểm cháy ghi nhận được từ vệ tinh và lưu lại thời gian và tọa độ cháy. Từ khi bắt đầu lắp đặt đến nay hệ thống dữ liệu cháy của cục kiểm lâm được ghi lại được gần 1 triệu điểm cháy. Nhờ lượng dữ liệu này việc xây dựng một hệ thống tự động phân tích mức độ cháy rừng dựa vào các đặc trưng cơ bản của dữ liệu khí tượng thủy văn là hoàn toàn có cơ sở và khả quan.
+
+%----------------------------------------------------------------------------------------
+%	SECTION 3
+%----------------------------------------------------------------------------------------
+
+\section{Xây dựng bộ dữ liệu}
+
+\qquad Để xây dựng dược mô hình, việc đầu tiên sau khi khai thác dữ liệu là phải thực hiện phân tích và làm sạch dữ liệu. Từ đó chọn ra những đặc trưng có ảnh hưởng nhiều đến output của bài toán để tạo ra được dataset phù hợp.
 
 \subsection{Imputation of Data}
 \subsection{Creation of Dataset}
