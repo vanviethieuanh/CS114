@@ -94,8 +94,8 @@ Về việc tìm nguồn dữ liệu tương tự đã được khai thác trư�
 % Chương này trình bày các kết quả nghiên cứu đã có của tiền nhân liên quan đến bài toán mà nhóm chọn. Những nghiên cứu trước làm trên các bộ dữ liệu nào, dùng phương pháp nào và performance đạt được bao nhiêu
 % Nếu có khả năng thì phân tích thêm kết quả của họ như vậy là tốt chưa, có còn chỗ gì để cải thiện không. Nếu không nhận xét dược thì thôi.
 \subsection{Predicting Australia wildfires with weather data a Call For Code spot challenge of IBM\cite{website:community_ibm}}
-Mục đích của cuộc thi này là dự đoán kích thước của khu vực cháy tính bằng km2 theo khu vực ở Úc cho mỗi ngày trong tháng 2 năm 2021 bằng cách sử dụng dữ liệu có sẳn cho đến ngày 29 tháng 1. 
-Bài toán chuỗi thời gian dựa trên dữ liệu hàng ngày do Pairs Geoscope cung cấp. 
+Mục đích của cuộc thi này là dự đoán kích thước của khu vực cháy tính bằng km2 theo khu vực ở Úc cho mỗi ngày trong tháng 2 năm 2021 bằng cách sử dụng dữ liệu có sẳn cho đến ngày 29 tháng 1.
+Bài toán chuỗi thời gian dựa trên dữ liệu hàng ngày do Pairs Geoscope cung cấp.
 Dữ liệu được cung cấp bao gồm:
 \begin{itemize}
 	\item Những trận cháy rừng trong lịch sử
@@ -108,16 +108,16 @@ Trong đó dữ liệu thời tiết lịch sử bao gồm các trường như \
 Từ những nghiên cứu các chuyên gia đưa ra các biến ảnh hưởng đến cháy rừng như:
 \begin{itemize}
 	\item Lãnh thổ:
-	\begin{itemize}
-		\item Khu vực: Số lượng và cường độ đám cháy khác nhau ở các khu vực khác nhau. Các sự kiện ở các khu vực lân cận có thê ảnh hưởng đến cháy rừng trong một lãnh thổ nhất định. Thành phần tự phục hồi( sự diện diện của cháy rừng trong những ngày trước đó).
-		\item Tính theo mùa: Cháy rừng đặc biệt dữ dội trong “Mùa cháy rừng” kéo dài từ tháng 10 đến tháng 12. Quan sát này sẽ ảnh hưởng đến cách thức phân chia tập dữ liệu huấn luận và kiểm tra.
-	\end{itemize}
+	      \begin{itemize}
+		      \item Khu vực: Số lượng và cường độ đám cháy khác nhau ở các khu vực khác nhau. Các sự kiện ở các khu vực lân cận có thê ảnh hưởng đến cháy rừng trong một lãnh thổ nhất định. Thành phần tự phục hồi( sự diện diện của cháy rừng trong những ngày trước đó).
+		      \item Tính theo mùa: Cháy rừng đặc biệt dữ dội trong “Mùa cháy rừng” kéo dài từ tháng 10 đến tháng 12. Quan sát này sẽ ảnh hưởng đến cách thức phân chia tập dữ liệu huấn luận và kiểm tra.
+	      \end{itemize}
 	\item Điều kiện đất và khí quyển:
-	\begin{itemize}
-		\item Thời tiết và đất đai: Thời tiết và Hạn hán có liên quan chặt chẽ đến hỏa hoạn. So sánh giữa lịch sử và dự báo thời tiết trong lịch sử.
-		\item Thảm thực vật: Có mối tương quan thuận giữa sự thay đổi chỉ số thảm thực vật và cường độ cháy.
-		\item Sử dụng đất: Việc sử dụng đất có thể liên quan đến việc dự đoán sự kéo dài của cháy rừng. Tuy nhiên, dữ liệu này chỉ có sẳn dưới dạng một hàng – cho mọi khu vực, do đó nó không được đưa vào mô hình.
-	\end{itemize}
+	      \begin{itemize}
+		      \item Thời tiết và đất đai: Thời tiết và Hạn hán có liên quan chặt chẽ đến hỏa hoạn. So sánh giữa lịch sử và dự báo thời tiết trong lịch sử.
+		      \item Thảm thực vật: Có mối tương quan thuận giữa sự thay đổi chỉ số thảm thực vật và cường độ cháy.
+		      \item Sử dụng đất: Việc sử dụng đất có thể liên quan đến việc dự đoán sự kéo dài của cháy rừng. Tuy nhiên, dữ liệu này chỉ có sẳn dưới dạng một hàng – cho mọi khu vực, do đó nó không được đưa vào mô hình.
+	      \end{itemize}
 \end{itemize}
 Theo báo các tổng kết cuộc thi thì mô hình được sử dụng là Convolutional Neural Network (Windowing Dataset, Conv1D Layers,…) cho ra kết quả RMSE: 19.96, MAE: 6.94, TOT: 9.54
 Qua nghiên cứu của cuộc thi này nhóm rút ra được các biến ảnh hưởng đến cháy rừng, cách khai thác lấy dữ liệu từ thực tế, mô hình đào tạo phù hợp với bài toán.
