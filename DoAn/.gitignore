@@ -4,4 +4,4 @@ report.*
 
 # Do not ignore the tex and result
 !report.tex
-
+.vscode
