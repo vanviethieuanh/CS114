@@ -332,21 +332,6 @@ Dưới đây là các thông số của bộ dữ liệu
 	\end{tabular}
 \end{table}
 
-Kết quả trả về từ hàm nunique():
-
-\begin{table}[H]
-	\begin{tabular}{ll}
-		ward     & 592  \\
-		date     & 2739 \\
-		max      & 25   \\
-		min      & 21   \\
-		sunrise  & 75   \\
-		sunset   & 74   \\
-		7\_rain  & 644  \\
-		m\_rain  & 976  \\
-		24\_rain & 231  \\
-	\end{tabular}
-\end{table}
 
 \begin{figure}[H]
 	\centering
@@ -357,6 +342,173 @@ Kết quả trả về từ hàm nunique():
 
 
 \subsubsection{worldweatheronline.com}
+Ở trang này dữ liệu thời tiết chỉ hiển thị ở 40 tỉnh thành, các điểm dữ liệu này được đặt title theo trung tâm hành chỉnh của tỉnh thành phố đó.
+
+Danh sách 40 thành phố:
+\begin{table}[H]
+	\begin{tabular}{llll}
+		Bac Lieu    & Ho Chi Minh City & Tam Ky    & Ben Tre   \\
+		Hoa Binh    & Tan An           & Bien Hoa  & Hong Gai  \\
+		Thai Nguyen & Buon Me Thuot    & Hue       & Thanh Hoa \\
+		Ca Mau      & Long Xuyen       & Tra Vinh  & Cam Pha   \\
+		My Tho      & Tuy Hoa          & Cam Ranh  & Nam Dinh  \\
+		Uong Bi     & Can Tho          & Nha Trang & Viet Tri  \\
+		Chau Doc    & Phan Rang        & Vinh      & Da Lat    \\
+		Phan Thiet  & Vinh Long        & Ha Noi    & Play Cu   \\
+		Vung Tau    & Hai Duong        & Qui Nhon  & Yen Bai   \\
+		Hai Phong   & Rach Gia         & Hanoi     & Soc Trang \\
+	\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=4in]{images/html_structure.png}
+	\caption{
+		Bố cục danh sách các tỉnh của website, kèm theo đường dẫn trong thẻ a của các tỉnh đó}
+\end{figure}
+
+Vì bố cục này đơn giản và hiển thị đầy đủ danh sách trên website nên chỉ cần sử dụng Javascript để lấy danh sách các dường dẫn đến các trang lấy dữ liệu để nhanh hơn trong quá trình xử lý. Trong console của trình duyệt
+
+\begin{minted}[tabsize=4, breaklines]{javascript}
+	let a = document.querySelectorAll(".country_part li >a")
+	let cities = Array.from(a)
+	cities = cities.map(e => {return {title: e.innerHTML, url:e.href}})
+	// Dùng stringtify để tạo json string, chuỗi này chính là mảng chứa danh sách các thành phố, ta chỉ cần khai báo như một biến list của dictionary trong python.
+	JSON.stringify(cities)
+\end{minted}
+
+Dùng phương pháp phân tích tương tự khi phân tích weather.com để kiểm tra thông tin gửi về cho server ta sẽ biết được những thông tin để nhận về thời tiết vào một ngày cụ thể.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=4in]{images/wwo-history-postman.png}
+	\caption{
+		Những thông số server cần để gửi trả về dữ liệu cần thiết}
+\end{figure}
+
+Vì server của website này render hầu như đầy đủ thông tin nên ta chỉ cần lấy thông tin từ mẫu response dưới đây là đạt yêu cầu. Ở đây có thể thấy rằng có một bảng dữ liệu thể hiện sự khác biệt qua từng năm của dữ liệu. Nên ta chỉ cần gửi 365 request là có thể lấy tất cả dữ liệu cần cho mỗi tỉnh.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=6in]{images/wwo-display-data.png}
+	\caption{
+		Những dữ liệu response hiển thị}
+\end{figure}
+
+Từ những dữ liệu này ta bắt tay vào viết spider.
+
+\begin{minted}[breaklines, tabsize=4]{python}
+	# Sử dụng numpy để tạo một mảng chứa tất cả các ngày trong năm 
+	BASE = date(2018, 1, 1)
+	DATES = numpy.array(
+    	[(BASE + timedelta(days=i)).strftime("%Y-%m-%d") for i in range(365)]
+	)
+\end{minted}
+
+\begin{minted}[breaklines, tabsize=4]{python}
+# Các thông số cơ bản của Spider
+class WorldWeatherOnlineScraper(Spider):
+    name = 'world-weather-online'
+
+    provinces = [
+        {
+			"url": "https://www.worldweatheronline.com/bac-lieu-weather-history/vn.aspx",
+			"title": "Bac Lieu"
+		},
+		...
+		{
+			"url": "https://www.worldweatheronline.com/ho-chi-minh-city-weather-history/vn.aspx",
+			"title": "Ho Chi Minh City"
+		}
+
+    ]
+
+	def start_requests(self):
+		# Ở mỗi tỉnh thành ta gửi 365 request cho 365 ngày trong năm
+        for province in self.provinces:
+            for date in DATES:
+                formData = {
+					# Các thông số khác như đơn vị nhiệt độ hay tọa độ gửi request đều giống nhau nên sẽ không ghi chú ở đây
+                    'ctl00$MainContentHolder$txtPastDate': date,
+                }
+
+                yield FormRequest(province['url'],
+                                  formdata=formData,
+                                  meta={
+                    'date': date,
+                    'province': province['title']
+                }, callback=self.parse
+                )
+
+	def parse(self, response):
+		# Tách bảng history
+        history = response.css('.row.text-center.wwo-tabular')
+
+		# Với mỗi cell trong bảng ta lấy tất cả ra và gom thành một mảng lớn chung
+        # 9 element đầu tiên là tên của 9 cột nên ta loại ra
+        records = history.css('.col.mr-1::text').getall()[9:]
+
+		# Việc cuối cùng là lặp qua tất cả các dòng để ghi lại dữ liệu
+        for i in range(0, len(records), 9):
+            yield{
+                'province': response.meta['province'],
+                'day': response.meta['date'][8:10],
+                'month': response.meta['date'][5:7],
+                'year': records[i],
+                'max': records[i+1],
+				# so on ...
+                'pressure': records[i+8],
+            }
+\end{minted}
+
+Sau khoảng 1 tiếng chạy và điều chỉnh lại ta có bảng dữ liệu sau:
+\begin{itemize}
+	\item Thời gian: 1/1/2009 to 18/06/2021
+	\item Địa lý: 40 thành phố, danh sách đã ghi lại ở trên
+	\item { Các trường dữ liệu:
+	      \begin{itemize}
+		      \item province: Tên thành phố \emph{(không dấu)}
+		      \item date: ngày
+		      \item max: nhiệt độ cao nhất trong ngày \emph{(celcius)}
+		      \item min: nhiệt độ thấp nhất trong ngày \emph{(celcius)}
+		      \item wind: tốc độ gió \emph{(km/h)}
+		      \item wind\_d: hướng gió \href{https://www7.ncdc.noaa.gov/climvis/help_wind.html}{direction}
+		      \item rain: lượng mưa \emph{(mm)}
+		      \item humidi: độ ẩm \emph{(\%)}
+		      \item cloud: mây \emph{(\%)}
+		      \item pressure: áp suất(\href{https://en.wikipedia.org/wiki/Bar_(unit)}{Bar})
+	      \end{itemize}
+	      }
+\end{itemize}
+Dưới đây là một đoạn trong dữ liệu:
+\begin{table}[H]
+	\begin{tabular}{llllllllll}
+		province & max & min & wind & wind\_d & rain & humidi & cloud & pressure & date       \\
+		Bac Lieu & 27  & 22  & 17   & NNE     & 6.9  & 90     & 71    & 1010     & 2009-01-01 \\
+		Bac Lieu & 31  & 25  & 20   & ENE     & 0.0  & 64     & 24    & 1010     & 2010-01-01 \\
+		Bac Lieu & 29  & 24  & 14   & E       & 0.0  & 75     & 45    & 1008     & 2011-01-01 \\
+		Bac Lieu & 30  & 24  & 30   & E       & 0.0  & 79     & 52    & 1012     & 2012-01-01 \\
+		Bac Lieu & 31  & 25  & 20   & ENE     & 0.0  & 70     & 24    & 1010     & 2013-01-01
+	\end{tabular}
+\end{table}
+
+Các thông số cơ bản của dữ liệu (lưu ý rằng gió đã được đổi ra các góc theo radian)
+
+\begin{table}[H]
+	\begin{tabular}{lllllllll}
+		      & max       & min       & wind      & wind\_d  & rain      & humidi    & cloud     & pressure    \\
+		count & 181960    & 181960    & 181960    & 181960   & 181960    & 181960    & 181960    & 181960      \\
+		mean  & 29.837277 & 23.277874 & 11.038657 & 2.67885  & 6.56713   & 77.083068 & 41.721268 & 1010.229127 \\
+		std   & 4.571345  & 3.945381  & 5.311807  & 1.241257 & 13.602055 & 9.288553  & 23.875067 & 4.635714    \\
+		min   & 4         & 2         & 1         & 0        & 0         & 23        & 0         & 988         \\
+		25\%  & 28        & 21        & 7         & 1.570796 & 0.1       & 71        & 23        & 1008        \\
+		50\%  & 31        & 24        & 10        & 2.356194 & 1.8       & 78        & 38        & 1010        \\
+		75\%  & 33        & 26        & 14        & 3.926991 & 7.5       & 83        & 58        & 1012        \\
+		max   & 46        & 32        & 54        & 5.890486 & 596.4     & 100       & 100       & 1038
+	\end{tabular}
+\end{table}
+
+
 \subsubsection{firewatchvn.kiemlam.org.vn}
 
 

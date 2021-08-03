@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+	\PYG{k+kd}{let} \PYG{n+nx}{a} \PYG{o}{=} \PYG{n+nb}{document}\PYG{p}{.}\PYG{n+nx}{querySelectorAll}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}.country\PYGZus{}part li \PYGZgt{}a\PYGZdq{}}\PYG{p}{)}
+	\PYG{k+kd}{let} \PYG{n+nx}{cities} \PYG{o}{=} \PYG{n+nb}{Array}\PYG{p}{.}\PYG{n+nx}{from}\PYG{p}{(}\PYG{n+nx}{a}\PYG{p}{)}
+	\PYG{n+nx}{cities} \PYG{o}{=} \PYG{n+nx}{cities}\PYG{p}{.}\PYG{n+nx}{map}\PYG{p}{(}\PYG{n+nx}{e} \PYG{p}{=\PYGZgt{}} \PYG{p}{\PYGZob{}}\PYG{k}{return} \PYG{p}{\PYGZob{}}\PYG{n+nx}{title}\PYG{o}{:} \PYG{n+nx}{e}\PYG{p}{.}\PYG{n+nx}{innerHTML}\PYG{p}{,} \PYG{n+nx}{url}\PYG{o}{:}\PYG{n+nx}{e}\PYG{p}{.}\PYG{n+nx}{href}\PYG{p}{\PYGZcb{}\PYGZcb{})}
+	\PYG{c+c1}{// Dùng stringtify để tạo json string, chuỗi này chính là mảng chứa danh sách các thành phố, ta chỉ cần khai báo như một biến list của dictionary trong python.}
+	\PYG{n+nx}{JSON}\PYG{p}{.}\PYG{n+nx}{stringify}\PYG{p}{(}\PYG{n+nx}{cities}\PYG{p}{)}
+\end{Verbatim}
