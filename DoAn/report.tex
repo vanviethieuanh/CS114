@@ -1,5 +1,4 @@
 \documentclass{article}
-
 \usepackage[a4paper, total={6in, 10in}]{geometry}
 \usepackage[utf8]{vietnam}
 \usepackage{cite}
@@ -26,7 +25,6 @@
 	19521225
 	\and
 	Lê Văn Phước\\
-
 }
 
 \date{\today} % Date for the report
@@ -93,7 +91,7 @@ Về việc tìm nguồn dữ liệu tương tự đã được khai thác trư�
 \section{Các nghiên cứu trước}
 % Chương này trình bày các kết quả nghiên cứu đã có của tiền nhân liên quan đến bài toán mà nhóm chọn. Những nghiên cứu trước làm trên các bộ dữ liệu nào, dùng phương pháp nào và performance đạt được bao nhiêu
 % Nếu có khả năng thì phân tích thêm kết quả của họ như vậy là tốt chưa, có còn chỗ gì để cải thiện không. Nếu không nhận xét dược thì thôi.
-\subsection{Predicting Australia wildfires with weather data a Call For Code spot challenge of IBM\cite{website:community_ibm}}
+\subsection{Predicting Australia wildfires with weather data a Call For Code spot challenge of IBM}
 Mục đích của cuộc thi này là dự đoán kích thước của khu vực cháy tính bằng km2 theo khu vực ở Úc cho mỗi ngày trong tháng 2 năm 2021 bằng cách sử dụng dữ liệu có sẳn cho đến ngày 29 tháng 1. 
 Bài toán chuỗi thời gian dựa trên dữ liệu hàng ngày do Pairs Geoscope cung cấp. 
 Dữ liệu được cung cấp bao gồm:
@@ -105,6 +103,7 @@ Dữ liệu được cung cấp bao gồm:
 	\item Các loại đất của các địa điểm xảy ra cháy rừng.
 \end{itemize}
 Trong đó dữ liệu thời tiết lịch sử bao gồm các trường như \textbf{vùng}, \textbf{thời gian}, \textbf{lượng mưa (mm/ngày)}, \textbf{Độ ẩm tương đối (\%)}, \textbf{Hàm lượng nước trong đất ($m^3$/$m^3$)}, \textbf{bức xạ mặt trời (MJ/ngày)}, \textbf{nhiệt độ (C)}, \textbf{tốc độ gió (m/s)}. Đây là dữ liệu chính áp dụng vào bài toán của nhóm. Tuy nhiên vì khó khăn trong việc tìm kiếm dữ liệu nên nhóm chỉ đáp 4/6 tiêu chí mà các chuyên gia đã đưa ra đó là lượng mưa, độ ẩm, nhiệt độ, tốc độ gió.
+
 Từ những nghiên cứu các chuyên gia đưa ra các biến ảnh hưởng đến cháy rừng như:
 \begin{itemize}
 	\item Lãnh thổ:
@@ -121,20 +120,23 @@ Từ những nghiên cứu các chuyên gia đưa ra các biến ảnh hưởng 
 \end{itemize}
 Theo báo các tổng kết cuộc thi thì mô hình được sử dụng là Convolutional Neural Network (Windowing Dataset, Conv1D Layers,…) cho ra kết quả RMSE: 19.96, MAE: 6.94, TOT: 9.54
 Qua nghiên cứu của cuộc thi này nhóm rút ra được các biến ảnh hưởng đến cháy rừng, cách khai thác lấy dữ liệu từ thực tế, mô hình đào tạo phù hợp với bài toán.
-\subsection{AI & Climate data for predicting fire frequency in California\cite{website:linkedin_california}}
+\subsection{AI and Climate data for predicting fire frequency in California}
 Mục đích của nghiên cứu này là dự đoán tần suất xảy ra cháy rừng có thể giúp lập kế hoạch khẩn cấp và chủ động quản lý rủ ro thiên tai.
 Dữ liệu về đám cháy được thu từ Kaggle(\url{https://www.kaggle.com/rtatman/188-million-us-wildfires}), bao gồm khoảng 1,9 triệu vụ cháy rừng ở Mỹ được tham chiếu trong giai đoạn 1992-2015. Ngoài ra, dữ liệu khí hậu từ Copernicus ERA5 được tải xuống và sử dụng cho bài toán này.
-Bài nghiên cứu này cũng đưa ra kết luận về việc cháy rừng thường xảy ra hàng tháng hoặc theo mùa. Ở đây, các chuyên gia đưa ra các trường dữ liệu thời tiết được lấy là \textbf{total_precipitation}, \textbf{2m_temperature}, \textbf{2m_dewpoint_temperature}, \textbf{10m_wind_speed}, \textbf{volumetric_soil_water}, \textbf{potential_evaporation}.
+
+Bài nghiên cứu này cũng đưa ra kết luận về việc cháy rừng thường xảy ra hàng tháng hoặc theo mùa. Ở đây, các chuyên gia đưa ra các trường dữ liệu thời tiết được lấy là \textbf{total\_precipitation}, \textbf{2m\_temperature}, \textbf{2m\_dewpoint\_temperature}, \textbf{10m\_wind\_speed}, \textbf{volumetric\_soil\_water}, \textbf{potential\_evaporation}.
+
 Qua nghiên cứu, bài báo đã tính toán hệ số tương quan giữa tuần suất các đám cháy và điều kiện khi hậu trung bình. Phân tích chỉ ra mối tương quan cao đáng kể giữa nhiệt độ mùa hè và PET với số lượng các sự kiện cháy ở CA.
+
 Mô hình dữ đoán trong nghiên cứu này khá đơn giản và nó chỉ sử dụng 6 biến khi hậu được tính trung bình trên toàn California để dự đoán tần suất cá đám cháy trong tiểu bang. Sử dụng tensorflow và scikit-learning để phát triển mạng nơ-ron nhân tạo dựa trên hồi quy.
+
 Từ đánh giá mô hình của bài nghiên cứu cho ra sai số tuyệt đối trung bình tương đối hàng năm (RMAE) khoảng 10\%.
+
 Qua nghiên cứu trên, nhóm cũng rút ra được các biến dữ liệu cần thiết và tác động lớn đến cháy rừng, các phương pháp xử lý số liệu và mô hình được đề xuất sử dụng cho loại bài toán này là ANN.
 %----------------------------------------------------------------------------------------
 %	SECTION 3
 %----------------------------------------------------------------------------------------
-
 \section{Xây dựng bộ dữ liệu}
-
 \qquad Chương này mô tả quá trình thu thập dữ liệu. Nếu dữ liệu crawling tự động thì mô tả cách viết crawler, các khó khăn gặp phải và các số liệu liên quan. Nếu dữ liệu thu thập thủ công thì mô tả các tiêu chí đặt ra để thống nhất trong nhóm khi thu thập. Làm sao để đảm bảo bộ dữ liệu thu thập thủ công có thể khớp gần giống với ngữ cảnh ứng dụng của bài toán.
 
 Sau đó mô tả các thông số chi tiết của bộ dữ liệu, kèm theo ví dụ minh họa rõ ràng. Bài toán đặt ra các trường hợp dữ liệu nào là khó xử lý, có bao nhiêu mẫu dữ liệu thuộc trường hợp đó, chụp vài mẫu dữ liệu khó đó vào báo cáo để minh họa.
