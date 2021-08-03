@@ -150,11 +150,20 @@ Tất cả dữ liệu của nhóm đều bắt đầu bằng 1 quy trình chung
 \subsubsection{weather.com}
 \qquad Để tìm ra API phục vụ cho việc crawl ta vào trang Monthly của một địa phương cụ thể sau đó navigate đến các trang chứa dữ liệu của các tháng trước (việc này giúp cho website sử dụng các API yêu cầu dữ liệu thời tiết quá khứ). Kiểm tra các response trong filter XHR ta có thể tìm ra những response tốt nhất chứa dữ liệu cần thiết.
 
-\includegraphics[width=6in]{images/inspect.png}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=6in]{images/inspect.png}
+	\caption{Thông tin của response chứa những thông tin cần thiết}
+\end{figure}
 
 Tiếp theo đó khi đã xác nhận API này đủ điều kiện ra kiểm tra ý nghĩa của các thông số trong request, thử thay đổi thông số để kiểm tra dữ liệu kéo dài được đến bao lâu.
 
-\includegraphics[width=6in]{images/checkpast.png}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=6in]{images/checkpast.png}
+	\caption{Thử nghiệm với các tham số khác}
+\end{figure}
 
 Vì dữ liệu chấp nhận đến 2014 nên sẽ tiến hành crawl dữ liệu. Nhóm sử dụng Scrappy để crawl vì công cụ này hỗ trợ async cho phép gửi nhiều request cùng lúc cùng với đó là có pipeline để lưu dữ liệu nên giảm rất nhiều quá trình cài đặt.
 
@@ -251,8 +260,7 @@ Việc còn lại là lấy ra và lưu lại dưới file csv. Sau đó lấy n
             }
 
 		last = json[-1]
-        recentDate = datetime.strptime(
-            last['Temperatures']['highTmISO'][:10], '%Y-%M-%d')
+        recentDate = datetime.strptime(last['Temperatures']['highTmISO'][:10], '%Y-%M-%d')
         next = recentDate + timedelta(days=1)
 		
 		if recentDate.date() == datetime.today():
@@ -340,9 +348,13 @@ Kết quả trả về từ hàm nunique():
 	\end{tabular}
 \end{table}
 
-Dữ liệu bị trống sau khi sắp xếp theo ngày và địa phương(theo thứ tự ngày trước địa phương sau, tăng dần):
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=6in]{images/missing.png}
+	\caption{
+		Dữ liệu sau khi sắp xếp theo ngày và địa phương(theo thứ tự ngày trước địa phương sau, tăng dần). Phần được tô là phần chứa dữ liệu, phần màu trắng là phần dữ liệu trống}
+\end{figure}
 
-\includegraphics[width=6in]{images/missing.png}
 
 \subsubsection{worldweatheronline.com}
 \subsubsection{firewatchvn.kiemlam.org.vn}
@@ -350,8 +362,6 @@ Dữ liệu bị trống sau khi sắp xếp theo ngày và địa phương(theo
 
 
 \subsection{Xây dựng bộ dữ liệu}
-
-
 \subsubsection{Imputation of Data}
 \subsubsection{Creation of Dataset}
 
