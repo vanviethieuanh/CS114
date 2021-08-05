@@ -1,0 +1,55 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Các thông số cơ bản của Spider}
+\PYG{k}{class} \PYG{n+nc}{WorldWeatherOnlineScraper}\PYG{p}{(}\PYG{n}{Spider}\PYG{p}{):}
+    \PYG{n}{name} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}world\PYGZhy{}weather\PYGZhy{}online\PYGZsq{}}
+
+    \PYG{n}{provinces} \PYG{o}{=} \PYG{p}{[}
+        \PYG{p}{\PYGZob{}}
+			\PYG{l+s+s2}{\PYGZdq{}url\PYGZdq{}}\PYG{p}{:} \PYG{l+s+s2}{\PYGZdq{}https://www.worldweatheronline.com/bac\PYGZhy{}lieu\PYGZhy{}weather\PYGZhy{}history/vn.aspx\PYGZdq{}}\PYG{p}{,}
+			\PYG{l+s+s2}{\PYGZdq{}title\PYGZdq{}}\PYG{p}{:} \PYG{l+s+s2}{\PYGZdq{}Bac Lieu\PYGZdq{}}
+		\PYG{p}{\PYGZcb{},}
+		\PYG{o}{...}
+		\PYG{p}{\PYGZob{}}
+			\PYG{l+s+s2}{\PYGZdq{}url\PYGZdq{}}\PYG{p}{:} \PYG{l+s+s2}{\PYGZdq{}https://www.worldweatheronline.com/ho\PYGZhy{}chi\PYGZhy{}minh\PYGZhy{}city\PYGZhy{}weather\PYGZhy{}history/vn.aspx\PYGZdq{}}\PYG{p}{,}
+			\PYG{l+s+s2}{\PYGZdq{}title\PYGZdq{}}\PYG{p}{:} \PYG{l+s+s2}{\PYGZdq{}Ho Chi Minh City\PYGZdq{}}
+		\PYG{p}{\PYGZcb{}}
+
+    \PYG{p}{]}
+
+	\PYG{k}{def} \PYG{n+nf}{start\PYGZus{}requests}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+		\PYG{c+c1}{\PYGZsh{} Ở mỗi tỉnh thành ta gửi 365 request cho 365 ngày trong năm}
+        \PYG{k}{for} \PYG{n}{province} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{provinces}\PYG{p}{:}
+            \PYG{k}{for} \PYG{n}{date} \PYG{o+ow}{in} \PYG{n}{DATES}\PYG{p}{:}
+                \PYG{n}{formData} \PYG{o}{=} \PYG{p}{\PYGZob{}}
+					\PYG{c+c1}{\PYGZsh{} Các thông số khác như đơn vị nhiệt độ hay tọa độ gửi request đều giống nhau nên sẽ không ghi chú ở đây}
+                    \PYG{l+s+s1}{\PYGZsq{}ctl00\PYGZdl{}MainContentHolder\PYGZdl{}txtPastDate\PYGZsq{}}\PYG{p}{:} \PYG{n}{date}\PYG{p}{,}
+                \PYG{p}{\PYGZcb{}}
+
+                \PYG{k}{yield} \PYG{n}{FormRequest}\PYG{p}{(}\PYG{n}{province}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}url\PYGZsq{}}\PYG{p}{],}
+                                  \PYG{n}{formdata}\PYG{o}{=}\PYG{n}{formData}\PYG{p}{,}
+                                  \PYG{n}{meta}\PYG{o}{=}\PYG{p}{\PYGZob{}}
+                    \PYG{l+s+s1}{\PYGZsq{}date\PYGZsq{}}\PYG{p}{:} \PYG{n}{date}\PYG{p}{,}
+                    \PYG{l+s+s1}{\PYGZsq{}province\PYGZsq{}}\PYG{p}{:} \PYG{n}{province}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}title\PYGZsq{}}\PYG{p}{]}
+                \PYG{p}{\PYGZcb{},} \PYG{n}{callback}\PYG{o}{=}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{parse}
+                \PYG{p}{)}
+
+	\PYG{k}{def} \PYG{n+nf}{parse}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{response}\PYG{p}{):}
+		\PYG{c+c1}{\PYGZsh{} Tách bảng history}
+        \PYG{n}{history} \PYG{o}{=} \PYG{n}{response}\PYG{o}{.}\PYG{n}{css}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}.row.text\PYGZhy{}center.wwo\PYGZhy{}tabular\PYGZsq{}}\PYG{p}{)}
+
+		\PYG{c+c1}{\PYGZsh{} Với mỗi cell trong bảng ta lấy tất cả ra và gom thành một mảng lớn chung}
+        \PYG{c+c1}{\PYGZsh{} 9 element đầu tiên là tên của 9 cột nên ta loại ra}
+        \PYG{n}{records} \PYG{o}{=} \PYG{n}{history}\PYG{o}{.}\PYG{n}{css}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}.col.mr\PYGZhy{}1::text\PYGZsq{}}\PYG{p}{)}\PYG{o}{.}\PYG{n}{getall}\PYG{p}{()[}\PYG{l+m+mi}{9}\PYG{p}{:]}
+
+		\PYG{c+c1}{\PYGZsh{} Việc cuối cùng là lặp qua tất cả các dòng để ghi lại dữ liệu}
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{records}\PYG{p}{),} \PYG{l+m+mi}{9}\PYG{p}{):}
+            \PYG{k}{yield}\PYG{p}{\PYGZob{}}
+                \PYG{l+s+s1}{\PYGZsq{}province\PYGZsq{}}\PYG{p}{:} \PYG{n}{response}\PYG{o}{.}\PYG{n}{meta}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}province\PYGZsq{}}\PYG{p}{],}
+                \PYG{l+s+s1}{\PYGZsq{}day\PYGZsq{}}\PYG{p}{:} \PYG{n}{response}\PYG{o}{.}\PYG{n}{meta}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}date\PYGZsq{}}\PYG{p}{][}\PYG{l+m+mi}{8}\PYG{p}{:}\PYG{l+m+mi}{10}\PYG{p}{],}
+                \PYG{l+s+s1}{\PYGZsq{}month\PYGZsq{}}\PYG{p}{:} \PYG{n}{response}\PYG{o}{.}\PYG{n}{meta}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}date\PYGZsq{}}\PYG{p}{][}\PYG{l+m+mi}{5}\PYG{p}{:}\PYG{l+m+mi}{7}\PYG{p}{],}
+                \PYG{l+s+s1}{\PYGZsq{}year\PYGZsq{}}\PYG{p}{:} \PYG{n}{records}\PYG{p}{[}\PYG{n}{i}\PYG{p}{],}
+                \PYG{l+s+s1}{\PYGZsq{}max\PYGZsq{}}\PYG{p}{:} \PYG{n}{records}\PYG{p}{[}\PYG{n}{i}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{],}
+				\PYG{c+c1}{\PYGZsh{} so on ...}
+                \PYG{l+s+s1}{\PYGZsq{}pressure\PYGZsq{}}\PYG{p}{:} \PYG{n}{records}\PYG{p}{[}\PYG{n}{i}\PYG{o}{+}\PYG{l+m+mi}{8}\PYG{p}{],}
+            \PYG{p}{\PYGZcb{}}
+\end{Verbatim}

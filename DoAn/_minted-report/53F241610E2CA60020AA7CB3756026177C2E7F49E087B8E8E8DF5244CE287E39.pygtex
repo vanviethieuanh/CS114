@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+	\PYG{c+c1}{\PYGZsh{} Sử dụng numpy để tạo một mảng chứa tất cả các ngày trong năm}
+	\PYG{n}{BASE} \PYG{o}{=} \PYG{n}{date}\PYG{p}{(}\PYG{l+m+mi}{2018}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}
+	\PYG{n}{DATES} \PYG{o}{=} \PYG{n}{numpy}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}
+    	\PYG{p}{[(}\PYG{n}{BASE} \PYG{o}{+} \PYG{n}{timedelta}\PYG{p}{(}\PYG{n}{days}\PYG{o}{=}\PYG{n}{i}\PYG{p}{))}\PYG{o}{.}\PYG{n}{strftime}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZpc{}Y\PYGZhy{}\PYGZpc{}m\PYGZhy{}}\PYG{l+s+si}{\PYGZpc{}d}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)} \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{365}\PYG{p}{)]}
+	\PYG{p}{)}
+\end{Verbatim}
