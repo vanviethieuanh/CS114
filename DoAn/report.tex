@@ -656,11 +656,58 @@ Một đoạn mẫu trong dữ liệu
 \end{table}
 
 \subsection{Xây dựng bộ dữ liệu}
+\subsubsection{Creation of Dataset}
+Do việc thiếu dữ liệu nên nhóm tạo 2 bộ dữ liệu có những đặc trưng tối ưu riêng (về không gian và thời gian) để có thể tận dụng hết được các trường dữ liệu có ảnh hưởng lớn đến bài toán và dễ dàng hơn trong việt imputation.
 
+Như đã nói ở trên dữ liệu lượng mưa vốn có ảnh hướng lớn đến thông tin cháy bị thiếu rất nhiều ở thời gian đầu của bộ dữ liệu. Nhóm đã tham khảo 2 phương pháp:
+\begin{enumerate}
+	\item Sử dụng phương pháp FFT(Fast Fourier transform) để tìm ra các chu kì lặp lại của dữ liệu để dự đoán ngược dữ liệu.
+	\item Sử dụng dữ liệu từ các thành phố trung tâm từ bộ dữ liệu từ World Weather Online để lấp bù vào các xã, bị thiếu.
+\end{enumerate}
+
+Vì lượng khí hậu thay đổi theo từng năm do biến đổi khí hậu trong thời gian gần đây, nên mặc dù các chu kỳ lặp lại qua từng năm thì sự phản hồi qua phép FFT cũng bị nhiễu loạn rất nhiều. Thêm vào đó biến đổi khí hậu còn là một trong những nguyên nhân gây nên cháy rừng, nên một yếu tố bị ảnh hưởng bởi biến đổi khí hậu như lượng mưa thì việc sử dụng FFT để dự đoán theo chu kì là không hợp lí. Vì vậy nhóm quyết định sử dụng dữ liệu từ thành phố trung tâm (hành chính) của các tỉnh để lấp vào phần lượng mưa còn trống. Tuy nhiên bộ dữ liệu thời tiết từ WWO chỉ có 3 tỉnh ở Tây Nguyên nên nhóm chia thành 2 bộ dữ liệu như sau:
+
+\begin{enumerate}
+	\item Gồm 5 Tỉnh Tây Nguyên từ 1/1/2017 đến 31/12/2020
+	\item Gồm 3 Tỉnh Gia Lai, Lâm Đồng, Đắk Lắk từ 01/01/2014 đến 31/12/2020
+\end{enumerate}
+
+Bộ dữ liệu đầu tiên gồm tất cả tỉnh thành nhưng chỉ lấy từ năm 2017 vì điểm đứt gãy dữ liệu (điểm mà dữ liệu bắt đầu thiếu là trước thời gian này)
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=6in]{images/missing_of_rain.png}
+	\caption{Biểu đồ thể hiện dữ liệu bị thiếu, trục tung là số lượng xã bị mất dữ liệu lượng mưa}
+\end{figure}
 
 \subsubsection{Imputation of Data}
-\subsubsection{Creation of Dataset}
 
+Bộ dữ liệu số 1 đầy đủ các thông tin cần thiết trong thời gian yêu cầu, nên việc imputation là không cần thiết.
+
+Như đã nói thì phương pháp imputation ở đây là sử dụng dữ liệu lượng mưa ở thành phố trung tâm cho tất cả các xã bị mất dữ liệu. Ví dụ tất cả các xã của tỉnh Lâm Đồng bị mất dữ liệu lượng mưa/nhiệt độ trong ngày 20/8/2020 sẽ được lấp bằng dữ liệu lượng mưa/nhiệt độ của Đà Lạt ngày 20/8/2020.
+
+Để thực hiện Imputation bộ dữ liệu thứ 2, ta map toàn bộ các tên các thành phố trong bộ dữ liệu WWO thành tên Tỉnh mà thành phố đó trực thuộc
+\begin{minted}[]{python}
+df_wwo_weather_tn = df_wwo_weather[df_wwo_weather['province'].isin(['Buon Me Thuot','Play Cu','Da Lat'])].copy()
+df_wwo_weather_tn['province'] = df_wwo_weather_tn['province'].replace({
+    'Buon Me Thuot':'Đắk Lắk',
+    'Play Cu':'Gia Lai',
+    'Da Lat':'Lâm Đồng',
+})
+\end{minted}
+
+Sau đó ta chuyển tên tỉnh đó thành mã tỉnh. Tạo một bảng chứa toàn bộ mã xã cùng với thời tiết của 3 tỉnh này từ bảng WWO. Merge bảng này với bảng dữ liệu từ weather.com bằng \texttt{left join} sau đó imputation từ cột của bảng WWO sang cột của bảng IBM weather ta sẽ được một bảng dữ liệu Imputation
+\begin{minted}[breaklines,tabsize=2]{python}
+# Create replacement df contain data imputation from wwo data to each ward of that province, drop province_code because don't need more
+df_replacement = pd.merge(df_wwo_weather_tn, df_administrative_tn[['province_code', 'ward_code']], on=['province_code'], how='outer').dropna().drop(['province_code'], axis=1)
+
+# Merge with ibm weather the for show missing data, drop ward because ward columns of IBM data will be NaN if ward do not have data in that date
+df = pd.merge(df_ibm_weather, df_replacement, how='right', left_on=['ward','date'], right_on=['ward_code','date']).drop(['ward'], axis=1)
+
+df['max_x'] = df['max_x'].fillna(df['max_y'])
+df['min_x'] = df['min_x'].fillna(df['min_y'])
+df['24_rain'] = df['24_rain'].fillna(df['rain'])
+\end{minted}
 
 %----------------------------------------------------------------------------------------
 %	SECTION 4
@@ -701,6 +748,11 @@ Một đoạn mẫu trong dữ liệu
 
 \section{Ứng dụng và hướng phát triển}
 
+\begin{itemize}
+	\item Sử dụng Deep learning để imputation dữ liệu còn thiếu
+	\item Tìm thêm nhiều nguồn dữ liệu thời tiết
+	\item Nghiên cứu sử dụng multiple input
+\end{itemize}
 
 
 %----------------------------------------------------------------------------------------

@@ -1,0 +1,8 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{df\PYGZus{}wwo\PYGZus{}weather\PYGZus{}tn} \PYG{o}{=} \PYG{n}{df\PYGZus{}wwo\PYGZus{}weather}\PYG{p}{[}\PYG{n}{df\PYGZus{}wwo\PYGZus{}weather}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}province\PYGZsq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{isin}\PYG{p}{([}\PYG{l+s+s1}{\PYGZsq{}Buon Me Thuot\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}Play Cu\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}Da Lat\PYGZsq{}}\PYG{p}{])]}\PYG{o}{.}\PYG{n}{copy}\PYG{p}{()}
+\PYG{n}{df\PYGZus{}wwo\PYGZus{}weather\PYGZus{}tn}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}province\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{df\PYGZus{}wwo\PYGZus{}weather\PYGZus{}tn}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}province\PYGZsq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{replace}\PYG{p}{(\PYGZob{}}
+    \PYG{l+s+s1}{\PYGZsq{}Buon Me Thuot\PYGZsq{}}\PYG{p}{:}\PYG{l+s+s1}{\PYGZsq{}Đắk Lắk\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}Play Cu\PYGZsq{}}\PYG{p}{:}\PYG{l+s+s1}{\PYGZsq{}Gia Lai\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}Da Lat\PYGZsq{}}\PYG{p}{:}\PYG{l+s+s1}{\PYGZsq{}Lâm Đồng\PYGZsq{}}\PYG{p}{,}
+\PYG{p}{\PYGZcb{})}
+\end{Verbatim}
