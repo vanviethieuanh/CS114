@@ -1,0 +1,11 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{p}{\PYGZob{}}
+    \PYG{l+s+s1}{\PYGZsq{}downloader/request\PYGZus{}count\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mi}{3127864}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}downloader/response\PYGZus{}count\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mi}{3127864}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}downloader/response\PYGZus{}status\PYGZus{}count/200\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mi}{3127863}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}downloader/response\PYGZus{}status\PYGZus{}count/404\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mi}{1}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}elapsed\PYGZus{}time\PYGZus{}seconds\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{68738.104826}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}finish\PYGZus{}reason\PYGZsq{}}\PYG{p}{:} \PYG{l+s+s1}{\PYGZsq{}finished\PYGZsq{}}\PYG{p}{,}
+    \PYG{l+s+s1}{\PYGZsq{}item\PYGZus{}scraped\PYGZus{}count\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mi}{997218}\PYG{p}{,}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

@@ -138,9 +138,12 @@ Qua nghiên cứu trên, nhóm cũng rút ra được các biến dữ liệu c�
 %	SECTION 3
 %----------------------------------------------------------------------------------------
 \section{Xây dựng bộ dữ liệu}
-\qquad Chương này mô tả quá trình thu thập dữ liệu. Nếu dữ liệu crawling tự động thì mô tả cách viết crawler, các khó khăn gặp phải và các số liệu liên quan. Nếu dữ liệu thu thập thủ công thì mô tả các tiêu chí đặt ra để thống nhất trong nhóm khi thu thập. Làm sao để đảm bảo bộ dữ liệu thu thập thủ công có thể khớp gần giống với ngữ cảnh ứng dụng của bài toán.
+% Chương này mô tả quá trình thu thập dữ liệu. Nếu dữ liệu crawling tự động thì mô tả cách viết crawler, các khó khăn gặp phải và các số liệu liên quan. Nếu dữ liệu thu thập thủ công thì mô tả các tiêu chí đặt ra để thống nhất trong nhóm khi thu thập. Làm sao để đảm bảo bộ dữ liệu thu thập thủ công có thể khớp gần giống với ngữ cảnh ứng dụng của bài toán.
 
-Sau đó mô tả các thông số chi tiết của bộ dữ liệu, kèm theo ví dụ minh họa rõ ràng. Bài toán đặt ra các trường hợp dữ liệu nào là khó xử lý, có bao nhiêu mẫu dữ liệu thuộc trường hợp đó, chụp vài mẫu dữ liệu khó đó vào báo cáo để minh họa.
+% Sau đó mô tả các thông số chi tiết của bộ dữ liệu, kèm theo ví dụ minh họa rõ ràng. Bài toán đặt ra các trường hợp dữ liệu nào là khó xử lý, có bao nhiêu mẫu dữ liệu thuộc trường hợp đó, chụp vài mẫu dữ liệu khó đó vào báo cáo để minh họa.
+
+\emph{Lưu ý ở phần này Tỉnh là thuật ngữ để chỉ chung đơn vị hành chính cấp 1 trực thuộc quốc gia, thay cho "tỉnh thành" hoặc chính xác hơn là "đơn vị hành chính cấp tỉnh". Tương tự với "Huyện" là đơn vị hành chính bậc hai, và xã là cấp ba.}
+
 
 \subsection{Quá trình thu thập dữ liệu}
 
@@ -207,7 +210,7 @@ Trong hàm start\_requests của Spider với mỗi xã ta tạo 1 request vào 
 
 Vì đây là API nên dữ liệu được thể hiện dưới dạng json rất rõ ràng.
 
-\begin{minted}[tabsize=4,breaklines]{json}
+\begin{minted}[tabsize=4,breaklines]{javascript}
 	{
         "Temperatures": {
             "highF": 72,
@@ -286,13 +289,13 @@ Dữ liệu từ website này cung cấp có độ chính xác đến từng t�
 Sau khoảng nhiều ngày khai thác và xử lý, nhóm đã lấy được dữ liệu của 5 tỉnh Tây Nguyên vào từng xã từng ngày kéo dài từ 1/1/2014 đến 8/6/2021. Dữ liệu gồm các trường cơ bản sau (lưu ý các trường này đã được đổi tên so với khi crawl dữ liệu để thống nhất các bộ dữ liệu với nhau nhằm dễ dàng cho việc nghiên cứu):
 
 \begin{itemize}
-	\item ward: Mã của xã, phường, thị trấn, thị xã. Vì sẽ có những địa điểm trùng tên nên nhóm sử dụng mã để phân biệt các địa phương (mã này cung cấp bởi API của firewatchvn.kiemlam.org.vn\cite{website:firewatch_administrative})
-	\item date: là ngày mà record được ghi lại.
-	\item max/min: là nhiệt độ cao nhất và thấp nhất được ghi nhận trong ngày(celcius).
-	\item sunrise/sunset: là thời gian mặt trời mọc và lặn.
-	\item 7\_rain: lượng mưa tổng tính từ ngày chủ nhật gần nhất trước đó (cm)
-	\item m\_rain: lượng mưa tổng tính từ ngày 1 của tháng đó(cm)
-	\item 24\_rain: lượng mưa ghi nhận trong ngày(cm)
+	\item \texttt{ward}: Mã xã. Vì sẽ có những địa điểm trùng tên nên nhóm sử dụng mã để phân biệt các địa phương (mã này cung cấp bởi API của firewatchvn.kiemlam.org.vn\cite{website:firewatch_administrative})
+	\item \texttt{date}: là ngày mà record được ghi lại.
+	\item \texttt{max/min}: là nhiệt độ cao nhất và thấp nhất được ghi nhận trong ngày(celcius).
+	\item \texttt{sunrise/sunset}: là thời gian mặt trời mọc và lặn.
+	\item \texttt{7\_rain}: lượng mưa tổng tính từ ngày chủ nhật gần nhất trước đó (cm)
+	\item \texttt{m\_rain}: lượng mưa tổng tính từ ngày 1 của tháng đó(cm)
+	\item \texttt{24\_rain}: lượng mưa ghi nhận trong ngày(cm)
 \end{itemize}
 
 Dưới đây là một đoạn mẫu trong dữ liệu.
@@ -468,16 +471,16 @@ Sau khoảng 1 tiếng chạy và điều chỉnh lại ta có bảng dữ liệ
 	\item Địa lý: 40 thành phố, danh sách đã ghi lại ở trên
 	\item { Các trường dữ liệu:
 	      \begin{itemize}
-		      \item province: Tên thành phố \emph{(không dấu)}
-		      \item date: ngày
-		      \item max: nhiệt độ cao nhất trong ngày \emph{(celcius)}
-		      \item min: nhiệt độ thấp nhất trong ngày \emph{(celcius)}
-		      \item wind: tốc độ gió \emph{(km/h)}
-		      \item wind\_d: hướng gió \href{https://www7.ncdc.noaa.gov/climvis/help_wind.html}{direction}
-		      \item rain: lượng mưa \emph{(mm)}
-		      \item humidi: độ ẩm \emph{(\%)}
-		      \item cloud: mây \emph{(\%)}
-		      \item pressure: áp suất(\href{https://en.wikipedia.org/wiki/Bar_(unit)}{Bar})
+		      \item \texttt{province}: Tên thành phố \emph{(không dấu)}
+		      \item \texttt{date}: ngày
+		      \item \texttt{max}: nhiệt độ cao nhất trong ngày \emph{(celcius)}
+		      \item \texttt{min}: nhiệt độ thấp nhất trong ngày \emph{(celcius)}
+		      \item \texttt{wind}: tốc độ gió \emph{(km/h)}
+		      \item \texttt{wind\_d}: hướng gió \href{https://www7.ncdc.noaa.gov/climvis/help_wind.html}{direction}
+		      \item \texttt{rain}: lượng mưa \emph{(mm)}
+		      \item \texttt{humidi}: độ ẩm \emph{(\%)}
+		      \item \texttt{cloud}: mây \emph{(\%)}
+		      \item \texttt{pressure}: áp suất(\href{https://en.wikipedia.org/wiki/Bar_(unit)}{Bar})
 	      \end{itemize}
 	      }
 \end{itemize}
@@ -511,9 +514,150 @@ Các thông số cơ bản của dữ liệu (lưu ý rằng gió đã được 
 
 \subsubsection{firewatchvn.kiemlam.org.vn}
 
+Tương tự với 2 trang ở trên, sau khi phân tích dữ liệu nhận về từ các response, ta biết được các cổng API sau:
 
+Domain: \texttt{firewatchvn.kiemlam.org.vn}
+
+\begin{enumerate}
+	\item Thông tin cấu trúc hành chính
+	      \begin{itemize}
+		      \item Route: \texttt{/fwdata/hanhchinh/{province-code}/{district-code}}
+		      \item Parameters:
+		            \begin{itemize}
+			            \item \texttt{province-code}: mã tỉnh, nếu để là 0 thì sẽ trả về danh sách tất cả các tỉnh trên cả nước
+			            \item \texttt{district-code}: mã huyện, nếu để là 0 thì sẽ trả về danh sách tất cả các huyện của tỉnh hiện tại, nếu \textbf{ \texttt{province-code} là 0 thì tham số này không có ý nghĩa}
+		            \end{itemize}
+		      \item Response:
+		            \begin{minted}[tabsize=4, breaklines]{javascript}
+					// Response from "/fwdata/hanhchinh/0/0"
+					[
+						{"ma":"89","ten":"An Giang"},
+						{"ma":"24","ten":"Bắc Giang"},
+						...,
+						{"ma":"15","ten":"Yên Bái"}
+					]
+					\end{minted}
+	      \end{itemize}
+
+	\item Thông tin điểm cháy
+	      \begin{enumerate}
+		      \item Route: {\texttt{/fwdata/search/diaphuong/\{province-code\}/\{district-code\}/\{ward-code\}/}
+		            \linebreak
+		            \texttt{\{start-date\}/\{end-date\}/1/100}
+		            }
+		      \item Parameters:
+		            \begin{itemize}
+			            \item \texttt{province-code}: mã tỉnh, nếu để là 0 thì sẽ trả về thống kê bằng tổng số các vụ cháy trên cả nước ở các tỉnh
+			            \item \texttt{district-code}: mã huyện, nếu để là 0 thì sẽ trả về thống kê bằng tổng số các vụ cháy trên cả nước ở các huyện, nếu \texttt{province-code là 0 thì tham số này không có ý nghĩa}
+			            \item \texttt{ward-code}: mã xã, nếu để là 0 thì sẽ trả về thống kê bằng tổng số các vụ cháy trên cả nước ở các xã, nếu \textbf{\texttt{province-code} hoặc \texttt{district-code} là 0 thì tham số này không có ý nghĩa}
+			            \item \texttt{start-date}: ngày bắt đầu, format dưới dạng \texttt{dd!mm!yyyy}
+			            \item \texttt{end-date}: ngày kết thúc, format dưới dạng \texttt{dd!mm!yyyy}
+		            \end{itemize}
+		      \item Response:
+		            \begin{minted}[tabsize=4, breaklines]{javascript}
+// Response from "/fwdata/search/diaphuong/49/512/0/01!10!2019/01!10!2019/1/100"
+[
+    {
+        "sdc": 3,
+        "x": 108.023503269442,
+        "y": 15.5811098358411,
+        "xa": "Hiệp Hòa",
+        "hp": [
+            { 
+				"x": 108.02951,
+				"y": 15.56155,
+				"idhotspot": "20758-_263b067"
+			},
+            {
+				"x": 108.03237,
+				"y": 15.553405,
+				"idhotspot": "20758-!ab49a26"
+			},
+            {
+				"x": 108.03386,
+				"y": 15.58714,
+				"idhotspot": "20758-_c73ffe4"
+			}
+        ]
+    },
+	...,
+    {
+        "sdc": 1,
+        "x": 108.014536842611,
+        "y": 15.537556163829,
+        "xa": "Sông Trà",
+        "hp": [
+			{ 
+				"x": 108.05701,
+				"y": 15.53117,
+				"idhotspot": "20770-_594ec71"
+			}
+		]
+    }
+]
+
+					\end{minted}
+	      \end{enumerate}
+\end{enumerate}
+
+Với API này ta có 2 hướng giải quyết:
+\begin{enumerate}
+	\item Tạo request cho tất cả các huyện vào mỗi ngày, việc này sẽ giúp quét hết toàn bộ điểm cháy chi tiết đến từng tọa độ theo ngày. Trong bộ dữ liệu có mã của 710 đơn vị hành chính cấp huyện nếu vậy để quét qua từ 1/1/2008 đến 31/12/2020 (khoảng 4749 ngày) ta cần gửi khoảng 3371790 request
+	\item Tạo request thống kê trên ngày cho cả nước, gom tất cả các huyện có cháy trong ngày đó, sau đó tra theo mã huyện đã nhận. Phương pháp này có thể giảm nhưng cũng có thể làm tăng số lượng request tùy các các điểm cháy phân bổ.
+\end{enumerate}
+
+Sau khi so sánh 2 phương pháp bằng cách request 30 ngày thì phương pháp thứ 2 cho lượng request chỉ bằng 70\% so với phương pháp thứ nhất. Vì vậy nhóm quyết định chọn phương pháp thứ 2.
+
+Dưới đây là kết quả tổng kết từ crawler (đã lược bỏ, chi tiết xem \href{https://github.com/vanviethieuanh/CS114.L21/blob/920ee0722baa05582e67e05f8e5a2a350b18b956/DoAn/Wildfire/wildfire/scrape-log.txt}{tại đây})
+
+\begin{minted}[]{python}
+{
+    'downloader/request_count': 3127864,
+    'downloader/response_count': 3127864,
+    'downloader/response_status_count/200': 3127863,
+    'downloader/response_status_count/404': 1,
+    'elapsed_time_seconds': 68738.104826,
+    'finish_reason': 'finished',
+    'item_scraped_count': 997218,
+}
+\end{minted}
+
+Vậy ta đã giảm được 7.23\% lượng request (243926, khoảng 1.489 tiếng thời gian thực thi)
+
+Đặc điểm chung của bộ dữ liệu này là không thiếu sót ở các cell vì nếu đã được ghi lại ở server thì chắc chắn dữ liệu này đầy đủ thông tin.
+
+\begin{itemize}
+	\item Thời gian: 1/1/2008 đến 31/12/2020
+	\item Địa lý: Cả nước
+	\item { Các trường dữ liệu:
+	      \begin{itemize}
+		      \item \texttt{date}: Ngày ghi nhận dưới dạng \texttt{yyyy-mm-dd}
+		      \item \texttt{province}: Tỉnh ghi nhận
+		      \item \texttt{district}: Huyện ghi nhận
+		      \item \texttt{ward}: Xã ghi nhận
+		      \item \texttt{long}: Kinh độ
+		      \item \texttt{lat}: Vĩ độ
+	      \end{itemize}
+	      }
+\end{itemize}
+
+Một đoạn mẫu trong dữ liệu
+\begin{table}[H]
+	\begin{tabular}{llllll}
+		date       & province   & district   & ward       & long      & lat      \\
+		2020-01-06 & Bắc Giang  & Yên Dũng   & Tiền Phong & 106.172   & 21.238   \\
+		2020-05-26 & Lào Cai    & Văn Bàn    & Nậm Tha    & 104.41616 & 21.99459 \\
+		2020-05-26 & Sóc Trăng  & Mỹ Tú      & Hưng  Phú  & 105.70397 & 9.64698  \\
+		2020-05-26 & Sơn La     & Vân Hồ     & Tân Xuân   & 104.70561 & 20.6593  \\
+		2020-05-26 & Bạc Liêu   & Bạc Liêu   & Vĩnh Trạch & 105.76225 & 9.30437  \\
+		2020-05-26 & Bình Dương & Bàu Bàng   & Lai Uyên   & 106.63067 & 11.23651 \\
+		2020-05-26 & Hà Tĩnh    & TX. Kỳ Anh & P. Kỳ Long & 106.41985 & 18.04084 \\
+	\end{tabular}
+\end{table}
 
 \subsection{Xây dựng bộ dữ liệu}
+
+
 \subsubsection{Imputation of Data}
 \subsubsection{Creation of Dataset}
 

@@ -1,0 +1,31 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+	\PYG{p}{\PYGZob{}}
+        \PYG{l+s+s2}{\PYGZdq{}Temperatures\PYGZdq{}}\PYG{o}{:} \PYG{p}{\PYGZob{}}
+            \PYG{l+s+s2}{\PYGZdq{}highF\PYGZdq{}}\PYG{o}{:} \PYG{l+m+mi}{72}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}highC\PYGZdq{}}\PYG{o}{:} \PYG{l+m+mi}{22}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}highTm\PYGZdq{}}\PYG{o}{:} \PYG{l+s+s2}{\PYGZdq{}01:00 PM\PYGZdq{}}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}highTmISO\PYGZdq{}}\PYG{o}{:} \PYG{l+s+s2}{\PYGZdq{}2014\PYGZhy{}01\PYGZhy{}01T06:00:00.000Z\PYGZdq{}}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}highTmISOLocal\PYGZdq{}}\PYG{o}{:} \PYG{l+s+s2}{\PYGZdq{}2014\PYGZhy{}01\PYGZhy{}01T13:00:00.000+07:00\PYGZdq{}}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}lowF\PYGZdq{}}\PYG{o}{:} \PYG{l+m+mi}{68}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}lowC\PYGZdq{}}\PYG{o}{:} \PYG{l+m+mi}{20}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}lowTm\PYGZdq{}}\PYG{o}{:} \PYG{l+s+s2}{\PYGZdq{}01:00 AM\PYGZdq{}}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}lowTmISO\PYGZdq{}}\PYG{o}{:} \PYG{l+s+s2}{\PYGZdq{}2013\PYGZhy{}12\PYGZhy{}31T18:00:00.000Z\PYGZdq{}}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}lowTmISOLocal\PYGZdq{}}\PYG{o}{:} \PYG{l+s+s2}{\PYGZdq{}2014\PYGZhy{}01\PYGZhy{}01T01:00:00.000+07:00\PYGZdq{}}
+        \PYG{p}{\PYGZcb{},}
+        \PYG{l+s+s2}{\PYGZdq{}WxDetails\PYGZdq{}}\PYG{o}{:} \PYG{p}{\PYGZob{}} \PYG{l+s+s2}{\PYGZdq{}icon\PYGZdq{}}\PYG{o}{:} \PYG{l+m+mi}{27}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}wx\PYGZdq{}}\PYG{o}{:} \PYG{l+s+s2}{\PYGZdq{}Mostly Cloudy\PYGZdq{}} \PYG{p}{\PYGZcb{},}
+        \PYG{l+s+s2}{\PYGZdq{}SunData\PYGZdq{}}\PYG{o}{:} \PYG{p}{\PYGZob{}}
+            \PYG{l+s+s2}{\PYGZdq{}sunrise\PYGZdq{}}\PYG{o}{:} \PYG{l+s+s2}{\PYGZdq{}06:05 AM\PYGZdq{}}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}sunset\PYGZdq{}}\PYG{o}{:} \PYG{l+s+s2}{\PYGZdq{}05:26 PM\PYGZdq{}}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}sunriseISO\PYGZdq{}}\PYG{o}{:} \PYG{l+s+s2}{\PYGZdq{}2013\PYGZhy{}12\PYGZhy{}31T23:05:00.000Z\PYGZdq{}}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}sunsetISO\PYGZdq{}}\PYG{o}{:} \PYG{l+s+s2}{\PYGZdq{}2014\PYGZhy{}01\PYGZhy{}01T10:26:00.000Z\PYGZdq{}}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}sunriseISOLocal\PYGZdq{}}\PYG{o}{:} \PYG{l+s+s2}{\PYGZdq{}2014\PYGZhy{}01\PYGZhy{}01T06:05:00.000+07:00\PYGZdq{}}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}sunsetISOLocal\PYGZdq{}}\PYG{o}{:} \PYG{l+s+s2}{\PYGZdq{}2014\PYGZhy{}01\PYGZhy{}01T17:26:00.000+07:00\PYGZdq{}}
+        \PYG{p}{\PYGZcb{},}
+        \PYG{l+s+s2}{\PYGZdq{}Moon\PYGZdq{}}\PYG{o}{:} \PYG{p}{\PYGZob{}}
+            \PYG{l+s+s2}{\PYGZdq{}moonriseLocal\PYGZdq{}}\PYG{o}{:} \PYG{l+s+s2}{\PYGZdq{}2014\PYGZhy{}01\PYGZhy{}01T05:34:00.000+07:00\PYGZdq{}}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}moonsetLocal\PYGZdq{}}\PYG{o}{:} \PYG{l+s+s2}{\PYGZdq{}2014\PYGZhy{}01\PYGZhy{}01T17:25:00.000+07:00\PYGZdq{}}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}moonriseISO\PYGZdq{}}\PYG{o}{:} \PYG{l+s+s2}{\PYGZdq{}2013\PYGZhy{}12\PYGZhy{}31T22:34:00.000Z\PYGZdq{}}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}moonsetlISO\PYGZdq{}}\PYG{o}{:} \PYG{l+s+s2}{\PYGZdq{}2014\PYGZhy{}01\PYGZhy{}01T10:25:00.000Z\PYGZdq{}}
+        \PYG{p}{\PYGZcb{}}
+    \PYG{p}{\PYGZcb{}}
+\end{Verbatim}

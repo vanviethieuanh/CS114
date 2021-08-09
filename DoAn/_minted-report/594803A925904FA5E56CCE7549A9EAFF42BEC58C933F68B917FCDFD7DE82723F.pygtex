@@ -1,0 +1,42 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{// Response from \PYGZdq{}/fwdata/search/diaphuong/49/512/0/01!10!2019/01!10!2019/1/100\PYGZdq{}}
+\PYG{p}{[}
+    \PYG{p}{\PYGZob{}}
+        \PYG{l+s+s2}{\PYGZdq{}sdc\PYGZdq{}}\PYG{o}{:} \PYG{l+m+mi}{3}\PYG{p}{,}
+        \PYG{l+s+s2}{\PYGZdq{}x\PYGZdq{}}\PYG{o}{:} \PYG{l+m+mf}{108.023503269442}\PYG{p}{,}
+        \PYG{l+s+s2}{\PYGZdq{}y\PYGZdq{}}\PYG{o}{:} \PYG{l+m+mf}{15.5811098358411}\PYG{p}{,}
+        \PYG{l+s+s2}{\PYGZdq{}xa\PYGZdq{}}\PYG{o}{:} \PYG{l+s+s2}{\PYGZdq{}Hiệp Hòa\PYGZdq{}}\PYG{p}{,}
+        \PYG{l+s+s2}{\PYGZdq{}hp\PYGZdq{}}\PYG{o}{:} \PYG{p}{[}
+            \PYG{p}{\PYGZob{}}
+				\PYG{l+s+s2}{\PYGZdq{}x\PYGZdq{}}\PYG{o}{:} \PYG{l+m+mf}{108.02951}\PYG{p}{,}
+				\PYG{l+s+s2}{\PYGZdq{}y\PYGZdq{}}\PYG{o}{:} \PYG{l+m+mf}{15.56155}\PYG{p}{,}
+				\PYG{l+s+s2}{\PYGZdq{}idhotspot\PYGZdq{}}\PYG{o}{:} \PYG{l+s+s2}{\PYGZdq{}20758\PYGZhy{}\PYGZus{}263b067\PYGZdq{}}
+			\PYG{p}{\PYGZcb{},}
+            \PYG{p}{\PYGZob{}}
+				\PYG{l+s+s2}{\PYGZdq{}x\PYGZdq{}}\PYG{o}{:} \PYG{l+m+mf}{108.03237}\PYG{p}{,}
+				\PYG{l+s+s2}{\PYGZdq{}y\PYGZdq{}}\PYG{o}{:} \PYG{l+m+mf}{15.553405}\PYG{p}{,}
+				\PYG{l+s+s2}{\PYGZdq{}idhotspot\PYGZdq{}}\PYG{o}{:} \PYG{l+s+s2}{\PYGZdq{}20758\PYGZhy{}!ab49a26\PYGZdq{}}
+			\PYG{p}{\PYGZcb{},}
+            \PYG{p}{\PYGZob{}}
+				\PYG{l+s+s2}{\PYGZdq{}x\PYGZdq{}}\PYG{o}{:} \PYG{l+m+mf}{108.03386}\PYG{p}{,}
+				\PYG{l+s+s2}{\PYGZdq{}y\PYGZdq{}}\PYG{o}{:} \PYG{l+m+mf}{15.58714}\PYG{p}{,}
+				\PYG{l+s+s2}{\PYGZdq{}idhotspot\PYGZdq{}}\PYG{o}{:} \PYG{l+s+s2}{\PYGZdq{}20758\PYGZhy{}\PYGZus{}c73ffe4\PYGZdq{}}
+			\PYG{p}{\PYGZcb{}}
+        \PYG{p}{]}
+    \PYG{p}{\PYGZcb{},}
+	\PYG{p}{...,}
+    \PYG{p}{\PYGZob{}}
+        \PYG{l+s+s2}{\PYGZdq{}sdc\PYGZdq{}}\PYG{o}{:} \PYG{l+m+mi}{1}\PYG{p}{,}
+        \PYG{l+s+s2}{\PYGZdq{}x\PYGZdq{}}\PYG{o}{:} \PYG{l+m+mf}{108.014536842611}\PYG{p}{,}
+        \PYG{l+s+s2}{\PYGZdq{}y\PYGZdq{}}\PYG{o}{:} \PYG{l+m+mf}{15.537556163829}\PYG{p}{,}
+        \PYG{l+s+s2}{\PYGZdq{}xa\PYGZdq{}}\PYG{o}{:} \PYG{l+s+s2}{\PYGZdq{}Sông Trà\PYGZdq{}}\PYG{p}{,}
+        \PYG{l+s+s2}{\PYGZdq{}hp\PYGZdq{}}\PYG{o}{:} \PYG{p}{[}
+			\PYG{p}{\PYGZob{}}
+				\PYG{l+s+s2}{\PYGZdq{}x\PYGZdq{}}\PYG{o}{:} \PYG{l+m+mf}{108.05701}\PYG{p}{,}
+				\PYG{l+s+s2}{\PYGZdq{}y\PYGZdq{}}\PYG{o}{:} \PYG{l+m+mf}{15.53117}\PYG{p}{,}
+				\PYG{l+s+s2}{\PYGZdq{}idhotspot\PYGZdq{}}\PYG{o}{:} \PYG{l+s+s2}{\PYGZdq{}20770\PYGZhy{}\PYGZus{}594ec71\PYGZdq{}}
+			\PYG{p}{\PYGZcb{}}
+		\PYG{p}{]}
+    \PYG{p}{\PYGZcb{}}
+\PYG{p}{]}
+\end{Verbatim}
