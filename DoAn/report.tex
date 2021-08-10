@@ -126,7 +126,7 @@ Qua nghiên cứu của cuộc thi này nhóm rút ra được các biến ảnh
 Mục đích của nghiên cứu này là dự đoán tần suất xảy ra cháy rừng có thể giúp lập kế hoạch khẩn cấp và chủ động quản lý rủ ro thiên tai.
 Dữ liệu về đám cháy được thu từ Kaggle(\url{https://www.kaggle.com/rtatman/188-million-us-wildfires}), bao gồm khoảng 1,9 triệu vụ cháy rừng ở Mỹ được tham chiếu trong giai đoạn 1992-2015. Ngoài ra, dữ liệu khí hậu từ Copernicus ERA5 được tải xuống và sử dụng cho bài toán này.
 
-Bài nghiên cứu này cũng đưa ra kết luận về việc cháy rừng thường xảy ra hàng tháng hoặc theo mùa. Ở đây, các chuyên gia đưa ra các trường dữ liệu thời tiết được lấy là \textbf{total\_precipitation}, \textbf{2m\_temperature}, \textbf{2m\_dewpoint\_temperature}, \textbf{10m\_wind\_speed}, \textbf{volumetric\_soil\_water}, \textbf{potential\_evaporation}.
+Bài nghiên cứu này cũng đưa ra kết luận về việc cháy rừng thường xảy ra hàng tháng hoặc theo mùa. Ở đây, các chuyên gia đưa ra các trường dữ liệu thời tiết được lấy là \textbf{total\_precipitation (tổng lượng mưa)}, \textbf{2m\_temperature (nhiệt độ)}, \textbf{2m\_dewpoint\_temperature (nhiệt độ điểm sương)}, \textbf{10m\_wind\_speed (tốc độ gió)}, \textbf{volumetric\_soil\_water (lượng nước trong đất)}, \textbf{potential\_evaporation (khả năng bốc hơi)}.
 
 Qua nghiên cứu, bài báo đã tính toán hệ số tương quan giữa tuần suất các đám cháy và điều kiện khi hậu trung bình. Phân tích chỉ ra mối tương quan cao đáng kể giữa nhiệt độ mùa hè và PET với số lượng các sự kiện cháy ở CA.
 
@@ -745,6 +745,14 @@ df['24_rain'] = df['24_rain'].fillna(df['rain'])
 
 Từ bộ dữ liệu đã được tạo ở trên, ta tiến hành chia dữ liệu thành các phần training, validation, testing. Ban đầu ta sẽ chia bộ dữ liệu thành training (70\%) và validation + testing (30\%). Sau đó từ bộ dữ liệu validation + testing, ta tiến hành chia dữ liệu thêm 1 lần nữa với tỷ lệ tương ứng là validation (70\%) và testing (30\%)
 
+Sau khi chi dữ liệu xong ta có số lượng các bộ dữ liệu như sau:
+
+\begin{itemize}
+	\item Training dataset: 32921
+	\item Validation dataset: 9876
+	\item Testing dataset: 4233
+\end{itemize}
+
 \paragraph{Thiết lập, Training}
 \subparagraph{Support Vector Machines (SVM)}
 
@@ -883,10 +891,9 @@ Từ model đã được xây dựng trên, ta tiến hành chỉnh sửa các t
 		\end{itemize}
 	\end{itemize}
 	\item Hai lớp ẩn (số nút tương ứng là 128 và 64, activation="relu"), optimizer="adam", loss="binary\_crossentropy"
-	
 	\begin{itemize}
 		\item Thời gian train: 5 min 13 second
-		\item Thời gian validation: 27 second
+		\item Thời gian validation: 7 second
 		\item Thời gian test: 5 second 
 		\item Accuracy: 
 		\begin{itemize}
@@ -904,6 +911,27 @@ Từ model đã được xây dựng trên, ta tiến hành chỉnh sửa các t
 			\item testing: 0.009204111539974925
 		\end{itemize}
 	\end{itemize}
+	\item Ba lớp ẩn (số nút tương ứng là 128, 64 và 32, activation="relu"), optimizer="adam", loss="binary\_crossentropy"
+	\begin{itemize}
+		\item Thời gian train: 3 min 23 second
+		\item Thời gian validation: 2 second
+		\item Thời gian test: 1 second 
+		\item Accuracy: 
+		\begin{itemize}
+			\item validation: 0.990481972694397
+			\item testing: 0.9922041296958923
+		\end{itemize}
+		\item Loss:
+		\begin{itemize}
+			\item validation: 0.0414808988571167
+			\item testing: 0.037396930158138275
+		\end{itemize} 
+		\item Mean Squared Error:
+		\begin{itemize}
+			\item validation: 0.00846018838163131
+			\item testing: 0.00734131887253742
+		\end{itemize}
+	\end{itemize}
 \end{enumerate}
 
 \begin{figure}[H]
@@ -913,11 +941,203 @@ Từ model đã được xây dựng trên, ta tiến hành chỉnh sửa các t
 \end{figure}
 
 \paragraph{Đánh giá}
+
+Từ hai thuật toán phân loại phân loại trên ta thấy được model hình dự đoán khá tốt khi dự báo cháy rừng trên dữ liệu thời tiết. Cụ thể , đốí với model SVM cho ra accuracy đối với tập dữ liệu validation là 99,2\% và dữ liệu testing thì 99,43\%. Còn model Dense thì cho ra accuracy đối với tập dữ liệu validation là 99,05\% và dữ liệu testing thì 99,22\%
+
+
 \paragraph{Tổng kết}
+
 \subsubsection{Model dự đoán cấp độ cháy rừng}
+
+Model này dùng để dự đoán các cấp độ cháy rừng sau khi đã có kết quả của model trên. Nếu model dự báo cháy rừng trên cho ra kết quả là 1 (tương ứng với việc có xảy ra cháy rừng) thì ta tiếp tục sử dụng model này để  phân loại các cấp độ cháy rừng, để có thể kịp thời ứng phó với nguy cơ cháy rừng. Còn nếu model trên dự đoán ra 0 thì ta không cần phải dự đoán tiếp model này. 
+
 \paragraph{Chia dữ liệu}
+
+Tương tự như model trên viêc chia dữ liệu cũng giống tưng tự. Sau khi chi dữ liệu xong ta có số lượng các bộ dữ liệu như sau:
+
+\begin{itemize}
+	\item Training dataset: 17311
+	\item Validation dataset: 5193
+	\item Testing dataset: 2226
+\end{itemize}
+
 \paragraph{Thiết lập, Training}
+
+\subparagraph{Support Vector Machines (SVM)}
+
+Tương tự như SVM của model trên ta cũng tiến hành thiết lập model và thay đổi các thông số để cho ra kết quả mong muốn:
+
+\begin{enumerate}
+	\item C=1, gamma='auto', kernel='poly'
+	\begin{itemize}
+		\item Thời gian train: 2 min 8 second
+		\item Thời gian validation: 25 second
+		\item Thời gian test: 12 second 
+		\item Accuracy: 
+		\begin{itemize}
+			\item validation: 0.6187175043327556
+			\item testing: 0.6154537286612758
+		\end{itemize}
+		\item Mean Squared Error:
+		\begin{itemize}
+			\item validation: 0.7232813402657423
+			\item testing: 0.7497753818508536
+		\end{itemize}
+	\end{itemize}
+	\item C=1, gamma='auto', kernel='rbf'
+	\begin{itemize}
+		\item Thời gian train: 1 min 56 second
+		\item Thời gian validation: 27 second
+		\item Thời gian test: 11 second 
+		\item Accuracy: 
+		\begin{itemize}
+			\item validation: 0.6347005584440593
+			\item testing: 0.6302785265049416
+		\end{itemize}
+		\item Mean Squared Error:
+		\begin{itemize}
+			\item validation: 0.6761024455998459
+			\item testing: 0.7133872416891285
+		\end{itemize}
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=6in]{images/confusionMatrixSVM_model2_0.png}
+			\caption{Confusion Matrix}
+		\end{figure}
+	\end{itemize}
+\end{enumerate}
+
+\subparagraph{Dense}
+
+Ta thiết lập model tương tự model trên:
+
+\begin{minted}[]{python}
+	model = Sequential()
+	model.add(Dense(128, input_shape=(210,), activation="relu", name='hidden_layer_1'))
+	model.add(Dense(64, activation="relu", name='hidden_layer_2'))
+	model.add(Dense(32, activation="relu", name='hidden_layer_3'))
+	model.add(Dense(16, activation="relu", name='hidden_layer_4'))
+	model.add(Dense(3, activation="sigmoid", name='output_layer'))
+
+	callback = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, mode='min')
+
+	print("[INFO] training network...")
+	model.compile(optimizer='adam', loss='categorical_crossentropy',
+              metrics=['accuracy'])
+	
+	history = model.fit(X_train, y_train, batch_size=64, epochs=200, validation_data=(X_valid, y_valid), callbacks=callback, verbose=1)
+\end{minted}
+
+\begin{itemize}
+	\item Thời gian train: 1 min 4 second
+	\item Thời gian validation: 5 second
+	\item Thời gian test: 2 second 
+	\item Accuracy: 
+	\begin{itemize}
+		\item validation: 0.6192951798439026
+		\item testing: 0.6145552396774292]
+	\end{itemize}
+	\item Loss:
+	\begin{itemize}
+		\item validation: 0.8435102105140686
+		\item testing: 0.8677495121955872
+	\end{itemize} 
+	\item Mean Squared Error:
+	\begin{itemize}
+		\item validation: 0.16747459320485225
+		\item testing: 0.17110031298128617
+	\end{itemize}
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=6in]{images/loss_acc_model2_0.png}
+	\caption{Biểu đồ thể hiện quá trình training}
+\end{figure}
+
+Từ model trên, ta thấy được nhãn 2 dự đoán đúng rất thấp, chủ yếu lệch về phía nhãn 1 rất nhiều, vì vật để khắc phục vấn đề này ta tiến hành giảm lớp class xuống, chỉ còn 2 lớp (nhãn 1, 2) và tiến hành phân chia lại dữ liệu. Thực ra, ban đầu nhóm chia dữ liệu cháy thành 3 lớp là dự trên số lượng các điểm cháy xảy ra trong ngày ở một xã nhất định. Vì theo quan điểm của nhóm thì số lượng điểm cháy xảy ở một xã trong một ngày càng nhiều thì cho thấy dữ liệu thời tiết đó càng có nguy cơ cao xảy ra cháy rừng. Nhưng sau khi phân chia dữ liệu, tiến hành train thì xảy ra hiện tượng trên, dữ liệu không khớp khi với nhãn 2, phần lớn những dữ liệu đó thì dễ nhằm với nhãn 1 hơn nên nhóm mới quyết định gộp nhãn 1 với nhãn 2 cũ thành nhãn 1 mới và chuyển nhãn 3 thành nhãn 2. Ta tiến hành train với dữ liệu mới. Sau khi train với nhiều model khác nhau, ta có kết quả các model như sau:
+
+\subparagraph{Support Vector Machines (SVM)}
+
+Trong SVC() ta thiết lập các thông số:
+\begin{enumerate}
+	\item C=1, gamma='auto', kernel='rbf'
+	\begin{itemize}
+		\item Thời gian train: 1 mini 29 second
+		\item Thời gian validation: 19 second
+		\item Thời gian test: 8 second 
+		\item Accuracy: 
+		\begin{itemize}
+			\item validation: 0.8239938378586559
+			\item testing: 0.8221024258760108
+		\end{itemize}
+		\item Mean Squared Error:
+		\begin{itemize}
+			\item validation: 0.17600616214134412
+			\item testing: 0.1778975741239892
+		\end{itemize}
+	\end{itemize}
+	\item C=10, gamma='auto', kernel='rbf'
+	\begin{itemize}
+		\item Thời gian train: 2 min 20 second
+		\item Thời gian validation: 17 second
+		\item Thời gian test: 7 second 
+		\item Accuracy: 
+		\begin{itemize}
+			\item validation: 0.8234161371076449
+			\item testing: 0.8274932614555256
+		\end{itemize}
+		\item Mean Squared Error:
+		\begin{itemize}
+			\item validation: 0.1765838628923551
+			\item testing: 0.1725067385444744
+		\end{itemize}
+	\end{itemize}
+\end{enumerate}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=6in]{images/confusionMatrixSVM_model2_1.png}
+	\caption{Confusion Matrix}
+\end{figure}
+
+\subparagraph{Dense}
+
+Tương tự, ta chỉ xét đến các thông số sau khi train xong model:
+
+\begin{itemize}
+	\item Thời gian train: 2 min 6 second
+	\item Thời gian validation: 5 second
+	\item Thời gian test: 2 second 
+	\item Accuracy: 
+	\begin{itemize}
+		\item validation: 0.8137878179550171
+		\item testing: 0.8126684427261353
+	\end{itemize}
+	\item Loss:
+	\begin{itemize}
+		\item validation: 0.4617549777030945
+		\item testing: 0.46853387355804443
+	\end{itemize} 
+	\item Mean Squared Error:
+	\begin{itemize}
+		\item validation: 0.14147366984777401
+		\item testing: 0.14031667554728067
+	\end{itemize}
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=6in]{images/loss_acc_model2_1.png}
+	\caption{Biểu đồ thể hiện quá trình training}
+\end{figure}
+
 \paragraph{Đánh giá}
+
+Nhìn chung model được chia thành 3 lớp dựa trên số điểm cháy của xã trong một ngày ban đầu cho ra kết quả khá tệ, nó chỉ dự đoán tốt trên nhãn 1 và nhãn 3 (81\% và 81\%) còn nhãn 2 thì cho ra kết quả khá tệ(13\%), các dự đoán gần như là rơi vào nhẵn 1 (chiếm đến 73\%).
+
+Khi xây dựng lại bộ dữ liệu 2 lớp thì cho ra kết quả khả quan hơn với accuracy là 82,39\% đối với dữ liệu validation và 82,21\% đối với dữ liệu testing.
+
 \paragraph{Tổng kết}
 \subsubsection{Tổng kết}
 %----------------------------------------------------------------------------------------
