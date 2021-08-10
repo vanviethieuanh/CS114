@@ -26,6 +26,7 @@
 	19521225
 	\and
 	Lê Văn Phước\\
+	19522054
 }
 
 \date{\today} % Date for the report
@@ -474,9 +475,9 @@ Sau khoảng 1 tiếng chạy và điều chỉnh lại ta có bảng dữ liệ
 		      \item \texttt{province}: Tên thành phố \emph{(không dấu)}
 		      \item \texttt{date}: ngày
 		      \item \texttt{max}: nhiệt độ cao nhất trong ngày \emph{(celcius)}
-		      \item \texttt{min}: nhiệt độ thấp nhất trong ngày \emph{(celcius)}
-		      \item \texttt{wind}: tốc độ gió \emph{(km/h)}
-		      \item \texttt{wind\_d}: hướng gió \href{https://www7.ncdc.noaa.gov/climvis/help_wind.html}{direction}
+		      \item \texttt{min}: nhiệt độ thấp nhất trong ngày \emph{(celcius)}
+		      \item \texttt{wind}: tốc độ gió \emph{(km/h)}
+		      \item \texttt{wind\_d}: hướng gió \href{https://www7.ncdc.noaa.gov/climvis/help_wind.html}{direction}
 		      \item \texttt{rain}: lượng mưa \emph{(mm)}
 		      \item \texttt{humidi}: độ ẩm \emph{(\%)}
 		      \item \texttt{cloud}: mây \emph{(\%)}
@@ -738,7 +739,180 @@ df['24_rain'] = df['24_rain'].fillna(df['rain'])
 % Trong các model này, những model nào có điểm tối ưu, hạn chế nào so với những model khác ?
 
 \subsection{Trên dữ liệu 3 tỉnh (Gia Lai, Lâm Đồng, Đắk Lắk)}
+\subsubsection{Model dữ đoán cháy rừng}
+\paragraph{Chia dữ liệu}
 
+
+Từ bộ dữ liệu đã được tạo ở trên, ta tiến hành chia dữ liệu thành các phần training, validation, testing. Ban đầu ta sẽ chia bộ dữ liệu thành training (70\%) và validation + testing (30\%). Sau đó từ bộ dữ liệu validation + testing, ta tiến hành chia dữ liệu thêm 1 lần nữa với tỷ lệ tương ứng là validation (70\%) và testing (30\%)
+
+\paragraph{Thiết lập, Training}
+\subparagraph{Support Vector Machines (SVM)}
+
+
+Ta sử dụng pipeline của thư viện sklearn để tiền xử lý dữ liệu và khởi tạo model SVM.
+
+\begin{minted}[]{python}
+	clf = make_pipeline(StandardScaler(), SVC(C=10, gamma='auto', kernel='rbf'))
+\end{minted}
+
+Trong SVC() ta thiết lập các thông số:
+\begin{enumerate}
+	\item C=1, gamma='auto', kernel='linear'
+	\begin{itemize}
+		\item Thời gian train: 9 min 28 second
+		\item Thời gian validation: 15 second
+		\item Thời gian test: 7 second 
+		\item Accuracy: 
+		\begin{itemize}
+			\item validation: 0.9590927501012556
+			\item testing: 0.9581856839121191
+		\end{itemize}
+		\item Mean Squared Error:
+		\begin{itemize}
+			\item validation: 0.04090724989874443
+			\item testing: 0.041814316087880936
+		\end{itemize}
+	\end{itemize}
+	\item C=1, gamma='auto', kernel='rbf'
+	\begin{itemize}
+		\item Thời gian train: 41 second
+		\item Thời gian validation: 9 second
+		\item Thời gian test: 4 second 
+		\item Accuracy: 
+		\begin{itemize}
+			\item validation: 0.987444309437019
+			\item testing: 0.9877155681549729
+		\end{itemize}
+		\item Mean Squared Error:
+		\begin{itemize}
+			\item validation: 0.012555690562980963
+			\item testing: 0.012284431845027168
+		\end{itemize}
+	\end{itemize}
+	\item C=10, gamma='auto', kernel='rbf'
+	\begin{itemize}
+		\item Thời gian train: 1 min 32 second
+		\item Thời gian validation: 8 second
+		\item Thời gian test: 4 second 
+		\item Accuracy: 
+		\begin{itemize}
+			\item validation: 0.9920008100445524
+			\item testing: 0.9943302622253721
+		\end{itemize}
+		\item Mean Squared Error:
+		\begin{itemize}
+			\item validation: 0.00799918995544755
+			\item testing: 0.005669737774627924
+		\end{itemize}
+	\end{itemize}
+\end{enumerate}
+
+Mean squared error được tính bằng công thức:
+\begin{equation}
+	MSE(y,\widehat{y}) = \frac{1}{n_samples} \sum_{i = 0}^{n_samples-1} (y_i - \widehat{y}_i)^2   
+\end{equation}
+Trong đó:
+\begin{itemize}
+	\item $\widehat{y}$ là một tập các nhãn dự đoán
+	\item $y$ là một tập các nhãn đúng
+	\item $\widehat{y}$ là giá trị dữ đoán của mẫu thứ i
+	\item $y_i$ là giá trị thực tương ứng với giá trị dự đoán trên
+	\item $n_samples$ là số lượng các giá trị trong tập y (hoặc $\widehat{y}$)
+\end{itemize}
+
+\subparagraph{Dense}
+
+Đầu tiên, ta khởi tạo model Sequential() của thự viện keras. Ta tiếp tục tạo lớp Input (đầu vào), và các lớp ẩn và cuối cùng là tạo lớp đầu ra. Trong lớp đầu vào ta cần khỏi tạo số nút tương ứng với kích thước của bộ dữ liệu. Trong các lớp ẩn thì ta cũng khởi tạo số nút cho mỗi lớp ẩn và thiết lập loại hình kích hoạt. Cuối cùng, trong lớp tạo số nút đầu ra và cũng thiết lập loại hình kích hoạt.
+
+\begin{minted}[]{python}
+	model = Sequential()
+	model.add(Input(shape=(210,)))
+	model.add(Dense(128, activation='relu', name='hidden_layer_1'))
+	model.add(Dense(64, activation='relu', name='hidden_layer_2'))
+	model.add(Dense(1, activation='sigmoid', name='output_layer'))
+\end{minted}
+
+Tiếp theo ta thiết lập hàm call back Early Stoping dùng để dừng quá trình train sớm, sau khi mà thông số chúng ta quan sát (có thể là validation accuarcy hay validation loss) không "khá lên" sau một vài epochs. Đây cũng là một kỹ thuật hay được dùng để tránh Overfit.
+
+\begin{minted}[]{python}
+	callback = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=20, mode='min')
+\end{minted}
+
+Tiếp tục ta tiếp hành lựa chọn các thuật toán tối ưu (optimizers). Về cơ bản, thuật toán tối ưu là cơ sở để xây dựng mô hình neural network với mục đích học được các features (hay pattern) của dữ liệu đầu vào, từ đó có thể tìm được một cặp weights và bias phù hợp để tối ưu hóa model. Trong các thuật toán tối ưu hóa ta tiến hành chọn learning rate (tỉ tệ học tập) sao cho phù hợp với bài toán.
+
+\begin{minted}[]{python}
+	sgd = SGD(learning_rate=0.01)
+\end{minted}
+
+Sau khi xây dựng model trên xong thì ta tiến hành comile nó có tác dụng biên tập lại toàn bộ model của chúng ta đã xây dựng. Ở đây ta có thể lựa chọn các tham số để training model như: thuật toán training thông quan tham số optimize, hàm loss, chọn metrics hiện thị khi model được train.
+
+\begin{minted}[]{python}
+	model.compile(optimizer=sgd, loss='categorical_crossentropy',
+              metrics=['accuracy'])
+\end{minted}
+
+Tiếp đến ta dùng hàm fit để đưa data vào training để tìm tham số model.
+
+\begin{minted}[]{python}
+	history = model.fit(X_train, y_train, batch_size=64, epochs=200, validation_data=(X_valid, y_valid), callbacks=callback, verbose=1).history
+\end{minted}
+
+Từ model đã được xây dựng trên, ta tiến hành chỉnh sửa các thông số của model:
+\begin{enumerate}
+	\item Hai lớp ẩn (số nút tương ứng là 128 và 64, activation="relu"), SGD(learning\_rate=0.01), loss="binary\_crossentropy"
+	
+	\begin{itemize}
+		\item Thời gian train: 5 min 13 second
+		\item Thời gian validation: 27 second
+		\item Thời gian test: 5 second 
+		\item Accuracy: 
+		\begin{itemize}
+			\item validation: 0.9533211588859558
+			\item testing: 0.9588943719863892
+		\end{itemize}
+		\item Loss:
+		\begin{itemize}
+			\item validation: 0.15693733096122742
+			\item testing: 0.1464112251996994
+		\end{itemize} 
+		\item Mean Squared Error:
+		\begin{itemize}
+			\item validation: 0.042361213827923364
+			\item testing: 0.03825463792437562
+		\end{itemize}
+	\end{itemize}
+	\item Hai lớp ẩn (số nút tương ứng là 128 và 64, activation="relu"), optimizer="adam", loss="binary\_crossentropy"
+	
+	\begin{itemize}
+		\item Thời gian train: 5 min 13 second
+		\item Thời gian validation: 27 second
+		\item Thời gian test: 5 second 
+		\item Accuracy: 
+		\begin{itemize}
+			\item validation: 0.9870392680168152
+			\item testing: 0.9893692135810852
+		\end{itemize}
+		\item Loss:
+		\begin{itemize}
+			\item validation: 0.059234291315078735
+			\item testing: 0.046542562544345856
+		\end{itemize} 
+		\item Mean Squared Error:
+		\begin{itemize}
+			\item validation: 0.011526199238160804
+			\item testing: 0.009204111539974925
+		\end{itemize}
+	\end{itemize}
+\end{enumerate}
+
+\paragraph{Đánh giá}
+\paragraph{Tổng kết}
+\subsubsection{Model dự đoán cấp độ cháy rừng}
+\paragraph{Chia dữ liệu}
+\paragraph{Thiết lập, Training}
+\paragraph{Đánh giá}
+\paragraph{Tổng kết}
+\subsubsection{Tổng kết}
 %----------------------------------------------------------------------------------------
 %	SECTION 5
 
