@@ -734,7 +734,7 @@ df['24_rain'] = df['24_rain'].fillna(df['rain'])
 % Còn những điểm nào có hy vọng cải thiện ?
 % Bao quát chung
 
-\subsection{Tổng kết}
+\subsubsection{Tổng kết}
 % Rút ra gì từ những model khi thực nghiệm trên bộ dữ liệu này
 % Trong các model này, những model nào có điểm tối ưu, hạn chế nào so với những model khác ?
 
@@ -842,9 +842,10 @@ Tiếp tục ta tiếp hành lựa chọn các thuật toán tối ưu (optimize
 
 \begin{minted}[]{python}
 	sgd = SGD(learning_rate=0.01)
+	
 \end{minted}
 
-Sau khi xây dựng model trên xong thì ta tiến hành comile nó có tác dụng biên tập lại toàn bộ model của chúng ta đã xây dựng. Ở đây ta có thể lựa chọn các tham số để training model như: thuật toán training thông quan tham số optimize, hàm loss, chọn metrics hiện thị khi model được train.
+Sau khi xây dựng model trên xong thì ta tiến hành comiple nó có tác dụng biên tập lại toàn bộ model của chúng ta đã xây dựng. Ở đây ta có thể lựa chọn các tham số để training model như: thuật toán training thông quan tham số optimize, hàm loss, chọn metrics hiện thị khi model được train.
 
 \begin{minted}[]{python}
 	model.compile(optimizer=sgd, loss='categorical_crossentropy',
@@ -904,6 +905,12 @@ Từ model đã được xây dựng trên, ta tiến hành chỉnh sửa các t
 		\end{itemize}
 	\end{itemize}
 \end{enumerate}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=6in]{images/loss_acc_model1_0.png}
+	\caption{Biểu đồ thể hiện quá trình training}
+\end{figure}
 
 \paragraph{Đánh giá}
 \paragraph{Tổng kết}

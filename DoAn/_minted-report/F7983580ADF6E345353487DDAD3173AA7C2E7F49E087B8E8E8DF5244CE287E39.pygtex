@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+	\PYG{n}{clf} \PYG{o}{=} \PYG{n}{make\PYGZus{}pipeline}\PYG{p}{(}\PYG{n}{StandardScaler}\PYG{p}{(),} \PYG{n}{SVC}\PYG{p}{(}\PYG{n}{C}\PYG{o}{=}\PYG{l+m+mi}{10}\PYG{p}{,} \PYG{n}{gamma}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}auto\PYGZsq{}}\PYG{p}{,} \PYG{n}{kernel}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}rbf\PYGZsq{}}\PYG{p}{))}
+\end{Verbatim}
