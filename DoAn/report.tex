@@ -739,6 +739,22 @@ df['24_rain'] = df['24_rain'].fillna(df['rain'])
 % Trong các model này, những model nào có điểm tối ưu, hạn chế nào so với những model khác ?
 
 \subsection{Trên dữ liệu 3 tỉnh (Gia Lai, Lâm Đồng, Đắk Lắk)}
+
+Dữ liệu thời tiết được lấy từ năm 2014 đến 2020. Mỗi ngày lấy các thông tin thời tiết gồm các trường sau:
+
+\begin{itemize}
+	\item max\_temp: Nhiệt độ cao nhất trong ngày 
+	\item min\_temp: Nhiệt độ thấp nhất trong ngày
+	\item wind\_x: Vector gió theo chiều x (được tạo thành từ hướng gió và tốc độ gió)
+	\item wind\_y: Vector gió theo chiều y
+	\item rain: Lượng mưa
+	\item humidi: Độ ẩm 
+	\item Cloud: Tỷ lệ mây che phủ. 
+\end{itemize}
+
+Với mỗi địa diểm xảy ra cháy trong một ngày nhất định thì ta lấy dữ liệu thời tiết (gồm các trường dữ liệu như trên) từ ngày trước khi xảy ra vụ cháy trở về trước 30 ngày. Với một ngày gồm 7 trường dữ liệu thời tiết trên ta nhân cho 30 ngày thì thu được 210 trường dữ liệu dùng để training. 
+
+
 \subsubsection{Model dữ đoán cháy rừng}
 \paragraph{Chia dữ liệu}
 
@@ -945,7 +961,7 @@ Từ model đã được xây dựng trên, ta tiến hành chỉnh sửa các t
 Từ hai thuật toán phân loại phân loại trên ta thấy được model hình dự đoán khá tốt khi dự báo cháy rừng trên dữ liệu thời tiết. Cụ thể , đốí với model SVM cho ra accuracy đối với tập dữ liệu validation là 99,2\% và dữ liệu testing thì 99,43\%. Còn model Dense thì cho ra accuracy đối với tập dữ liệu validation là 99,05\% và dữ liệu testing thì 99,22\%
 
 
-\paragraph{Tổng kết}
+%\paragraph{Tổng kết}
 
 \subsubsection{Model dự đoán cấp độ cháy rừng}
 
@@ -1055,7 +1071,7 @@ Ta thiết lập model tương tự model trên:
 	\caption{Biểu đồ thể hiện quá trình training}
 \end{figure}
 
-Từ model trên, ta thấy được nhãn 2 dự đoán đúng rất thấp, chủ yếu lệch về phía nhãn 1 rất nhiều, vì vật để khắc phục vấn đề này ta tiến hành giảm lớp class xuống, chỉ còn 2 lớp (nhãn 1, 2) và tiến hành phân chia lại dữ liệu. Thực ra, ban đầu nhóm chia dữ liệu cháy thành 3 lớp là dự trên số lượng các điểm cháy xảy ra trong ngày ở một xã nhất định. Vì theo quan điểm của nhóm thì số lượng điểm cháy xảy ở một xã trong một ngày càng nhiều thì cho thấy dữ liệu thời tiết đó càng có nguy cơ cao xảy ra cháy rừng. Nhưng sau khi phân chia dữ liệu, tiến hành train thì xảy ra hiện tượng trên, dữ liệu không khớp khi với nhãn 2, phần lớn những dữ liệu đó thì dễ nhằm với nhãn 1 hơn nên nhóm mới quyết định gộp nhãn 1 với nhãn 2 cũ thành nhãn 1 mới và chuyển nhãn 3 thành nhãn 2. Ta tiến hành train với dữ liệu mới. Sau khi train với nhiều model khác nhau, ta có kết quả các model như sau:
+Từ model trên, ta thấy được nhãn 2 dự đoán đúng rất thấp, chủ yếu lệch về phía nhãn 1 rất nhiều, vì vật để khắc phục vấn đề này ta tiến hành giảm lớp class xuống, chỉ còn 2 lớp (nhãn 1, 2) và tiến hành phân chia lại dữ liệu. Thực ra, ban đầu nhóm chia dữ liệu cháy thành 3 lớp là dự trên số lượng các điểm cháy xảy ra trong ngày ở một xã nhất định. Vì theo quan điểm của nhóm thì số lượng điểm cháy xảy ở một xã trong một ngày càng nhiều thì cho thấy dữ liệu thời tiết đó càng có nguy cơ cao xảy ra cháy rừng. Nhưng sau khi phân chia dữ liệu, tiến hành train thì xảy ra hiện tượng trên, dữ liệu không khớp khi với nhãn 2, phần lớn những dữ liệu đó thì dễ nhầm với nhãn 1 hơn nên nhóm mới quyết định gộp nhãn 1 với nhãn 2 cũ thành nhãn 1 mới và chuyển nhãn 3 thành nhãn 2. Ta tiến hành train với dữ liệu mới. Sau khi train với nhiều model khác nhau, ta có kết quả các model như sau:
 
 \subparagraph{Support Vector Machines (SVM)}
 
@@ -1136,10 +1152,15 @@ Tương tự, ta chỉ xét đến các thông số sau khi train xong model:
 
 Nhìn chung model được chia thành 3 lớp dựa trên số điểm cháy của xã trong một ngày ban đầu cho ra kết quả khá tệ, nó chỉ dự đoán tốt trên nhãn 1 và nhãn 3 (81\% và 81\%) còn nhãn 2 thì cho ra kết quả khá tệ(13\%), các dự đoán gần như là rơi vào nhẵn 1 (chiếm đến 73\%).
 
-Khi xây dựng lại bộ dữ liệu 2 lớp thì cho ra kết quả khả quan hơn với accuracy là 82,39\% đối với dữ liệu validation và 82,21\% đối với dữ liệu testing.
+Khi xây dựng lại bộ dữ liệu 2 lớp thì cho ra kết quả khả quan hơn với accuracy là 82,39\% đối với dữ liệu validation và 82,21\% đối với dữ liệu testing. Mặc dù khi giảm số class thì accuracy sẽ tăng lên, dẫn đến phân loại đúng hơn. Nhưng cũng phải chấp nhận phương pháp trên, việc phân chia số lượng class trên còn phải dựa vào số lượng dữ liệu điểm cháy nữa nên không thể tạo thành nhiều lớp hơn khi gộp dữ liệu nhãn 1 và 2 trên lại với nhau. Vì vậy, nhóm quyết định chỉ làm 2 lớp để phân loại.
 
-\paragraph{Tổng kết}
+%\paragraph{Tổng kết}
 \subsubsection{Tổng kết}
+
+Qua quá trình đào tạo 2 mô hình khác nhau, với độ dữ đoán chính xác là khác nhau. Mô hình đầu tiên cho kết quả tốt trên cả tập train, tập validation và tập test. Loss thấp và mean squared error cũng khá thấp, cho thấp khả năng học tập và đào tạo của mô hình là khá tốt. Từ đó thấy được mô hình dữ đoán cháy rừng có thể áp dụng thực tế được. Mặc dù, nhóm chưa thử kiểm tra với dữ liệu năm 2021 (vì dữ liệu thời tiết thì có thể thu thập, nhưng dữ liệu cháy rừng năm 2021 thì chưa có nên khi dữ đoán thì không thể kiểm tra đươc nên nhóm chưa trên khai kiểm tra thử) nhưng với độ chính xác cao thì nó vẫn có khả năng lớn là cho ra kết quả dữ đoán đúng về việc xảy ra cháy rừng trên địa bàn tỉnh Tây Nguyên.
+
+Mô hình thử hai dự đoán cấp độ cháy rừng cho kết quả thấp với việc phân chia dữ liệu thành 3 lớp, nhưng khi thấy vấn đề ở việc phân chia dữ như vậy, thì nhóm quyết định giảm lớp phân loại xuống còn hai lớp và tiến hành phân chia lại dữ liệu thì cho ra kết qủa khả quan hơn với độ chính xác trên 80\%, điều này làm cho việc kiểm tra phân loại cấp độ cháy cho độ chính xác cao hơn và có thể thử nghiệm thử trong thực tế.
+
 %----------------------------------------------------------------------------------------
 %	SECTION 5
 
