@@ -85,6 +85,11 @@ Về việc tìm nguồn dữ liệu tương tự đã được khai thác trư�
 \subsubsection{Fire Data}
 \qquad firewatchvn.kiemlam.org.vn là website tạo ra ý tưởng cho nhóm. Website này cung cấp giao diện tra cứu dữ liệu về các điểm cháy vào từng thời gian cụ thể. Tuy nhiên điểm yếu của website này là xây dựng quá nhiều tính năng và sử dụng Ajax nên dùng những công cụ như Beautiful Soup thì không thể thu thập còn nếu dùng những công cụ như Selenium hay Puppeteer thì tốc độ quá chậm (dữ liệu này kéo dài từ 1/1/2008 đến 5/12/2020 nếu tra cứu từng ngày trên 700 quận, huyện, thành phố thuộc tỉnh,... thì sẽ mất rất nhiều thời gian). Điều này bắt buộc nhóm phải phân tích API mà website đã lấy dữ liệu điểm cháy để tăng tốc độ lấy dữ liệu. Bởi vì những thông tin như bản đồ của địa điểm lấy dữ liệu là không cần thiết, ta hoàn toàn có thể lấy bản đồ địa hình của cả trái đất chỉ cần dùng tọa độ. Việc lấy những thông tin nặng như bản đồ cần thời gian tải rất lâu nên việc tìm ra API mà website sử dụng cũng là cần thiết.
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=6in]{./WildfireVisualization/TayNguyen.png}
+	\caption{Dữ liệu cháy biểu thị trên bản đồ}
+\end{figure}
 
 %----------------------------------------------------------------------------------------
 %	SECTION 2
@@ -143,7 +148,7 @@ Qua nghiên cứu trên, nhóm cũng rút ra được các biến dữ liệu c�
 
 % Sau đó mô tả các thông số chi tiết của bộ dữ liệu, kèm theo ví dụ minh họa rõ ràng. Bài toán đặt ra các trường hợp dữ liệu nào là khó xử lý, có bao nhiêu mẫu dữ liệu thuộc trường hợp đó, chụp vài mẫu dữ liệu khó đó vào báo cáo để minh họa.
 
-\emph{Lưu ý ở phần này Tỉnh là thuật ngữ để chỉ chung đơn vị hành chính cấp 1 trực thuộc quốc gia, thay cho "tỉnh thành" hoặc chính xác hơn là "đơn vị hành chính cấp tỉnh". Tương tự với "Huyện" là đơn vị hành chính bậc hai, và xã là cấp ba.}
+\emph{Lưu ý ở phần này Tỉnh là thuật ngữ để chỉ chung đơn vị hành chính cấp 1 trực thuộc quốc gia, thay cho "tỉnh thành" hoặc chính xác hơn là "đơn vị hành chính cấp tỉnh"\cite{website:wiki_province}. Tương tự với "Huyện" là đơn vị hành chính bậc hai, và xã là cấp ba.}
 
 
 \subsection{Quá trình thu thập dữ liệu}
