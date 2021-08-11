@@ -96,7 +96,7 @@ Về việc tìm nguồn dữ liệu tương tự đã được khai thác trư�
 \section{Các nghiên cứu trước}
 % Chương này trình bày các kết quả nghiên cứu đã có của tiền nhân liên quan đến bài toán mà nhóm chọn. Những nghiên cứu trước làm trên các bộ dữ liệu nào, dùng phương pháp nào và performance đạt được bao nhiêu
 % Nếu có khả năng thì phân tích thêm kết quả của họ như vậy là tốt chưa, có còn chỗ gì để cải thiện không. Nếu không nhận xét dược thì thôi.
-\subsection{Predicting Australia wildfires with weather data a Call For Code spot challenge of IBM}
+\subsection{Predicting Australia wildfires with weather data a Call For Code spot challenge of IBM \cite{website:community_ibm}}
 Mục đích của cuộc thi này là dự đoán kích thước của khu vực cháy tính bằng km2 theo khu vực ở Úc cho mỗi ngày trong tháng 2 năm 2021 bằng cách sử dụng dữ liệu có sẳn cho đến ngày 29 tháng 1.
 Bài toán chuỗi thời gian dựa trên dữ liệu hàng ngày do Pairs Geoscope cung cấp.
 Dữ liệu được cung cấp bao gồm:
@@ -125,7 +125,7 @@ Từ những nghiên cứu các chuyên gia đưa ra các biến ảnh hưởng 
 \end{itemize}
 Theo báo các tổng kết cuộc thi thì mô hình được sử dụng là Convolutional Neural Network (Windowing Dataset, Conv1D Layers,…) cho ra kết quả RMSE: 19.96, MAE: 6.94, TOT: 9.54
 Qua nghiên cứu của cuộc thi này nhóm rút ra được các biến ảnh hưởng đến cháy rừng, cách khai thác lấy dữ liệu từ thực tế, mô hình đào tạo phù hợp với bài toán.
-\subsection{AI and Climate data for predicting fire frequency in California}
+\subsection{AI and Climate data for predicting fire frequency in California \cite{website:linkedin_california}}
 Mục đích của nghiên cứu này là dự đoán tần suất xảy ra cháy rừng có thể giúp lập kế hoạch khẩn cấp và chủ động quản lý rủ ro thiên tai.
 Dữ liệu về đám cháy được thu từ Kaggle(\url{https://www.kaggle.com/rtatman/188-million-us-wildfires}), bao gồm khoảng 1,9 triệu vụ cháy rừng ở Mỹ được tham chiếu trong giai đoạn 1992-2015. Ngoài ra, dữ liệu khí hậu từ Copernicus ERA5 được tải xuống và sử dụng cho bài toán này.
 
@@ -768,7 +768,7 @@ Từ bộ dữ liệu thời tiết IBM đã được xử lý ở phần trư�
 
 Những features cần dùng cho training:
 \begin{itemize}
-    \item max: nhiệt độ cao nhất (độ C)
+	\item max: nhiệt độ cao nhất (độ C)
 	\item rain: lượng mưa trong 24h (mm)
 	\item wind: vận tốc gió (km/h)
 	\item humidi: độ ẩm (\%)
@@ -811,7 +811,7 @@ Sau khi xử lý bộ dữ liệu xong ta tiến hành windowing. Ở đây em d
 % Khúc này ghi cấu trúc model
 % Thời gian training, thời gian test
 % Nhớ ghi những thông số và công thức tính (acc, error, optimizor)
-\subparagraph{Dense} Khởi tạo Sequential() của Keras. Ở đây em dùng gồm 3 lớp Dense với hàm kích hoạt là 'relu', lớp cuối có 1 node với hàm 'sigmoid' để phân loại binary ở output. 
+\subparagraph{Dense} Khởi tạo Sequential() của Keras. Ở đây em dùng gồm 3 lớp Dense với hàm kích hoạt là 'relu', lớp cuối có 1 node với hàm 'sigmoid' để phân loại binary ở output.
 
 \begin{minted}[]{python}
 denseModel = tf.keras.Sequential()
@@ -843,15 +843,15 @@ Các số liệu về training:
 	\item Thời gian train: 3 phút 20 giây
 	\item Thời gian test: 12 giây
 	\item Accuracy:
-	\begin{itemize}
-	    \item validation: 0.9730
-	    \item test: 0.9742
-	\end{itemize}
+	      \begin{itemize}
+		      \item validation: 0.9730
+		      \item test: 0.9742
+	      \end{itemize}
 	\item Loss:
-	\begin{itemize}
-	    \item validation: 0.0912
-	    \item test: 0.0890
-	\end{itemize}
+	      \begin{itemize}
+		      \item validation: 0.0912
+		      \item test: 0.0890
+	      \end{itemize}
 \end{itemize}
 
 \begin{figure}[H]
@@ -902,7 +902,7 @@ cnnModel.add(Dense(32,activation='relu'))
 cnnModel.add(Dense(units=1,activation='relu'))
 \end{minted}
 
-Sử dụng optimizer là Adam, loss là Mean Squared Error. Tương tự, ta cũng thiết lập early stopping để dừng training khi cần thiết. 
+Sử dụng optimizer là Adam, loss là Mean Squared Error. Tương tự, ta cũng thiết lập early stopping để dừng training khi cần thiết.
 
 \begin{minted}[breaklines]{python}
 cnnModel.compile(optimizer='adam',loss=tf.keras.losses.MeanSquaredError(),metrics=['accuracy'])
@@ -917,18 +917,18 @@ Các số liệu về training:
 	\item Thời gian train: 1 giờ 2 phút
 	\item Thời gian test: 11 phút
 	\item Accuracy:
-	\begin{itemize}
-	    \item validation: 0.9740
-	    \item test: 0.9842
-	\end{itemize}
+	      \begin{itemize}
+		      \item validation: 0.9740
+		      \item test: 0.9842
+	      \end{itemize}
 	\item Loss:
-	\begin{itemize}
-	    \item validation: 9.5859
-	    \item test: 1.321
-	\end{itemize}
+	      \begin{itemize}
+		      \item validation: 9.5859
+		      \item test: 1.321
+	      \end{itemize}
 \end{itemize}
 
-\paragraph{RNN} Recurrent Neural Network là một mạng neural được đánh giá là phù hợp nhất cho time series data. Tương tự, ta cũng khởi tạo Sequential() của Keras. Sau đó add 2 lớp SimpleRNN, thiết lập return sequential = True cho phép model return một output cho mỗi input đầu vào. Cuối cùng là một lớp Dense 1 node với hàm kích hoạt là relu để nhận kết quả trả về 0, 1, 2,... Tương ứng với mức độ cháy. Các thông số compile ta thiết lập tương tự như mạng CNN trên. 
+\paragraph{RNN} Recurrent Neural Network là một mạng neural được đánh giá là phù hợp nhất cho time series data. Tương tự, ta cũng khởi tạo Sequential() của Keras. Sau đó add 2 lớp SimpleRNN, thiết lập return sequential = True cho phép model return một output cho mỗi input đầu vào. Cuối cùng là một lớp Dense 1 node với hàm kích hoạt là relu để nhận kết quả trả về 0, 1, 2,... Tương ứng với mức độ cháy. Các thông số compile ta thiết lập tương tự như mạng CNN trên.
 
 \begin{minted}[]{python}
 rnnModel = tf.keras.Sequential()
@@ -946,15 +946,15 @@ Các số liệu về training:
 	\item Thời gian train: 33 phút
 	\item Thời gian test: 6 phút
 	\item Accuracy:
-	\begin{itemize}
-	    \item validation: 0.9740
-	    \item test: 0.9842
-	\end{itemize}
+	      \begin{itemize}
+		      \item validation: 0.9740
+		      \item test: 0.9842
+	      \end{itemize}
 	\item Loss:
-	\begin{itemize}
-	    \item validation: 9.5859
-	    \item test: 1.321
-	\end{itemize}
+	      \begin{itemize}
+		      \item validation: 9.5859
+		      \item test: 1.321
+	      \end{itemize}
 \end{itemize}
 
 \paragraph{LSTM} Long Short-Term Memory là một dạng của mạng RNN, độ hiệu quả cao hơn CNN và phù hợp cho các dữ liệu thời gian dài. Tương tự, ta cũng khởi tạo Sequential() của Keras. Sau đó add lớp LSTM và thiết lập return sequential = True. Lớp Dense output và thiết lập compile tương tự như mạng RNN phía trên.
@@ -974,15 +974,15 @@ Các số liệu về training:
 	\item Thời gian train: 39 phút
 	\item Thời gian test: 6 phút
 	\item Accuracy:
-	\begin{itemize}
-	    \item validation: 0.9740
-	    \item test: 0.9842
-	\end{itemize}
+	      \begin{itemize}
+		      \item validation: 0.9740
+		      \item test: 0.9842
+	      \end{itemize}
 	\item Loss:
-	\begin{itemize}
-	    \item validation: 9.5859
-	    \item test: 1.3218
-	\end{itemize}
+	      \begin{itemize}
+		      \item validation: 9.5859
+		      \item test: 1.3218
+	      \end{itemize}
 \end{itemize}
 
 \paragraph{Đánh giá}
