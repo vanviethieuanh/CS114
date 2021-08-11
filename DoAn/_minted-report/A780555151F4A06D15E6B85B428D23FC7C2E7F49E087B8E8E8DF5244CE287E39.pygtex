@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{cnnModel} \PYG{o}{=} \PYG{n}{tf}\PYG{o}{.}\PYG{n}{keras}\PYG{o}{.}\PYG{n}{Sequential}\PYG{p}{()}
+\PYG{n}{cnnModel}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{tf}\PYG{o}{.}\PYG{n}{keras}\PYG{o}{.}\PYG{n}{layers}\PYG{o}{.}\PYG{n}{Conv1D}\PYG{p}{(}\PYG{l+m+mi}{32}\PYG{p}{,}\PYG{n}{kernel\PYGZus{}size}\PYG{o}{=}\PYG{p}{(}\PYG{l+m+mi}{6}\PYG{p}{),}\PYG{n}{activation}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}relu\PYGZsq{}}\PYG{p}{))}
+\PYG{n}{cnnModel}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{Dense}\PYG{p}{(}\PYG{l+m+mi}{32}\PYG{p}{,}\PYG{n}{activation}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}relu\PYGZsq{}}\PYG{p}{))}
+\PYG{n}{cnnModel}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{Dense}\PYG{p}{(}\PYG{n}{units}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{activation}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}relu\PYGZsq{}}\PYG{p}{))}
+\end{Verbatim}

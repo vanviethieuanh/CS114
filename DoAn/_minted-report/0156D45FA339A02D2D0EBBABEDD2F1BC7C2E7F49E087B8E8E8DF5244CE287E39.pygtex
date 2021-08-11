@@ -1,0 +1,14 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{def} \PYG{n+nf}{concatDataset}\PYG{p}{(}\PYG{n}{data}\PYG{p}{,} \PYG{n}{ward\PYGZus{}code\PYGZus{}column} \PYG{p}{,}\PYG{n}{wards}\PYG{p}{,}\PYG{n}{columns}\PYG{p}{):}
+  \PYG{k}{for} \PYG{n}{i}\PYG{p}{,} \PYG{n}{w} \PYG{o+ow}{in} \PYG{n+nb}{enumerate}\PYG{p}{(}\PYG{n}{wards}\PYG{p}{):}
+    \PYG{n}{df} \PYG{o}{=} \PYG{n}{data}\PYG{p}{[}\PYG{n}{data}\PYG{p}{[}\PYG{n}{ward\PYGZus{}code\PYGZus{}column}\PYG{p}{]} \PYG{o}{==} \PYG{n}{w}\PYG{p}{][}\PYG{n}{columns}\PYG{p}{]}\PYG{o}{.}\PYG{n}{to\PYGZus{}numpy}\PYG{p}{()}
+    \PYG{n}{inputs}\PYG{p}{,} \PYG{n}{targets} \PYG{o}{=} \PYG{n}{df}\PYG{p}{[:,:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{df}\PYG{p}{[:,}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{:]}
+
+    \PYG{n}{ds} \PYG{o}{=} \PYG{n}{tf}\PYG{o}{.}\PYG{n}{keras}\PYG{o}{.}\PYG{n}{preprocessing}\PYG{o}{.}\PYG{n}{timeseries\PYGZus{}dataset\PYGZus{}from\PYGZus{}array}\PYG{p}{(}\PYG{n}{data}\PYG{o}{=}\PYG{n}{inputs}\PYG{p}{,} \PYG{n}{targets}\PYG{o}{=}\PYG{n}{targets}\PYG{p}{,} \PYG{n}{sequence\PYGZus{}length}\PYG{o}{=}\PYG{l+m+mi}{30}\PYG{p}{,} \PYG{n}{sequence\PYGZus{}stride}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{sampling\PYGZus{}rate}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{batch\PYGZus{}size}\PYG{o}{=}\PYG{l+m+mi}{256}\PYG{p}{,} \PYG{n}{shuffle}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{,} \PYG{n}{seed}\PYG{o}{=}\PYG{l+m+mi}{20}\PYG{p}{)}
+    \PYG{n}{ds} \PYG{o}{=} \PYG{n}{ds}\PYG{o}{.}\PYG{n}{map}\PYG{p}{(}\PYG{n}{expand}\PYG{p}{)}
+    \PYG{k}{if} \PYG{n}{i} \PYG{o}{==} \PYG{l+m+mi}{0}\PYG{p}{:}
+      \PYG{n}{dataset} \PYG{o}{=} \PYG{n}{ds}
+    \PYG{k}{else}\PYG{p}{:}
+      \PYG{n}{dataset} \PYG{o}{=} \PYG{n}{dataset}\PYG{o}{.}\PYG{n}{concatenate}\PYG{p}{(}\PYG{n}{ds}\PYG{p}{)}
+  \PYG{k}{return} \PYG{n}{dataset}
+\end{Verbatim}

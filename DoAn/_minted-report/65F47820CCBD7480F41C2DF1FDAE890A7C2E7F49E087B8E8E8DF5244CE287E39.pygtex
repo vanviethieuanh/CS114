@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{def} \PYG{n+nf}{MinMaxScale}\PYG{p}{(}\PYG{n}{df}\PYG{p}{,} \PYG{n}{columns}\PYG{p}{):}
+  \PYG{k}{for} \PYG{n}{c} \PYG{o+ow}{in} \PYG{n}{columns}\PYG{p}{:}
+    \PYG{n}{df}\PYG{p}{[}\PYG{n}{c}\PYG{p}{]} \PYG{o}{=} \PYG{p}{(}\PYG{n}{df}\PYG{p}{[}\PYG{n}{c}\PYG{p}{]}\PYG{o}{\PYGZhy{}}\PYG{n}{df}\PYG{p}{[}\PYG{n}{c}\PYG{p}{]}\PYG{o}{.}\PYG{n}{min}\PYG{p}{())}\PYG{o}{/}\PYG{p}{(}\PYG{n}{df}\PYG{p}{[}\PYG{n}{c}\PYG{p}{]}\PYG{o}{.}\PYG{n}{max}\PYG{p}{()}\PYG{o}{\PYGZhy{}}\PYG{n}{df}\PYG{p}{[}\PYG{n}{c}\PYG{p}{]}\PYG{o}{.}\PYG{n}{min}\PYG{p}{())}
+  \PYG{k}{return} \PYG{n}{df}
+\end{Verbatim}
