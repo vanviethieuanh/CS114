@@ -657,7 +657,6 @@ Một đoạn mẫu trong dữ liệu
 \end{table}
 
 \subsection{Xây dựng bộ dữ liệu}
-\subsubsection{Creation of Dataset}
 Do việc thiếu dữ liệu nên nhóm tạo 2 bộ dữ liệu có những đặc trưng tối ưu riêng (về không gian và thời gian) để có thể tận dụng hết được các trường dữ liệu có ảnh hưởng lớn đến bài toán và dễ dàng hơn trong việt imputation.
 
 Như đã nói ở trên dữ liệu lượng mưa vốn có ảnh hướng lớn đến thông tin cháy bị thiếu rất nhiều ở thời gian đầu của bộ dữ liệu. Nhóm đã tham khảo 2 phương pháp:
@@ -688,7 +687,7 @@ Bộ dữ liệu số 1 đầy đủ các thông tin cần thiết trong thời 
 Như đã nói thì phương pháp imputation ở đây là sử dụng dữ liệu lượng mưa ở thành phố trung tâm cho tất cả các xã bị mất dữ liệu. Ví dụ tất cả các xã của tỉnh Lâm Đồng bị mất dữ liệu lượng mưa/nhiệt độ trong ngày 20/8/2020 sẽ được lấp bằng dữ liệu lượng mưa/nhiệt độ của Đà Lạt ngày 20/8/2020.
 
 Để thực hiện Imputation bộ dữ liệu thứ 2, ta map toàn bộ các tên các thành phố trong bộ dữ liệu WWO thành tên Tỉnh mà thành phố đó trực thuộc
-\begin{minted}[]{python}
+\begin{minted}[breaklines, tabsize=4]{python}
 df_wwo_weather_tn = df_wwo_weather[df_wwo_weather['province'].isin(['Buon Me Thuot','Play Cu','Da Lat'])].copy()
 df_wwo_weather_tn['province'] = df_wwo_weather_tn['province'].replace({
     'Buon Me Thuot':'Đắk Lắk',
@@ -710,6 +709,11 @@ df['min_x'] = df['min_x'].fillna(df['min_y'])
 df['24_rain'] = df['24_rain'].fillna(df['rain'])
 \end{minted}
 
+\subsubsection{Creation of Dataset}
+
+\qquad Việc tạo dữ liệu cho timeseries đã có hàm dựng sẵn từ tensorflow nên cách tạo dataset rất đơn giản, ta shuffle mã xã sau đó chia ra tùy vào mã xã. Lấy từng khoảng dữ liệu theo mã xã đã sắp xếp theo thời gian, đưa vào hàm \texttt{timeseries\_dataset\_from\_array}, sử dụng hàm \texttt{concatenate} ta sẽ tạo được các generator sử dụng cho việc training.
+
+Tùy vào mục đích cho từng model ta sẽ cần mở rộng chiều của dữ liệu để phù hợp, ví dụ Conv2D sẽ yêu cầu dữ liệu 4 chiều. Việc sử dụng Generator sẽ kéo dài việc training song sẽ giúp quá trình tạo dataset vốn rất lớn gần như tức thời.
 %----------------------------------------------------------------------------------------
 %	SECTION 4
 %----------------------------------------------------------------------------------------
@@ -743,16 +747,16 @@ df['24_rain'] = df['24_rain'].fillna(df['rain'])
 Dữ liệu thời tiết được lấy từ năm 2014 đến 2020. Mỗi ngày lấy các thông tin thời tiết gồm các trường sau:
 
 \begin{itemize}
-	\item max\_temp: Nhiệt độ cao nhất trong ngày 
+	\item max\_temp: Nhiệt độ cao nhất trong ngày
 	\item min\_temp: Nhiệt độ thấp nhất trong ngày
 	\item wind\_x: Vector gió theo chiều x (được tạo thành từ hướng gió và tốc độ gió)
 	\item wind\_y: Vector gió theo chiều y
 	\item rain: Lượng mưa
-	\item humidi: Độ ẩm 
-	\item Cloud: Tỷ lệ mây che phủ. 
+	\item humidi: Độ ẩm
+	\item Cloud: Tỷ lệ mây che phủ.
 \end{itemize}
 
-Với mỗi địa diểm xảy ra cháy trong một ngày nhất định thì ta lấy dữ liệu thời tiết (gồm các trường dữ liệu như trên) từ ngày trước khi xảy ra vụ cháy trở về trước 30 ngày. Với một ngày gồm 7 trường dữ liệu thời tiết trên ta nhân cho 30 ngày thì thu được 210 trường dữ liệu dùng để training. 
+Với mỗi địa diểm xảy ra cháy trong một ngày nhất định thì ta lấy dữ liệu thời tiết (gồm các trường dữ liệu như trên) từ ngày trước khi xảy ra vụ cháy trở về trước 30 ngày. Với một ngày gồm 7 trường dữ liệu thời tiết trên ta nhân cho 30 ngày thì thu được 210 trường dữ liệu dùng để training.
 
 
 \subsubsection{Model dữ đoán cháy rừng}
@@ -782,58 +786,58 @@ Ta sử dụng pipeline của thư viện sklearn để tiền xử lý dữ li�
 Trong SVC() ta thiết lập các thông số:
 \begin{enumerate}
 	\item C=1, gamma='auto', kernel='linear'
-	\begin{itemize}
-		\item Thời gian train: 9 min 28 second
-		\item Thời gian validation: 15 second
-		\item Thời gian test: 7 second 
-		\item Accuracy: 
-		\begin{itemize}
-			\item validation: 0.9590927501012556
-			\item testing: 0.9581856839121191
-		\end{itemize}
-		\item Mean Squared Error:
-		\begin{itemize}
-			\item validation: 0.04090724989874443
-			\item testing: 0.041814316087880936
-		\end{itemize}
-	\end{itemize}
+	      \begin{itemize}
+		      \item Thời gian train: 9 min 28 second
+		      \item Thời gian validation: 15 second
+		      \item Thời gian test: 7 second
+		      \item Accuracy:
+		            \begin{itemize}
+			            \item validation: 0.9590927501012556
+			            \item testing: 0.9581856839121191
+		            \end{itemize}
+		      \item Mean Squared Error:
+		            \begin{itemize}
+			            \item validation: 0.04090724989874443
+			            \item testing: 0.041814316087880936
+		            \end{itemize}
+	      \end{itemize}
 	\item C=1, gamma='auto', kernel='rbf'
-	\begin{itemize}
-		\item Thời gian train: 41 second
-		\item Thời gian validation: 9 second
-		\item Thời gian test: 4 second 
-		\item Accuracy: 
-		\begin{itemize}
-			\item validation: 0.987444309437019
-			\item testing: 0.9877155681549729
-		\end{itemize}
-		\item Mean Squared Error:
-		\begin{itemize}
-			\item validation: 0.012555690562980963
-			\item testing: 0.012284431845027168
-		\end{itemize}
-	\end{itemize}
+	      \begin{itemize}
+		      \item Thời gian train: 41 second
+		      \item Thời gian validation: 9 second
+		      \item Thời gian test: 4 second
+		      \item Accuracy:
+		            \begin{itemize}
+			            \item validation: 0.987444309437019
+			            \item testing: 0.9877155681549729
+		            \end{itemize}
+		      \item Mean Squared Error:
+		            \begin{itemize}
+			            \item validation: 0.012555690562980963
+			            \item testing: 0.012284431845027168
+		            \end{itemize}
+	      \end{itemize}
 	\item C=10, gamma='auto', kernel='rbf'
-	\begin{itemize}
-		\item Thời gian train: 1 min 32 second
-		\item Thời gian validation: 8 second
-		\item Thời gian test: 4 second 
-		\item Accuracy: 
-		\begin{itemize}
-			\item validation: 0.9920008100445524
-			\item testing: 0.9943302622253721
-		\end{itemize}
-		\item Mean Squared Error:
-		\begin{itemize}
-			\item validation: 0.00799918995544755
-			\item testing: 0.005669737774627924
-		\end{itemize}
-	\end{itemize}
+	      \begin{itemize}
+		      \item Thời gian train: 1 min 32 second
+		      \item Thời gian validation: 8 second
+		      \item Thời gian test: 4 second
+		      \item Accuracy:
+		            \begin{itemize}
+			            \item validation: 0.9920008100445524
+			            \item testing: 0.9943302622253721
+		            \end{itemize}
+		      \item Mean Squared Error:
+		            \begin{itemize}
+			            \item validation: 0.00799918995544755
+			            \item testing: 0.005669737774627924
+		            \end{itemize}
+	      \end{itemize}
 \end{enumerate}
 
 Mean squared error được tính bằng công thức:
 \begin{equation}
-	MSE(y,\widehat{y}) = \frac{1}{n_samples} \sum_{i = 0}^{n_samples-1} (y_i - \widehat{y}_i)^2   
+	MSE(y,\widehat{y}) = \frac{1}{n_samples} \sum_{i = 0}^{n_samples-1} (y_i - \widehat{y}_i)^2
 \end{equation}
 Trong đó:
 \begin{itemize}
@@ -858,8 +862,8 @@ Trong đó:
 
 Tiếp theo ta thiết lập hàm call back Early Stoping dùng để dừng quá trình train sớm, sau khi mà thông số chúng ta quan sát (có thể là validation accuarcy hay validation loss) không "khá lên" sau một vài epochs. Đây cũng là một kỹ thuật hay được dùng để tránh Overfit.
 
-\begin{minted}[]{python}
-	callback = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=20, mode='min')
+\begin{minted}[breaklines, tabsize=2]{python}
+	callback = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=5, mode='min')
 \end{minted}
 
 Tiếp tục ta tiếp hành lựa chọn các thuật toán tối ưu (optimizers). Về cơ bản, thuật toán tối ưu là cơ sở để xây dựng mô hình neural network với mục đích học được các features (hay pattern) của dữ liệu đầu vào, từ đó có thể tìm được một cặp weights và bias phù hợp để tối ưu hóa model. Trong các thuật toán tối ưu hóa ta tiến hành chọn learning rate (tỉ tệ học tập) sao cho phù hợp với bài toán.
@@ -885,69 +889,69 @@ Tiếp đến ta dùng hàm fit để đưa data vào training để tìm tham s
 Từ model đã được xây dựng trên, ta tiến hành chỉnh sửa các thông số của model:
 \begin{enumerate}
 	\item Hai lớp ẩn (số nút tương ứng là 128 và 64, activation="relu"), SGD(learning\_rate=0.01), loss="binary\_crossentropy"
-	
-	\begin{itemize}
-		\item Thời gian train: 5 min 13 second
-		\item Thời gian validation: 27 second
-		\item Thời gian test: 5 second 
-		\item Accuracy: 
-		\begin{itemize}
-			\item validation: 0.9533211588859558
-			\item testing: 0.9588943719863892
-		\end{itemize}
-		\item Loss:
-		\begin{itemize}
-			\item validation: 0.15693733096122742
-			\item testing: 0.1464112251996994
-		\end{itemize} 
-		\item Mean Squared Error:
-		\begin{itemize}
-			\item validation: 0.042361213827923364
-			\item testing: 0.03825463792437562
-		\end{itemize}
-	\end{itemize}
+
+	      \begin{itemize}
+		      \item Thời gian train: 5 min 13 second
+		      \item Thời gian validation: 27 second
+		      \item Thời gian test: 5 second
+		      \item Accuracy:
+		            \begin{itemize}
+			            \item validation: 0.9533211588859558
+			            \item testing: 0.9588943719863892
+		            \end{itemize}
+		      \item Loss:
+		            \begin{itemize}
+			            \item validation: 0.15693733096122742
+			            \item testing: 0.1464112251996994
+		            \end{itemize}
+		      \item Mean Squared Error:
+		            \begin{itemize}
+			            \item validation: 0.042361213827923364
+			            \item testing: 0.03825463792437562
+		            \end{itemize}
+	      \end{itemize}
 	\item Hai lớp ẩn (số nút tương ứng là 128 và 64, activation="relu"), optimizer="adam", loss="binary\_crossentropy"
-	\begin{itemize}
-		\item Thời gian train: 5 min 13 second
-		\item Thời gian validation: 7 second
-		\item Thời gian test: 5 second 
-		\item Accuracy: 
-		\begin{itemize}
-			\item validation: 0.9870392680168152
-			\item testing: 0.9893692135810852
-		\end{itemize}
-		\item Loss:
-		\begin{itemize}
-			\item validation: 0.059234291315078735
-			\item testing: 0.046542562544345856
-		\end{itemize} 
-		\item Mean Squared Error:
-		\begin{itemize}
-			\item validation: 0.011526199238160804
-			\item testing: 0.009204111539974925
-		\end{itemize}
-	\end{itemize}
+	      \begin{itemize}
+		      \item Thời gian train: 5 min 13 second
+		      \item Thời gian validation: 7 second
+		      \item Thời gian test: 5 second
+		      \item Accuracy:
+		            \begin{itemize}
+			            \item validation: 0.9870392680168152
+			            \item testing: 0.9893692135810852
+		            \end{itemize}
+		      \item Loss:
+		            \begin{itemize}
+			            \item validation: 0.059234291315078735
+			            \item testing: 0.046542562544345856
+		            \end{itemize}
+		      \item Mean Squared Error:
+		            \begin{itemize}
+			            \item validation: 0.011526199238160804
+			            \item testing: 0.009204111539974925
+		            \end{itemize}
+	      \end{itemize}
 	\item Ba lớp ẩn (số nút tương ứng là 128, 64 và 32, activation="relu"), optimizer="adam", loss="binary\_crossentropy"
-	\begin{itemize}
-		\item Thời gian train: 3 min 23 second
-		\item Thời gian validation: 2 second
-		\item Thời gian test: 1 second 
-		\item Accuracy: 
-		\begin{itemize}
-			\item validation: 0.990481972694397
-			\item testing: 0.9922041296958923
-		\end{itemize}
-		\item Loss:
-		\begin{itemize}
-			\item validation: 0.0414808988571167
-			\item testing: 0.037396930158138275
-		\end{itemize} 
-		\item Mean Squared Error:
-		\begin{itemize}
-			\item validation: 0.00846018838163131
-			\item testing: 0.00734131887253742
-		\end{itemize}
-	\end{itemize}
+	      \begin{itemize}
+		      \item Thời gian train: 3 min 23 second
+		      \item Thời gian validation: 2 second
+		      \item Thời gian test: 1 second
+		      \item Accuracy:
+		            \begin{itemize}
+			            \item validation: 0.990481972694397
+			            \item testing: 0.9922041296958923
+		            \end{itemize}
+		      \item Loss:
+		            \begin{itemize}
+			            \item validation: 0.0414808988571167
+			            \item testing: 0.037396930158138275
+		            \end{itemize}
+		      \item Mean Squared Error:
+		            \begin{itemize}
+			            \item validation: 0.00846018838163131
+			            \item testing: 0.00734131887253742
+		            \end{itemize}
+	      \end{itemize}
 \end{enumerate}
 
 \begin{figure}[H]
@@ -965,7 +969,7 @@ Từ hai thuật toán phân loại phân loại trên ta thấy được model 
 
 \subsubsection{Model dự đoán cấp độ cháy rừng}
 
-Model này dùng để dự đoán các cấp độ cháy rừng sau khi đã có kết quả của model trên. Nếu model dự báo cháy rừng trên cho ra kết quả là 1 (tương ứng với việc có xảy ra cháy rừng) thì ta tiếp tục sử dụng model này để  phân loại các cấp độ cháy rừng, để có thể kịp thời ứng phó với nguy cơ cháy rừng. Còn nếu model trên dự đoán ra 0 thì ta không cần phải dự đoán tiếp model này. 
+Model này dùng để dự đoán các cấp độ cháy rừng sau khi đã có kết quả của model trên. Nếu model dự báo cháy rừng trên cho ra kết quả là 1 (tương ứng với việc có xảy ra cháy rừng) thì ta tiếp tục sử dụng model này để  phân loại các cấp độ cháy rừng, để có thể kịp thời ứng phó với nguy cơ cháy rừng. Còn nếu model trên dự đoán ra 0 thì ta không cần phải dự đoán tiếp model này.
 
 \paragraph{Chia dữ liệu}
 
@@ -985,49 +989,49 @@ Tương tự như SVM của model trên ta cũng tiến hành thiết lập mode
 
 \begin{enumerate}
 	\item C=1, gamma='auto', kernel='poly'
-	\begin{itemize}
-		\item Thời gian train: 2 min 8 second
-		\item Thời gian validation: 25 second
-		\item Thời gian test: 12 second 
-		\item Accuracy: 
-		\begin{itemize}
-			\item validation: 0.6187175043327556
-			\item testing: 0.6154537286612758
-		\end{itemize}
-		\item Mean Squared Error:
-		\begin{itemize}
-			\item validation: 0.7232813402657423
-			\item testing: 0.7497753818508536
-		\end{itemize}
-	\end{itemize}
+	      \begin{itemize}
+		      \item Thời gian train: 2 min 8 second
+		      \item Thời gian validation: 25 second
+		      \item Thời gian test: 12 second
+		      \item Accuracy:
+		            \begin{itemize}
+			            \item validation: 0.6187175043327556
+			            \item testing: 0.6154537286612758
+		            \end{itemize}
+		      \item Mean Squared Error:
+		            \begin{itemize}
+			            \item validation: 0.7232813402657423
+			            \item testing: 0.7497753818508536
+		            \end{itemize}
+	      \end{itemize}
 	\item C=1, gamma='auto', kernel='rbf'
-	\begin{itemize}
-		\item Thời gian train: 1 min 56 second
-		\item Thời gian validation: 27 second
-		\item Thời gian test: 11 second 
-		\item Accuracy: 
-		\begin{itemize}
-			\item validation: 0.6347005584440593
-			\item testing: 0.6302785265049416
-		\end{itemize}
-		\item Mean Squared Error:
-		\begin{itemize}
-			\item validation: 0.6761024455998459
-			\item testing: 0.7133872416891285
-		\end{itemize}
-		\begin{figure}[H]
-			\centering
-			\includegraphics[width=6in]{images/confusionMatrixSVM_model2_0.png}
-			\caption{Confusion Matrix}
-		\end{figure}
-	\end{itemize}
+	      \begin{itemize}
+		      \item Thời gian train: 1 min 56 second
+		      \item Thời gian validation: 27 second
+		      \item Thời gian test: 11 second
+		      \item Accuracy:
+		            \begin{itemize}
+			            \item validation: 0.6347005584440593
+			            \item testing: 0.6302785265049416
+		            \end{itemize}
+		      \item Mean Squared Error:
+		            \begin{itemize}
+			            \item validation: 0.6761024455998459
+			            \item testing: 0.7133872416891285
+		            \end{itemize}
+		            \begin{figure}[H]
+			            \centering
+			            \includegraphics[width=6in]{images/confusionMatrixSVM_model2_0.png}
+			            \caption{Confusion Matrix}
+		            \end{figure}
+	      \end{itemize}
 \end{enumerate}
 
 \subparagraph{Dense}
 
 Ta thiết lập model tương tự model trên:
 
-\begin{minted}[]{python}
+\begin{minted}[breaklines,tabsize=4]{python}
 	model = Sequential()
 	model.add(Dense(128, input_shape=(210,), activation="relu", name='hidden_layer_1'))
 	model.add(Dense(64, activation="relu", name='hidden_layer_2'))
@@ -1037,7 +1041,6 @@ Ta thiết lập model tương tự model trên:
 
 	callback = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, mode='min')
 
-	print("[INFO] training network...")
 	model.compile(optimizer='adam', loss='categorical_crossentropy',
               metrics=['accuracy'])
 	
@@ -1047,22 +1050,22 @@ Ta thiết lập model tương tự model trên:
 \begin{itemize}
 	\item Thời gian train: 1 min 4 second
 	\item Thời gian validation: 5 second
-	\item Thời gian test: 2 second 
-	\item Accuracy: 
-	\begin{itemize}
-		\item validation: 0.6192951798439026
-		\item testing: 0.6145552396774292]
-	\end{itemize}
+	\item Thời gian test: 2 second
+	\item Accuracy:
+	      \begin{itemize}
+		      \item validation: 0.6192951798439026
+		      \item testing: 0.6145552396774292]
+	      \end{itemize}
 	\item Loss:
-	\begin{itemize}
-		\item validation: 0.8435102105140686
-		\item testing: 0.8677495121955872
-	\end{itemize} 
+	      \begin{itemize}
+		      \item validation: 0.8435102105140686
+		      \item testing: 0.8677495121955872
+	      \end{itemize}
 	\item Mean Squared Error:
-	\begin{itemize}
-		\item validation: 0.16747459320485225
-		\item testing: 0.17110031298128617
-	\end{itemize}
+	      \begin{itemize}
+		      \item validation: 0.16747459320485225
+		      \item testing: 0.17110031298128617
+	      \end{itemize}
 \end{itemize}
 
 \begin{figure}[H]
@@ -1078,37 +1081,37 @@ Từ model trên, ta thấy được nhãn 2 dự đoán đúng rất thấp, ch
 Trong SVC() ta thiết lập các thông số:
 \begin{enumerate}
 	\item C=1, gamma='auto', kernel='rbf'
-	\begin{itemize}
-		\item Thời gian train: 1 mini 29 second
-		\item Thời gian validation: 19 second
-		\item Thời gian test: 8 second 
-		\item Accuracy: 
-		\begin{itemize}
-			\item validation: 0.8239938378586559
-			\item testing: 0.8221024258760108
-		\end{itemize}
-		\item Mean Squared Error:
-		\begin{itemize}
-			\item validation: 0.17600616214134412
-			\item testing: 0.1778975741239892
-		\end{itemize}
-	\end{itemize}
+	      \begin{itemize}
+		      \item Thời gian train: 1 mini 29 second
+		      \item Thời gian validation: 19 second
+		      \item Thời gian test: 8 second
+		      \item Accuracy:
+		            \begin{itemize}
+			            \item validation: 0.8239938378586559
+			            \item testing: 0.8221024258760108
+		            \end{itemize}
+		      \item Mean Squared Error:
+		            \begin{itemize}
+			            \item validation: 0.17600616214134412
+			            \item testing: 0.1778975741239892
+		            \end{itemize}
+	      \end{itemize}
 	\item C=10, gamma='auto', kernel='rbf'
-	\begin{itemize}
-		\item Thời gian train: 2 min 20 second
-		\item Thời gian validation: 17 second
-		\item Thời gian test: 7 second 
-		\item Accuracy: 
-		\begin{itemize}
-			\item validation: 0.8234161371076449
-			\item testing: 0.8274932614555256
-		\end{itemize}
-		\item Mean Squared Error:
-		\begin{itemize}
-			\item validation: 0.1765838628923551
-			\item testing: 0.1725067385444744
-		\end{itemize}
-	\end{itemize}
+	      \begin{itemize}
+		      \item Thời gian train: 2 min 20 second
+		      \item Thời gian validation: 17 second
+		      \item Thời gian test: 7 second
+		      \item Accuracy:
+		            \begin{itemize}
+			            \item validation: 0.8234161371076449
+			            \item testing: 0.8274932614555256
+		            \end{itemize}
+		      \item Mean Squared Error:
+		            \begin{itemize}
+			            \item validation: 0.1765838628923551
+			            \item testing: 0.1725067385444744
+		            \end{itemize}
+	      \end{itemize}
 \end{enumerate}
 
 \begin{figure}[H]
@@ -1124,22 +1127,22 @@ Tương tự, ta chỉ xét đến các thông số sau khi train xong model:
 \begin{itemize}
 	\item Thời gian train: 2 min 6 second
 	\item Thời gian validation: 5 second
-	\item Thời gian test: 2 second 
-	\item Accuracy: 
-	\begin{itemize}
-		\item validation: 0.8137878179550171
-		\item testing: 0.8126684427261353
-	\end{itemize}
+	\item Thời gian test: 2 second
+	\item Accuracy:
+	      \begin{itemize}
+		      \item validation: 0.8137878179550171
+		      \item testing: 0.8126684427261353
+	      \end{itemize}
 	\item Loss:
-	\begin{itemize}
-		\item validation: 0.4617549777030945
-		\item testing: 0.46853387355804443
-	\end{itemize} 
+	      \begin{itemize}
+		      \item validation: 0.4617549777030945
+		      \item testing: 0.46853387355804443
+	      \end{itemize}
 	\item Mean Squared Error:
-	\begin{itemize}
-		\item validation: 0.14147366984777401
-		\item testing: 0.14031667554728067
-	\end{itemize}
+	      \begin{itemize}
+		      \item validation: 0.14147366984777401
+		      \item testing: 0.14031667554728067
+	      \end{itemize}
 \end{itemize}
 
 \begin{figure}[H]
