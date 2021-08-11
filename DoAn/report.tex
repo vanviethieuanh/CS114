@@ -763,6 +763,7 @@ Dữ liệu thời tiết được lấy từ năm 2014 đến 2020. Mỗi ngày
 
 Với mỗi địa diểm xảy ra cháy trong một ngày nhất định thì ta lấy dữ liệu thời tiết (gồm các trường dữ liệu như trên) từ ngày trước khi xảy ra vụ cháy trở về trước 30 ngày. Với một ngày gồm 7 trường dữ liệu thời tiết trên ta nhân cho 30 ngày thì thu được 210 trường dữ liệu dùng để training.
 
+Để thuật tiện cho việc dự báo cháy rừng và mang lại độ chính xác cao, ta tiến hành chia thành 2 model riêng biết. Model đầu tiên dùng để đự đoán cháy rừng, đầu vào là dữ liệu thời tiết như ở trên, đầu ra là 2 nhẵn 0 (không xảy ra cháy rừng) và nhãn 1 (xảy ra cháy rừng). Model thứ 2 dùng để dự đoán cấp độ cháy rừng, cấp độ càng cao thì càng có độ tin cậy về cháy rừng càng cao. Đầu vào của model 2 này là dữ liệu thời tiết như trên nhưng mà có xảy ra cháy rừng, sau đó ta tiến hành chia dữ liệu thành 3 nhãn: nhãn 1 (cháy rừng cấp 1), nhãn 2 (cháy rừng cấp độ 2), nhãn 3 (cháy rừng cấp độ 3).
 
 \subsubsection{Model dữ đoán cháy rừng}
 \paragraph{Chia dữ liệu}
