@@ -59,8 +59,6 @@ Hệ thống này cung cấp dữ liệu về điểm cháy ghi nhận được 
 
 Input của bài toán là dữ liệu lịch sử thời tiết trong vòng 1 tháng trở lại và từ đó để model đánh giá địa phương đó vào ngày mai có mức độ cháy được đánh giá ở thang nào.
 
-Chưa làm xong đâu, làm phụ đi
-
 \subsection{Mô tả dữ liệu}
 
 Nguồn dữ liệu của nhóm đến từ các website gồm 3 website chính:
@@ -264,7 +262,7 @@ Việc còn lại là lấy ra và lưu lại dưới file csv. Sau đó lấy n
                 'lowC': d.get('Temperatures', {}).get('lowC',''),
                 'sun_rise': d.get('SunData', {}).get('sunrise',''),
                 'sun_set': d.get('SunData',{}).get('sunset',''),
-                'sevenDayPrecipCm':d.get('Precips',{}).get('sevenDayPrecipCm',''),
+                'sevenDayPrecipCm':d.get('Precips',{}).get('sevenDayPrecipCm',''),s
                 'mtdPrecipCm':d.get('Precips',{}).get('mtdPrecipCm',''),
                 'precip24Cm':d.get('Precips',{}).get('precip24Cm',''),
             }
@@ -713,6 +711,35 @@ df['max_x'] = df['max_x'].fillna(df['max_y'])
 df['min_x'] = df['min_x'].fillna(df['min_y'])
 df['24_rain'] = df['24_rain'].fillna(df['rain'])
 \end{minted}
+
+\begin{table}[H]
+	\begin{tabular}{lllllllllll}
+		ward\_code & date       & fires & max & 24\_rain & ... & wind & wind\_d  & cloud & pressure & doy \\
+		23557      & 2009-01-01 & 0     & 22  & 8.7      & ... & 22   & 1.178097 & 84    & 1014     & 1   \\
+		23557      & 2009-01-02 & 0     & 22  & 1.6      & ... & 26   & 1.178097 & 66    & 1015     & 2   \\
+		23557      & 2009-01-03 & 0     & 23  & 1.4      & ... & 20   & 0.785398 & 63    & 1016     & 3   \\
+		23557      & 2009-01-04 & 0     & 22  & 0        & ... & 18   & 0.785398 & 31    & 1014     & 4   \\
+		23557      & 2009-01-05 & 0     & 26  & 0        & ... & 15   & 0.785398 & 29    & 1014     & 5
+	\end{tabular}
+\end{table}
+
+Danh sách các trường dữ liệu
+
+\begin{itemize}
+	\item ward\_code: mã xã
+	\item date: ngày ghi nhận
+	\item fires: số điểm cháy
+	\item max: nhiệt độ cao nhất
+	\item min: nhiệt độ thấp nhất
+	\item 24\_rain: lượng mưa
+	\item sun\_mins: số phút nắng trong ngày
+	\item wind: vận tốc gió
+	\item wind\_d: hướng gió (radian)
+	\item humidi: độ ẩm
+	\item cloud: lượng mây
+	\item pressure: áp suất
+	\item doy: ngày trong năm
+\end{itemize}
 
 \subsubsection{Creation of Dataset}
 
