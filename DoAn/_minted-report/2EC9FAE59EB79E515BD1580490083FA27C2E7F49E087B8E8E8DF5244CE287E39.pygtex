@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{cnnModel}\PYG{o}{.}\PYG{n}{compile}\PYG{p}{(}\PYG{n}{optimizer}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}adam\PYGZsq{}}\PYG{p}{,}\PYG{n}{loss}\PYG{o}{=}\PYG{n}{tf}\PYG{o}{.}\PYG{n}{keras}\PYG{o}{.}\PYG{n}{losses}\PYG{o}{.}\PYG{n}{MeanSquaredError}\PYG{p}{(),}\PYG{n}{metrics}\PYG{o}{=}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}accuracy\PYGZsq{}}\PYG{p}{])}
+\PYG{n}{early\PYGZus{}stopping} \PYG{o}{=} \PYG{n}{tf}\PYG{o}{.}\PYG{n}{keras}\PYG{o}{.}\PYG{n}{callbacks}\PYG{o}{.}\PYG{n}{EarlyStopping}\PYG{p}{(}\PYG{n}{monitor}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}val\PYGZus{}loss\PYGZsq{}}\PYG{p}{,}\PYG{n}{patience}\PYG{o}{=}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{n}{mode}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}min\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{history} \PYG{o}{=} \PYG{n}{cnnModel}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{(}\PYG{n}{train\PYGZus{}dataset\PYGZus{}5}\PYG{p}{,}\PYG{n}{validation\PYGZus{}data}\PYG{o}{=}\PYG{n}{val\PYGZus{}dataset\PYGZus{}5}\PYG{p}{,}\PYG{n}{epochs}\PYG{o}{=}\PYG{l+m+mi}{20}\PYG{p}{,}\PYG{n}{callbacks}\PYG{o}{=}\PYG{p}{[}\PYG{n}{early\PYGZus{}stopping}\PYG{p}{])}
+\end{Verbatim}

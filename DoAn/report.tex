@@ -759,20 +759,234 @@ Tùy vào mục đích cho từng model ta sẽ cần mở rộng chiều của 
 % Trình bày càng kỹ càng nhiều điểm
 
 \subsection{Trên dữ liệu 5 tỉnh Tây Nguyên}
-\subsubsection{Fully Connected}
+\subsubsection{Model dự đoán cháy rừng}
+\paragraph{Xử lý và chia dữ liệu}
+
+Từ bộ dữ liệu ta tiến hành xử lý và chia dữ liệu:
+
+Từ bộ dữ liệu thời tiết IBM đã được xử lý ở phần trước ta tiến hành lấy những features cần dùng và drop những features không cần thiết.
+
+Những features cần dùng cho training:
+\begin{itemize}
+    \item max: nhiệt độ cao nhất (độ C)
+	\item rain: lượng mưa trong 24h (mm)
+	\item wind: vận tốc gió (km/h)
+	\item humidi: độ ẩm (\%)
+	\item doy: ngày trong năm (1-365)
+	\item ward code: mã xã
+\end{itemize}
+
+\begin{minted}[breaklines]{python}
+# drop unneccessary features
+df_ibm_weather_5 = df_ibm_weather_5.drop(['min_x','sun_mins','wind_d','cloud','pressure','sunset','sunrise','7_rain','m_rain','province','max_y','min_y','rain'], axis=1)
+df_ibm_weather_5 = df_ibm_weather_5.rename(columns={'max_x':'max','24_rain':'rain'})
+
+# get data after 2017 and before 2021
+df_ibm_weather_5 = df_ibm_weather_5.loc[df_ibm_weather_5['date'].dt.year >= 2017]
+df_ibm_weather_5 = df_ibm_weather_5.loc[df_ibm_weather_5['date'].dt.year <= 2020]
+\end{minted}
+
+Ta tiến hành đếm tổng các điểm cháy trong ngày tại mỗi xã và merge với dữ liệu thời tiết tương ứng theo 'ward code' và 'date'.
+
+\begin{minted}[]{python}
+# count fires
+df_fire_count = df_wildfire_tn.groupby(['ward_code','date']).size().reset_index(name='fires')
+
+# merge fire with weather
+df_dataset_5 = pd.merge(df_fire_count,df_ibm_weather_5,how='right' ,on=['ward_code','date'])
+\end{minted}
+
+Scale dữ liệu thời tiết bằng MinMaxScale. Việc này giúp model hội tụ tốt hơn.
+
+\begin{minted}[]{python}
+def MinMaxScale(df, columns):
+  for c in columns:
+    df[c] = (df[c]-df[c].min())/(df[c].max()-df[c].min())
+  return df
+\end{minted}
+
+Sau khi xử lý bộ dữ liệu xong ta tiến hành windowing. Ở đây em dùng vòng lặp để thực hiện. Sau khi hoàn tất xử lý và tạo bộ dữ liệu. Ta chia bộ dữ liệu thành 3 phần train, validation và test tương ứng với tỉ lệ 70%, 20%, 10%.
+
 \paragraph{Thiết lập, Training}
 % Khúc này ghi cấu trúc model
 % Thời gian training, thời gian test
 % Nhớ ghi những thông số và công thức tính (acc, error, optimizor)
+\subparagraph{Dense} Khởi tạo Sequential() của Keras. Ở đây em dùng gồm 3 lớp Dense với hàm kích hoạt là 'relu', lớp cuối có 1 node với hàm 'sigmoid' để phân loại binary ở output. 
+
+\begin{minted}[]{python}
+denseModel = tf.keras.Sequential()
+denseModel.add(Input(shape=(X_train_binary.shape[1],)))
+denseModel.add(Dense(128, activation='relu'))
+denseModel.add(tf.keras.layers.Dropout(0.2))
+denseModel.add(Dense(64, activation='relu'))
+denseModel.add(Dense(32, activation='relu'))
+denseModel.add(Dense(1, activation='sigmoid'))
+\end{minted}
+
+Compile denseModel với optimizer là adam, loss là binary crossentropy và accuracy. Để tránh mất nhiều thời gian, ta thiết lập early stopping để kết thúc sớm việc training trong trường hợp val loss không giảm.
+
+\begin{minted}[]{python}
+denseModel.compile(optimizer='adam', loss='binary_crossentropy',metrics=['accuracy'])
+early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss',patience=5,mode='min')
+\end{minted}
+
+Sau khi thiết lập xong các thông số, ta tiến hành training.
+
+\begin{minted}[breaklines]{python}
+history = denseModel.fit(X_train_binary, y_train_binary, batch_size=256, epochs=20, callbacks=[early_stopping], validation_data=(X_val_binary, y_val_binary), verbose=1)
+\end{minted}
+
+Các số liệu về training:
+\begin{itemize}
+	\item Epochs: 20
+	\item Batch size: 256
+	\item Thời gian train: 3 phút 20 giây
+	\item Thời gian test: 12 giây
+	\item Accuracy:
+	\begin{itemize}
+	    \item validation: 0.9730
+	    \item test: 0.9742
+	\end{itemize}
+	\item Loss:
+	\begin{itemize}
+	    \item validation: 0.0912
+	    \item test: 0.0890
+	\end{itemize}
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=6in]{images/ky1.png}
+	\caption{Biểu đồ quá trình training}
+\end{figure}
 
 \paragraph{Đánh giá}
 % Các đánh giá về model, số liệu tổng quan chung, các trường hợp model đoán đúng, sai,
 % Còn những điểm nào có hy vọng cải thiện ?
 % Bao quát chung
+Từ các số liệu trên cho thấy model dự đoán cháy tốt dựa trên dữ liệu thời tiết. Với độ chính xác khá cao trên tập validation là 97,30% và trên tập test là 97,42%.
 
-\subsubsection{Tổng kết}
+%\paragraph{Tổng kết}
 % Rút ra gì từ những model khi thực nghiệm trên bộ dữ liệu này
 % Trong các model này, những model nào có điểm tối ưu, hạn chế nào so với những model khác ?
+\subsubsection{Model dự đoán cấp độ cháy rừng}
+
+\paragraph{Xử lý và chia dữ liệu}
+Việc xử lý dữ liệu thực hiện tương tự như phần trước. Nhưng đặc biệt ở đây là bộ dataset được tạo bằng bộ tạo time series dataset của tensorflow trong hàm dưới đây.
+
+\begin{minted}[breaklines]{python}
+def concatDataset(data, ward_code_column ,wards,columns):
+  for i, w in enumerate(wards):
+    df = data[data[ward_code_column] == w][columns].to_numpy()
+    inputs, targets = df[:,:-1], df[:,-1:]
+    
+    ds = tf.keras.preprocessing.timeseries_dataset_from_array(data=inputs, targets=targets, sequence_length=30, sequence_stride=1, sampling_rate=1, batch_size=256, shuffle=True, seed=20)
+    ds = ds.map(expand)
+    if i == 0:
+      dataset = ds
+    else:
+      dataset = dataset.concatenate(ds)
+  return dataset
+\end{minted}
+
+\paragraph{Thiết lập, Training}
+Sau khi tạo xong bộ dữ liệu ta tiến hành áp dụng các model cho việc training.
+
+\paragraph{CNN}
+Ta khởi tạo Sequential() của Keras. Thiết lập layer Conv1D với kernel size là 6 và hàm kích hoạt là relu. Tiếp đến là 2 lớp Dense với 1 node ở output đầu ra. Sử dụng hàm relu để lấy các giá trị từ 0, 1, 2,... Đó là các mức độ cháy rừng.
+
+\begin{minted}[]{python}
+cnnModel = tf.keras.Sequential()
+cnnModel.add(tf.keras.layers.Conv1D(32,kernel_size=(6),activation='relu'))
+cnnModel.add(Dense(32,activation='relu'))
+cnnModel.add(Dense(units=1,activation='relu'))
+\end{minted}
+
+Sử dụng optimizer là Adam, loss là Mean Squared Error. Tương tự, ta cũng thiết lập early stopping để dừng training khi cần thiết. 
+
+\begin{minted}[breaklines]{python}
+cnnModel.compile(optimizer='adam',loss=tf.keras.losses.MeanSquaredError(),metrics=['accuracy'])
+early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss',patience=2,mode='min')
+history = cnnModel.fit(train_dataset_5,validation_data=val_dataset_5,epochs=20,callbacks=[early_stopping])
+\end{minted}
+
+Các số liệu về training:
+\begin{itemize}
+	\item Epochs: 20
+	\item Batch size: 256
+	\item Thời gian train: 1 giờ 2 phút
+	\item Thời gian test: 11 phút
+	\item Accuracy:
+	\begin{itemize}
+	    \item validation: 0.9740
+	    \item test: 0.9842
+	\end{itemize}
+	\item Loss:
+	\begin{itemize}
+	    \item validation: 9.5859
+	    \item test: 1.321
+	\end{itemize}
+\end{itemize}
+
+\paragraph{RNN} Recurrent Neural Network là một mạng neural được đánh giá là phù hợp nhất cho time series data. Tương tự, ta cũng khởi tạo Sequential() của Keras. Sau đó add 2 lớp SimpleRNN, thiết lập return sequential = True cho phép model return một output cho mỗi input đầu vào. Cuối cùng là một lớp Dense 1 node với hàm kích hoạt là relu để nhận kết quả trả về 0, 1, 2,... Tương ứng với mức độ cháy. Các thông số compile ta thiết lập tương tự như mạng CNN trên. 
+
+\begin{minted}[]{python}
+rnnModel = tf.keras.Sequential()
+rnnModel.add(tf.keras.layers.SimpleRNN(32,return_sequences=True))
+rnnModel.add(tf.keras.layers.SimpleRNN(32))
+rnnModel.add(Dense(1,activation='relu'))
+rnnModel.compile(optimizer='adam', loss=tf.keras.losses.MeanSquaredError(), metrics=['accuracy'])
+early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss',patience=2,mode='min')
+\end{minted}
+
+Các số liệu về training:
+\begin{itemize}
+	\item Epochs: 20
+	\item Batch size: 256
+	\item Thời gian train: 33 phút
+	\item Thời gian test: 6 phút
+	\item Accuracy:
+	\begin{itemize}
+	    \item validation: 0.9740
+	    \item test: 0.9842
+	\end{itemize}
+	\item Loss:
+	\begin{itemize}
+	    \item validation: 9.5859
+	    \item test: 1.321
+	\end{itemize}
+\end{itemize}
+
+\paragraph{LSTM} Long Short-Term Memory là một dạng của mạng RNN, độ hiệu quả cao hơn CNN và phù hợp cho các dữ liệu thời gian dài. Tương tự, ta cũng khởi tạo Sequential() của Keras. Sau đó add lớp LSTM và thiết lập return sequential = True. Lớp Dense output và thiết lập compile tương tự như mạng RNN phía trên.
+
+\begin{minted}[]{python}
+lstmModel = tf.keras.Sequential()
+lstmModel.add(LSTM(32,return_sequences=True))
+lstmModel.add(Dense(units=1,activation='relu'))
+lstmModel.compile(loss=tf.keras.losses.MeanSquaredError(),optimizer='adam',metrics=['accuracy'])
+early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss',patience=2,mode='min')
+\end{minted}
+
+Các số liệu về training:
+\begin{itemize}
+	\item Epochs: 20
+	\item Batch size: 256
+	\item Thời gian train: 39 phút
+	\item Thời gian test: 6 phút
+	\item Accuracy:
+	\begin{itemize}
+	    \item validation: 0.9740
+	    \item test: 0.9842
+	\end{itemize}
+	\item Loss:
+	\begin{itemize}
+	    \item validation: 9.5859
+	    \item test: 1.3218
+	\end{itemize}
+\end{itemize}
+
+\paragraph{Đánh giá}
+Từ ba model dự đoán trên cho ta độ chính xác khá tốt với accuracy trên 97\%. Từ đó, ta hoàn toàn có khả năng dự đoán được mức độ cháy, dựa trên dữ liệu thời tiết đã thu thập. Ta có thể  đánh giá được mức độ báo động cháy để chuẩn bị và đưa ra các phương án phòng chống và giải quyết sớm những vụ cháy rừng.
 
 \subsection{Trên dữ liệu 3 tỉnh (Gia Lai, Lâm Đồng, Đắk Lắk)}
 
@@ -790,6 +1004,7 @@ Dữ liệu thời tiết được lấy từ năm 2014 đến 2020. Mỗi ngày
 
 Với mỗi địa diểm xảy ra cháy trong một ngày nhất định thì ta lấy dữ liệu thời tiết (gồm các trường dữ liệu như trên) từ ngày trước khi xảy ra vụ cháy trở về trước 30 ngày. Với một ngày gồm 7 trường dữ liệu thời tiết trên ta nhân cho 30 ngày thì thu được 210 trường dữ liệu dùng để training.
 
+Để thuật tiện cho việc dự báo cháy rừng và mang lại độ chính xác cao, ta tiến hành chia thành 2 model riêng biết. Model đầu tiên dùng để đự đoán cháy rừng, đầu vào là dữ liệu thời tiết như ở trên, đầu ra là 2 nhẵn 0 (không xảy ra cháy rừng) và nhãn 1 (xảy ra cháy rừng). Model thứ 2 dùng để dự đoán cấp độ cháy rừng, cấp độ càng cao thì càng có độ tin cậy về cháy rừng càng cao. Đầu vào của model 2 này là dữ liệu thời tiết như trên nhưng mà có xảy ra cháy rừng, sau đó ta tiến hành chia dữ liệu thành 3 nhãn: nhãn 1 (cháy rừng cấp 1), nhãn 2 (cháy rừng cấp độ 2), nhãn 3 (cháy rừng cấp độ 3).
 
 \subsubsection{Model dữ đoán cháy rừng}
 \paragraph{Chia dữ liệu}

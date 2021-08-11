@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} count fires}
+\PYG{n}{df\PYGZus{}fire\PYGZus{}count} \PYG{o}{=} \PYG{n}{df\PYGZus{}wildfire\PYGZus{}tn}\PYG{o}{.}\PYG{n}{groupby}\PYG{p}{([}\PYG{l+s+s1}{\PYGZsq{}ward\PYGZus{}code\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}date\PYGZsq{}}\PYG{p}{])}\PYG{o}{.}\PYG{n}{size}\PYG{p}{()}\PYG{o}{.}\PYG{n}{reset\PYGZus{}index}\PYG{p}{(}\PYG{n}{name}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}fires\PYGZsq{}}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} merge fire with weather}
+\PYG{n}{df\PYGZus{}dataset\PYGZus{}5} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{merge}\PYG{p}{(}\PYG{n}{df\PYGZus{}fire\PYGZus{}count}\PYG{p}{,}\PYG{n}{df\PYGZus{}ibm\PYGZus{}weather\PYGZus{}5}\PYG{p}{,}\PYG{n}{how}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}right\PYGZsq{}} \PYG{p}{,}\PYG{n}{on}\PYG{o}{=}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}ward\PYGZus{}code\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}date\PYGZsq{}}\PYG{p}{])}
+\end{Verbatim}
