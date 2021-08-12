@@ -57,7 +57,13 @@ Từ đầu năm 2007, Cục Kiểm lâm (Bộ Nông nghiệp và Phát triển 
 
 Hệ thống này cung cấp dữ liệu về điểm cháy ghi nhận được từ vệ tinh và lưu lại thời gian và tọa độ cháy. Từ khi bắt đầu lắp đặt đến nay hệ thống dữ liệu cháy của cục kiểm lâm được ghi lại được gần 1 triệu điểm cháy. Nhờ lượng dữ liệu này việc xây dựng một hệ thống tự động phân tích mức độ cháy rừng dựa vào các đặc trưng cơ bản của dữ liệu khí tượng thủy văn là hoàn toàn có cơ sở và khả quan.
 
-Input của bài toán là dữ liệu lịch sử thời tiết trong vòng 30 ngày trở lại và từ đó để model đánh giá địa phương đó vào ngày hôm nay có mức độ cháy được đánh giá ở thang nào.
+Input của bài toán là dữ liệu lịch sử thời tiết của địa phương trong vòng 1 tháng trước ngày xảy ra vụ cháy.
+
+Output của bài toán là:
+\begin{itemize}
+	\item Model 1 cho ra kết quả một trong hai giá trị 0 hoặc 1 đại diện cho địa phương đó có xảy ra cháy rừng hay không?
+	\item Model 2 cho ra kết quả là cấp độ cháy rừng gồm 3 nhãn là nhãn 1 (cháy rừng cấp độ 1), nhãn 2 (cháy rừng cấp độ 2), nhãn 3 (cháy rừng cấp độ 3).
+\end{itemize}
 
 \subsection{Mô tả dữ liệu}
 
@@ -1012,6 +1018,13 @@ Dữ liệu thời tiết được lấy từ năm 2014 đến 2020. Mỗi ngày
 \end{itemize}
 
 Với mỗi địa diểm xảy ra cháy trong một ngày nhất định thì ta lấy dữ liệu thời tiết (gồm các trường dữ liệu như trên) từ ngày trước khi xảy ra vụ cháy trở về trước 30 ngày. Với một ngày gồm 7 trường dữ liệu thời tiết trên ta nhân cho 30 ngày thì thu được 210 trường dữ liệu dùng để training.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=6in]{images/show_data.png}
+	\caption{Dữ liệu dùng để đào tạo model}
+\end{figure}
+
 
 Để thuật tiện cho việc dự báo cháy rừng và mang lại độ chính xác cao, ta tiến hành chia thành 2 model riêng biết. Model đầu tiên dùng để đự đoán cháy rừng, đầu vào là dữ liệu thời tiết như ở trên, đầu ra là 2 nhẵn 0 (không xảy ra cháy rừng) và nhãn 1 (xảy ra cháy rừng). Model thứ 2 dùng để dự đoán cấp độ cháy rừng, cấp độ càng cao thì càng có độ tin cậy về cháy rừng càng cao. Đầu vào của model 2 này là dữ liệu thời tiết như trên nhưng mà có xảy ra cháy rừng, sau đó ta tiến hành chia dữ liệu thành 3 nhãn: nhãn 1 (cháy rừng cấp 1), nhãn 2 (cháy rừng cấp độ 2), nhãn 3 (cháy rừng cấp độ 3).
 
