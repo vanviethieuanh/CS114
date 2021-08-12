@@ -803,7 +803,7 @@ df_ibm_weather_5 = df_ibm_weather_5.loc[df_ibm_weather_5['date'].dt.year >= 2017
 df_ibm_weather_5 = df_ibm_weather_5.loc[df_ibm_weather_5['date'].dt.year <= 2020]
 \end{minted}
 
-Ta tiến hành đếm tổng các điểm cháy trong ngày tại mỗi xã và merge với dữ liệu thời tiết tương ứng theo 'ward code' và 'date'.
+Ta tiến hành đếm tổng các điểm cháy trong ngày tại mỗi xã và merge với dữ liệu thời tiết tương ứng theo ward\_code và date.
 
 \begin{minted}[]{python}
 # count fires
@@ -828,7 +828,7 @@ Sau khi xử lý bộ dữ liệu xong ta tiến hành windowing. Ở đây em d
 % Khúc này ghi cấu trúc model
 % Thời gian training, thời gian test
 % Nhớ ghi những thông số và công thức tính (acc, error, optimizor)
-\subparagraph{Dense} Khởi tạo Sequential() của Keras. Ở đây em dùng gồm 3 lớp Dense với hàm kích hoạt là 'relu', lớp cuối có 1 node với hàm 'sigmoid' để phân loại binary ở output.
+\subparagraph{Dense} Khởi tạo Sequential() của Keras. Ở đây em dùng gồm 3 lớp Dense với hàm kích hoạt là relu, lớp cuối có 1 node với hàm sigmoid để phân loại binary ở output.
 
 \begin{minted}[]{python}
 denseModel = tf.keras.Sequential()
@@ -994,6 +994,7 @@ Các số liệu về training:
 
 \paragraph{Đánh giá}
 Từ các model thử nghiệm trên cho ta độ chính xác khá cao trên 98\%. Từ đó, ta cũng có thể đánh giá được khả năng dự đoán cháy của model trên bộ dữ liệu nhóm đã thu thập. Tuy nhiên, với độ chính xác quá cao cho thấy dấu hiệu overfiting. Vì vậy, trong phần tiếp theo, nhóm sẽ thực hiện trên toàn bộ tập dữ liệu. Dữ liệu sẽ đầy đủ và dài hơi hơn sau khi đã imputation những dữ liệu còn thiếu, bên cạnh đó thực hiện với nhiều thuật toán khác nhau để đưa ra kết quả tối ưu hơn.
+
 \subsection{Thực hiện trên dữ liệu 3 tỉnh Tây Nguyên (Gia Lai, Lâm Đồng, Đắk Lắk)}
 
 Dữ liệu thời tiết được lấy từ năm 2014 đến 2020. Mỗi ngày lấy các thông tin thời tiết gồm các trường sau:
