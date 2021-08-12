@@ -758,7 +758,9 @@ Tùy vào mục đích cho từng model ta sẽ cần mở rộng chiều của 
 % SHOW ĐƯỢC CÁC MẪU DỮ LIỆU mà model dự đoán sai và phân tích lý do. Đặc biệt chú ý các mẫu dữ liệu mà model này dự đoán đúng nhưng hầu hết model khác dự đoán sai, phải chụp ảnh được các mẫu dữ liệu đó làm ví dụ.
 % Trình bày càng kỹ càng nhiều điểm
 
-\subsection{Trên dữ liệu 5 tỉnh Tây Nguyên}
+\subsection{Thử nghiệm trên dữ liệu 5 tỉnh Tây Nguyên}
+\paragraph{Mô tả} Từ việc phân tích dữ liệu ở trên, ta thấy dữ liệu thời tiết bị thiếu dữ liệu lượng mưa trước năm 2017. Vì vậy, nhóm tiến hành lấy dữ liệu từ 2017 đến 2020 để thử  nghiệm một vài model trước khi thực hiện trên toàn bộ tập dữ liệu. Phần thử nghiệm này thực hiện trên dữ liệu từ 2017 đến 2020, gồm 553 xã thuộc 5 tỉnh Tây Nguyên. Thử nghiệm trên 2 loại model. Loại 1 là Dự đoán cháy rừng với output là 0 và 1, tương ứng với không cháy và cháy. Loại 2 là Dự đoán mức độ cháy rừng với output đầu ra là con số tương ứng với mức độ cháy.
+
 \subsubsection{Model dự đoán cháy rừng}
 \paragraph{Xử lý và chia dữ liệu}
 
@@ -805,7 +807,7 @@ def MinMaxScale(df, columns):
   return df
 \end{minted}
 
-Sau khi xử lý bộ dữ liệu xong ta tiến hành windowing. Ở đây em dùng vòng lặp để thực hiện. Sau khi hoàn tất xử lý và tạo bộ dữ liệu. Ta chia bộ dữ liệu thành 3 phần train, validation và test tương ứng với tỉ lệ 70%, 20%, 10%.
+Sau khi xử lý bộ dữ liệu xong ta tiến hành windowing. Ở đây em dùng vòng lặp để thực hiện. Sau khi hoàn tất xử lý và tạo bộ dữ liệu. Ta chia bộ dữ liệu thành 3 phần train, validation và test tương ứng với tỉ lệ 70\%, 20\%, 10\%.
 
 \paragraph{Thiết lập, Training}
 % Khúc này ghi cấu trúc model
@@ -860,20 +862,10 @@ Các số liệu về training:
 	\caption{Biểu đồ quá trình training}
 \end{figure}
 
-\paragraph{Đánh giá}
-% Các đánh giá về model, số liệu tổng quan chung, các trường hợp model đoán đúng, sai,
-% Còn những điểm nào có hy vọng cải thiện ?
-% Bao quát chung
-Từ các số liệu trên cho thấy model dự đoán cháy tốt dựa trên dữ liệu thời tiết. Với độ chính xác khá cao trên tập validation là 97,30% và trên tập test là 97,42%.
-
-%\paragraph{Tổng kết}
-% Rút ra gì từ những model khi thực nghiệm trên bộ dữ liệu này
-% Trong các model này, những model nào có điểm tối ưu, hạn chế nào so với những model khác ?
 \subsubsection{Model dự đoán cấp độ cháy rừng}
 
 \paragraph{Xử lý và chia dữ liệu}
-Việc xử lý dữ liệu thực hiện tương tự như phần trước. Nhưng đặc biệt ở đây là bộ dataset được tạo bằng bộ tạo time series dataset của tensorflow trong hàm dưới đây.
-
+Việc xử lý dữ liệu thực hiện tương tự như phần trước. Nhưng đặc biệt ở đây là bộ dataset được tạo bằng bộ tạo time series dataset của tensorflow trong hàm bên dưới. Hàm timeseries\_dataset\_from\_array của tensorflow sẽ thực hiện phân chia features và label, lấy dữ liệu 30 ngày trước, chia batch\_size và shuffle dữ liệu. 
 \begin{minted}[breaklines]{python}
 def concatDataset(data, ward_code_column ,wards,columns):
   for i, w in enumerate(wards):
@@ -919,7 +911,7 @@ Các số liệu về training:
 	\item Accuracy:
 	      \begin{itemize}
 		      \item validation: 0.9740
-		      \item test: 0.9842
+		      \item test: 0.9942
 	      \end{itemize}
 	\item Loss:
 	      \begin{itemize}
@@ -948,7 +940,7 @@ Các số liệu về training:
 	\item Accuracy:
 	      \begin{itemize}
 		      \item validation: 0.9740
-		      \item test: 0.9842
+		      \item test: 0.9942
 	      \end{itemize}
 	\item Loss:
 	      \begin{itemize}
@@ -976,7 +968,7 @@ Các số liệu về training:
 	\item Accuracy:
 	      \begin{itemize}
 		      \item validation: 0.9740
-		      \item test: 0.9842
+		      \item test: 0.9942
 	      \end{itemize}
 	\item Loss:
 	      \begin{itemize}
@@ -986,9 +978,8 @@ Các số liệu về training:
 \end{itemize}
 
 \paragraph{Đánh giá}
-Từ ba model dự đoán trên cho ta độ chính xác khá tốt với accuracy trên 97\%. Từ đó, ta hoàn toàn có khả năng dự đoán được mức độ cháy, dựa trên dữ liệu thời tiết đã thu thập. Ta có thể  đánh giá được mức độ báo động cháy để chuẩn bị và đưa ra các phương án phòng chống và giải quyết sớm những vụ cháy rừng.
-
-\subsection{Trên dữ liệu 3 tỉnh (Gia Lai, Lâm Đồng, Đắk Lắk)}
+Từ các model thử nghiệm trên cho ta độ chính xác khá cao trên 98\%. Từ đó, ta cũng có thể đánh giá được khả năng dự đoán cháy của model trên bộ dữ liệu nhóm đã thu thập. Tuy nhiên, với độ chính xác quá cao cho thấy dấu hiệu overfiting. Vì vậy, trong phần tiếp theo, nhóm sẽ thực hiện trên toàn bộ tập dữ liệu. Dữ liệu sẽ đầy đủ và dài hơi hơn sau khi đã imputation những dữ liệu còn thiếu, bên cạnh đó thực hiện với nhiều thuật toán khác nhau để đưa ra kết quả tối ưu hơn.
+\subsection{Thực hiện trên dữ liệu 3 tỉnh Tây Nguyên (Gia Lai, Lâm Đồng, Đắk Lắk)}
 
 Dữ liệu thời tiết được lấy từ năm 2014 đến 2020. Mỗi ngày lấy các thông tin thời tiết gồm các trường sau:
 
