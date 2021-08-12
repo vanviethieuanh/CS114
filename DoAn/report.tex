@@ -57,7 +57,13 @@ Từ đầu năm 2007, Cục Kiểm lâm (Bộ Nông nghiệp và Phát triển 
 
 Hệ thống này cung cấp dữ liệu về điểm cháy ghi nhận được từ vệ tinh và lưu lại thời gian và tọa độ cháy. Từ khi bắt đầu lắp đặt đến nay hệ thống dữ liệu cháy của cục kiểm lâm được ghi lại được gần 1 triệu điểm cháy. Nhờ lượng dữ liệu này việc xây dựng một hệ thống tự động phân tích mức độ cháy rừng dựa vào các đặc trưng cơ bản của dữ liệu khí tượng thủy văn là hoàn toàn có cơ sở và khả quan.
 
-Input của bài toán là dữ liệu lịch sử thời tiết trong vòng 1 tháng trở lại và từ đó để model đánh giá địa phương đó vào ngày mai có mức độ cháy được đánh giá ở thang nào.
+Input của bài toán là dữ liệu lịch sử thời tiết của địa phương trong vòng 1 tháng trước ngày xảy ra vụ cháy.
+
+Output của bài toán là:
+\begin{itemize}
+	\item Model 1 cho ra kết quả một trong hai giá trị 0 hoặc 1 đại diện cho địa phương đó có xảy ra cháy rừng hay không?
+	\item Model 2 cho ra kết quả là cấp độ cháy rừng gồm 3 nhãn là nhãn 1 (cháy rừng cấp độ 1), nhãn 2 (cháy rừng cấp độ 2), nhãn 3 (cháy rừng cấp độ 3).
+\end{itemize}
 
 \subsection{Mô tả dữ liệu}
 
@@ -88,7 +94,6 @@ Về việc tìm nguồn dữ liệu tương tự đã được khai thác trư�
 	\includegraphics[width=6in]{./WildfireVisualization/TayNguyen.png}
 	\caption{Dữ liệu cháy biểu thị trên bản đồ}
 \end{figure}
-
 %----------------------------------------------------------------------------------------
 %	SECTION 2
 %----------------------------------------------------------------------------------------
@@ -659,6 +664,15 @@ Một đoạn mẫu trong dữ liệu
 	\end{tabular}
 \end{table}
 
+
+\emph{Lưu ý rằng ở một xã nhất định vào một ngày có thể có nhiều điểm cháy, do thuật toán nhận diện dựa trên ảnh từ vệ tinh nên nếu cháy trên diện rộng sẽ nhận diện được nhiều điểm}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=3in]{images/criticle.png}
+	\caption{Ví dụ về ngày phát hiện nhiều điểm cháy nhất ở một xã}
+\end{figure}
+
 \subsection{Xây dựng bộ dữ liệu}
 Do việc thiếu dữ liệu nên nhóm tạo 2 bộ dữ liệu có những đặc trưng tối ưu riêng (về không gian và thời gian) để có thể tận dụng hết được các trường dữ liệu có ảnh hưởng lớn đến bài toán và dễ dàng hơn trong việt imputation.
 
@@ -740,6 +754,7 @@ Danh sách các trường dữ liệu
 	\item pressure: áp suất
 	\item doy: ngày trong năm
 \end{itemize}
+
 
 \subsubsection{Creation of Dataset}
 
@@ -994,6 +1009,13 @@ Dữ liệu thời tiết được lấy từ năm 2014 đến 2020. Mỗi ngày
 \end{itemize}
 
 Với mỗi địa diểm xảy ra cháy trong một ngày nhất định thì ta lấy dữ liệu thời tiết (gồm các trường dữ liệu như trên) từ ngày trước khi xảy ra vụ cháy trở về trước 30 ngày. Với một ngày gồm 7 trường dữ liệu thời tiết trên ta nhân cho 30 ngày thì thu được 210 trường dữ liệu dùng để training.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=6in]{images/show_data.png}
+	\caption{Dữ liệu dùng để đào tạo model}
+\end{figure}
+
 
 Để thuật tiện cho việc dự báo cháy rừng và mang lại độ chính xác cao, ta tiến hành chia thành 2 model riêng biết. Model đầu tiên dùng để đự đoán cháy rừng, đầu vào là dữ liệu thời tiết như ở trên, đầu ra là 2 nhẵn 0 (không xảy ra cháy rừng) và nhãn 1 (xảy ra cháy rừng). Model thứ 2 dùng để dự đoán cấp độ cháy rừng, cấp độ càng cao thì càng có độ tin cậy về cháy rừng càng cao. Đầu vào của model 2 này là dữ liệu thời tiết như trên nhưng mà có xảy ra cháy rừng, sau đó ta tiến hành chia dữ liệu thành 3 nhãn: nhãn 1 (cháy rừng cấp 1), nhãn 2 (cháy rừng cấp độ 2), nhãn 3 (cháy rừng cấp độ 3).
 
@@ -1411,12 +1433,18 @@ Mô hình thử hai dự đoán cấp độ cháy rừng cho kết quả thấp 
 
 \section{Ứng dụng và hướng phát triển}
 
-\begin{itemize}
-	\item Sử dụng Deep learning để imputation dữ liệu còn thiếu
-	\item Tìm thêm nhiều nguồn dữ liệu thời tiết
-	\item Nghiên cứu sử dụng multiple input
-\end{itemize}
+Tuy đề tài là một ứng dụng rất cần thiết trong thực tế và nhóm nhận thấy rằng đã xử lý nhiều phương diện cơ bản của một đồ án Máy học(phân tích website để thu thập dữ liệu, xử lý thiếu sót, mất cân bằng dữ liệu, xử lý các model cơ bản,...). Song vẫn phải thừa nhận kết quả đạt được còn nhiều điều hạn chế, thiếu sót trong việc ứng dụng.
 
+\subsection{Ứng dụng}
+
+\qquad Phải thành thật thừa nhận rằng tính ứng dụng của đồ án chưa cao, đó là điều mà nhóm đã nhận thấy từ lời khuyên ban đầu của thầy. Có rất nhiều nguyên nhân trong đó có cả việc những tài nguyên (input) đưa vào model không đủ để phân tích. Vì có rất nhiều vấn đề vĩ mô lẫn vi mô liên quan mật thiết đến cháy rừng như: mật độ thực vật, độ đa dạng, hình thái phân bổ thực vật,... Kinh nghiệm còn nhiều thiếu sót cũng là một điểm yếu của nhóm.
+
+Tuy nhiên, còn điểm yếu là còn có thể cải thiện, đề tài này tuy có tính khả quan rất thấp nhưng lại có tính cần thiết rất cao vì tất cả chúng ta đều biết những nguy tại của thiên tai có thể ảnh hưởng lớn thế nào đến con người.
+
+\subsection{Hướng phát triển}
+\qquad Như đã nói ở trên, nếu có được các nghiên cứu hơn về cấu trúc rừng ở nước ta (rừng trồng hay rừng tự nhiên), những yếu tố liên quan đến phân bổ thực vật (loại thực vật nào sinh trưởng chủ yếu ở những vùng nào), thậm chí là thu nhập của người dân ở từng vùng. Là những yếu tố thực tế gắn liền với rừng hiện nay hơn là thời tiết ta vẫn có hy vọng một kết quả nghiên cứu tốt hơn.
+
+Ngoài ra một yếu tố như bản đồ hoàn chỉnh của nước ta về các bản đồ với những đặc trưng trên có thể áp dụng tốt những cấu trúc model khác như sử dụng phép Convolution\cite{website:wiki_conv} trên bản đồ để trích rút ra được đặc trưng trên phương diện địa lý cũng là một ý tưởng.
 
 %----------------------------------------------------------------------------------------
 %	BIBLIOGRAPHY
