@@ -761,6 +761,24 @@ Danh sách các trường dữ liệu
 \qquad Việc tạo dữ liệu cho timeseries đã có hàm dựng sẵn từ tensorflow nên cách tạo dataset rất đơn giản, ta shuffle mã xã sau đó chia ra tùy vào mã xã. Lấy từng khoảng dữ liệu theo mã xã đã sắp xếp theo thời gian, đưa vào hàm \texttt{timeseries\_dataset\_from\_array}, sử dụng hàm \texttt{concatenate} ta sẽ tạo được các generator sử dụng cho việc training.
 
 Tùy vào mục đích cho từng model ta sẽ cần mở rộng chiều của dữ liệu để phù hợp, ví dụ Conv2D sẽ yêu cầu dữ liệu 4 chiều. Việc sử dụng Generator sẽ kéo dài việc training song sẽ giúp quá trình tạo dataset vốn rất lớn gần như tức thời.
+
+\paragraph{Dữ liệu đào tạo}
+
+Sau khi hoàn thành bước Imputation of Data ta được một bộ dư liệu thời tiết hoàn chỉnh từ 1/1/2014 đến 31/12/2020 với các trường dữ liệu như trên.
+
+Để việc đào tạo hiệu quả chúng em đã tham thảo một số phương pháp xử lý số liệu thời tiết ở time series của tensorflow \cite{website:tensorflow_time_series} trong đó họ có đề cập việc thay đổi trường vận tốc gió và hướng gió tạo thành vector gió theo chiều x và chiều y sẽ mang lại kết quả tốt hơn.
+
+\begin{minted}[]{python}
+	df_weather['wind_x'] = df_weather['wind']*np.cos(df_weather['wind_d'])
+	df_weather['wind_y'] = df_weather['wind']*np.sin(df_weather['wind_d'])
+\end{minted}
+
+Sau khi đã đủ các trường để đào tạo model, nhóm tiếp tục nghiên cứu và thảo luận rồi đưa ra quyết định về việc xây dựng dữ liệu thời tiết trước 30 ngày của ngày đưa ra dự đoán để đảm bảo quá trình hình thành cháy rừng. Từ đó tiến hành xây dựng data windowing.
+
+\paragraph{Xác định nhãn}
+Với dữ liệu wildfire thì ta xác định được thời gian xảy ra cháy rừng cũng như địa điểm cháy. Từ đó ta xác đinh được dữ liệu chứa nhãn 1 đối với model dự đoán cháy rừng. Ngoài ra thì khi ta xác định được dữ liệu này rồi thì ta tiếp tục chia dữ liệu đào tạo này dựa trên số lượng điểm cháy để phân ra thành các nhãn cấp độ cháy đối với model dự đoán cấp độ cháy rừng.
+
+Để xác định nhãn 0 của modek dự đoán cháy rừng, nhóm đã xem xét trên toàn bộ dữ liệu cháy rừng đã thu thập được và từ các nghiên cứu của các chuyên gia trước đó đã xác định được cháy rừng thì xảy ra theo mùa, vì thế để lấy được dữ liệu chưa nhãn 0, nhóm xác định các tháng ít xảy ra cháy rừng trên địa bàn Tây Nguyên từ đó xác định ngày và địa điểm để tạo dữ liệu.
 %----------------------------------------------------------------------------------------
 %	SECTION 4
 %----------------------------------------------------------------------------------------
